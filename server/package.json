@@ -12,6 +12,7 @@
     "bcrypt": "*",
     "express": "*",
     "mongoose": "*",
-    "mysql": "*"
+    "mysql": "*",
+    "react": "^18.2.0"
   }
 }
