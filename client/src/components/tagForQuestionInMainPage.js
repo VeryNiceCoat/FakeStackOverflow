@@ -1,19 +1,16 @@
-// import React, {Component} from "react";
-import React from "react";
-// import Query from "./objectForSearching";
+import React from 'react'
 
-const TagForQuestionInMainPage =({tag, onhandleTagOnMainPageClicked}) => {
+const TagForQuestionInMainPage = ({ tag, onhandleTagOnMainPageClicked }) => {
+  const handleTagClick = event => {
+    event.preventDefault()
+    onhandleTagOnMainPageClicked('[' + tag.name + ']')
+  }
 
-    const handleTagClick = (event) => {
-        event.preventDefault();
-        onhandleTagOnMainPageClicked('['+tag.name+']');
-    }
-
-    // render() {
-        return (
-            <button className="tag-type" onClick={handleTagClick}>{tag.name}</button>
-        )
-    // }
+  return (
+    <button className='tag-type' onClick={handleTagClick}>
+      {tag.name}
+    </button>
+  )
 }
 
-export default TagForQuestionInMainPage;
+export default TagForQuestionInMainPage
