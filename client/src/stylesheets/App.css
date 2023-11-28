@@ -1,1 +1,255 @@
 /* Add your CSS here */
+/* Add CSS stylesheet */
+body{
+    display: flex;
+    flex-direction: column;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+#header {
+    display: flex;
+    align-items: center;
+    padding:8px;
+    justify-content: space-between;
+    background: white;
+    border-bottom: 2px solid #ddd;
+    box-shadow: 0 0 8px rgba(0,0,0,.1);
+}
+
+.logo {
+    width: 100%;/* makes the logo take up all remaining space in header */
+    text-align: center; /*the text in logo container is*/
+}
+.search-bar {
+    display: flex;
+    margin-left:auto; /* push searchbar far right */
+}
+
+.content {
+    display: flex;
+    flex: 1;
+}
+
+.sidebar {
+    height: 100vh; /*makes the sidebar extend to the bottom otherwise it stops partway*/
+    width: 250px;
+    background: paleturquoise;
+    box-sizing: border-box;
+    border: 2px solid black;
+    border-right: 2px dashed black;
+    padding: 10px;
+}
+
+.sidebar ul {
+    list-style-type: none; /* removes the underlining and extraneous */
+    margin: 0;
+    padding: 0;
+}
+
+.sidebar li {
+    margin-bottom: 16px;
+}
+
+.question-view {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+#question-title:hover {
+    color:blue;
+    cursor: pointer;
+}
+
+
+#subheader {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 5px;
+    /* border: 2px solid black; */
+}
+
+.left-side {
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    /* border:2px solid red; */
+}
+
+.right-side{
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    /* border: 2px solid blue; */
+    gap: 25px;
+}
+.ask-q,.answer-q{
+    display: inline-block;
+    font-size: 15px;
+    padding: 10px;
+    border: 2px solid black;
+    transition: background-color 0.7s ease; /* for smooth transition when hovering */
+}
+
+.ask-q:hover, .answer-q:hover {
+    background-color: green;
+    color: white;
+}
+
+.q-filter{
+    display: flex;
+    gap: 0px;
+}
+
+.newest-q,.active-q,.unanswered-q {
+    padding: 2px;
+    gap: 0px;
+    border: 1px solid black;
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
+    transition: background-color 0.7s ease;
+}
+
+.newest-q:hover, .active-q:hover, .unanswered-q:hover {
+    background-color: orangered;
+    color:black;
+}
+
+.newest-q {
+    border-left:2px solid black;
+}
+
+.unanswered-q {
+    border-right: 2px solid black;
+}
+/* 
+#submissions-view {
+    
+    border: 2px solid red;
+} */
+
+a {
+    text-decoration: none;
+    color: black;
+    font-size: 20px;
+}
+
+/* hides the form when button is clicked */
+#questionFormContainer, #answerFormContainer {
+    /* display: none; */
+    flex: 1;
+    width: 100%;
+}
+#tagPageContainer {
+    /* display: none; */
+}
+/* for the question-form.html */
+#questionForm {
+    display: flex;
+    flex: 1;
+    width: 100%;
+    flex-direction: column;
+    border: 2px solid black;
+}
+
+#answerForm {
+    display: flex;
+    flex: 1;
+    width: 100%;
+    flex-direction: column;
+    border: 2px solid black;
+}
+
+input, textarea {
+    padding: 10px;
+    margin: 10px;
+}
+
+label {
+    font-size: 24px;
+}
+
+/* for the question container.html */
+#questionContainer, #answerContainer {
+    display:flex;
+    padding: 10px;
+    gap: 30px;
+    border: 2px dashed black;
+    border-left: none;
+    justify-content:flex-start;
+    width: 100%;
+}
+
+#answerContainer {
+    justify-content: space-between;
+}
+
+#title-and-tags {
+    margin-right: auto;
+}
+
+.tag-type {
+    font-size: 14px;
+    background-color: darkgrey; 
+    border-radius: 5px; /* Slightly rounded corners */
+    padding: 5px 10px; 
+    margin: 5px;
+    text-decoration: none; 
+    color: black; 
+    display: inline-block; 
+    margin-top: 10px;
+}
+
+.tag-type:hover {
+    background-color: orangered; 
+    cursor: pointer; 
+}
+
+/* for the post.html */
+
+#postContainer {
+    /* display: none; */
+    width: 100%;
+}
+
+#questionData {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 10px;
+    width: 100%;
+}
+
+#questionData > div {
+    margin-right: 30px;
+}
+
+
+/* for tag and tag-page */
+#tagPageContainer {
+    width: 100%
+}
+#tagCollection {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    /* padding: 10px; */
+}
+
+#tagCollection > div {
+    margin-left: 20px;
+}
+.tagCard {
+    border: 2px dashed gray;
+    box-shadow: 2px 4px 16px rgba(0,0,0,.06);
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    
+    flex-basis: 25%;
+    margin: 4px;
+    padding: 4px;
+}
