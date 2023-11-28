@@ -24,9 +24,9 @@ const AnswerForm = ({ question, onSubmit }) => {
     await Axios.put(`http://localhost:8000/questions/${questionID}`, {
       answerID: newAnswer.data._id
     }).then(onSubmit())
-    if (updateQuestionResponse === undefined) {
-      console.log('error')
-    }
+    // if (updateQuestionResponse === undefined) {
+    //   console.log('error')
+    // }
   }
 
   return (
