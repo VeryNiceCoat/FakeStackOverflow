@@ -45,9 +45,11 @@ app.use(express.urlencoded({ extended: true }));
 const questionsRoute = require('./routes/questionsRoute');
 const answersRoute = require('./routes/answersRoute');
 const tagsRoute = require('./routes/tagsRoute');
+const usersRoute = require('./routes/userRoute');
 app.use('/questions', questionsRoute);
 app.use('/answers', answersRoute);
 app.use('/tags', tagsRoute);
+app.use('/users', usersRoute);
 
 app.get('/', (req,res) =>{
 // const y = bcrypt.hashSync("guest", 5);

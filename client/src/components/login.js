@@ -7,6 +7,7 @@ function Login (props) {
         setShowWelcomePage,
         showLoginForm,
         setShowLoginForm,
+        showRegisterForm,
         setShowRegisterForm,
         showRejectedMessage,
         setShowRejectedMessage,
@@ -37,12 +38,24 @@ function Login (props) {
 
     };
 
+    const handleGuestClick = async () => {
+        setShowLoginForm(false);
+        setShowRegisterForm(false);
+        setShowRejectedMessage(false);
+
+        const temp = await Axios.get(
+            'http://localhost:8000/users/guest/guest@guest.com/guest'
+        );
+
+        console.log(temp);
+    }
+
     return(
         <div className='loginContainer'>
             <h3>Welcome to FakeStackOverflow</h3>
             <button onClick={handleLoginClick}>Login</button>
             <button onClick={handleRegisterClick}>Register</button>
-            <button>Guest</button>
+            <button onClick={handleGuestClick}>Guest</button>
             {showLoginForm && (
                 <form onSubmit={handleLoginSubmit}>
                     <input type='text' name='name' placeholder='Username'/>
@@ -50,7 +63,7 @@ function Login (props) {
                     <button type='submit'>Submit</button>
                 </form>
             )}
-            {setShowRegisterForm && (
+            {showRegisterForm && (
                 <form>
                     <input type='text' name='name' placeholder='Username'/>
                     <input type='text' name='email' placeholder='Email'/>
