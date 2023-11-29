@@ -1,6 +1,6 @@
 import React from 'react'
 
-const AnswerTab = props => {
+const AnswerTab = (props) => {
   return (
     <div id='answerContainer'>
       <div id='answer-text'>{LinkifyQuestionText(props.answer.text)}</div>

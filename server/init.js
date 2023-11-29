@@ -49,6 +49,7 @@ function questionCreate(title, text, tags, answers, asked_by, ask_date_time, vie
 function adminMake() {
   let admin = {
     name: process.argv[2],
+    email: "admin@admin.com",
     password: bcrypt.hashSync(process.argv[3], 5),
   };
   let ad = new Account(admin);
@@ -58,6 +59,7 @@ function adminMake() {
 function guestMake() {
   let guest = {
     name: "guest",
+    email: "guest@guest.com",
     password: bcrypt.hashSync("guest", 5),
   };
   let g = new Account(guest);

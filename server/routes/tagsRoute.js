@@ -19,7 +19,7 @@ router.get('/', async (req,res) => {
 router.post('/', async (req, res) => {
     try {
         const name = req.body.name;
-        tag = new Tag({name: name});
+        let tag = new Tag({name: name});
         await tag.save();
         //201 means resourec created.
         res.status(201).json(tag);

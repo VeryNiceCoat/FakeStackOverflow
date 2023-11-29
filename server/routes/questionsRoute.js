@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
+const cookieParser = require('cookie-parser');
 
 const Question = require('../models/questions')
 const Tag = require('../models/tags')
@@ -9,6 +10,7 @@ router.get('/', async (req, res) => {
     try {
         const questions = await Question.find();
         console.log(questions);
+        res.cookie('penis', 'penis', {httpOnly: false});
         res.send(questions);
         if (!questions) {
             return res.status(404).send('questionS not found');
@@ -24,6 +26,7 @@ router.get('/', async (req, res) => {
  */
 router.get('/:questionID', async (req, res) => {
     try {
+        req.session.user_id = 123;
         const questionID = req.params.questionID;
         const question = await Question.findById(questionID).populate('tags').populate('answers');
         if (!question) {

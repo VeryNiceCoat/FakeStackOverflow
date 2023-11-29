@@ -7,23 +7,25 @@ import Post from './post'
 import TagPage from './tag-page'
 
 const QuestionView = props => {
-  const [filter, setFilter] = useState('all')
-  const [selectedQuestion, setSelectedQuestion] = useState(null)
-  const [questions, setQuestions] = useState([])
-  const [allTags, setAllTags] = useState([])
+  const [filter, setFilter] = useState('all');
+  const [selectedQuestion, setSelectedQuestion] = useState(null);
+  const [questions, setQuestions] = useState([]);
+  const [allTags, setAllTags] = useState([]);
+  const [currentPage, setCurrentPage] = useState(0);
+  const questionsPerPage = 5;
 
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const response = await Axios.get('http://localhost:8000/questions')
-        setQuestions(response.data)
+        const response = await Axios.get('http://localhost:8000/questions');
+        setQuestions(response.data);
       } catch (error) {
-        console.error('Error fetching questions', error)
+        console.error('Error fetching questions', error);
       }
     }
     const fetchAllTags = async () => {
       try {
-        const res = await Axios.get(`http://localhost:8000/tags`)
+        const res = await Axios.get(`http://localhost:8000/tags`);
         setAllTags(res.data)
       } catch (error) {
         console.error('error fetching tags in components/tag-page.js', error)
@@ -136,12 +138,17 @@ const QuestionView = props => {
   }
 
   const renderQuestions = () => {
+    const startIndex = currentPage * questionsPerPage;
+    // const selectedQuestions = questions.slice(startIndex, startIndex + questionsPerPage);
+  
     const filteredQuestions = questions.filter(q =>
       doesQuestionMatchSearchQuery(q, props.searchQuery)
-    )
-    console.log(filteredQuestions.length)
+    );
+    // console.log(document.cookie);
+    // console.log(filteredQuestions.length)
     getValue(filteredQuestions.length)
-    const questionComponents = filteredQuestions.map(q => (
+    const selectedQuestions = filteredQuestions.slice(startIndex, startIndex + questionsPerPage);
+    const questionComponents = selectedQuestions.map(q => (
       <Question
         key={q._id}
         onTitleClick={() => handleShowPost(q)}
@@ -150,17 +157,13 @@ const QuestionView = props => {
         question={q}
         onhandleTagOnMainPageClicked={props.onhandleTagOnMainPageClicked}
       />
-    ))
+    ));
     if (getValue() === 0) {
-      return <div>No Questions Found</div>
+      return <div>No Questions Found</div>;
     }
-    return questionComponents
+    return questionComponents;
   }
 
-  /**
-   * Returns true if a question fulfills certain values
-   * @returns
-   */
   const doesQuestionMatchSearchQuery = (question, searchQuery) => {
     if (searchQuery === '') {
       return true
@@ -332,7 +335,15 @@ const QuestionView = props => {
         </div>
         <div id='submissions-view'>
           {temp1}
-          {temp2}
+          <div
+            className='scrollable-questions' 
+            style={{
+              maxHeight: '400px', // Adjust the height as needed
+              overflowY: 'auto'   // Enables vertical scrolling
+            }}
+          >
+            {temp2}
+          </div>
           {}
           {}
         </div>
