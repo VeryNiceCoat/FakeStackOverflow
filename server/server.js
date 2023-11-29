@@ -23,9 +23,20 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
  * Makes express application, and sets it so only 3000 can send requests
  */
 const app = express();
-app.use(cors({
-    origin: 'http://localhost:3000' 
-}));
+
+const corsOptionsDelegate = function (req, callback) {
+    const corsOptions = {
+      origin: true, // reflect (enable) the requested origin in the CORS response
+      credentials: true // to allow cookies and credentials
+    };
+    callback(null, corsOptions); // callback expects two parameters: error and options
+  };
+  
+app.use(cors(corsOptionsDelegate));
+
+// app.use(cors({
+//     origin: 'http://localhost:3000' 
+// }));
 
 app.use(cookieParser());
 

@@ -1,9 +1,15 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const router = express.Router();
+const cors = require('cors');
 
 const Account = require('../models/user')
 const cookieParser = require('cookie-parser');
+
+const corsOptions = {
+    origin: 'http://localhost:3000', // Replace with your client domain
+    credentials: true, // To allow cookies to be sent
+};
 
 router.get('/', async (req, res) => {
     try {
@@ -35,18 +41,29 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.get('/:name/:email/:password', async (req, res) => {
+router.get('/:name/:emailName/:emailDomain/:password', async (req, res) => {
     try {
         const name = req.params.name;
-        const email = req.params.email;
+        const emailName = req.params.emailName;
+        const emailDomain = req.params.emailDomain;
         const password = req.params.password;
+        const email = emailName + '@' + emailDomain;
         const account = await Account.findOne({name: name, email: email});
         if (!account) {
             return res.status(404).send(false);
         }
         const isMatch = await bcrypt.compare(password, account.password);
         if (isMatch) {
-            res.cookie('email', email, {httpOnly: false});
+            res.cookie('emailName', emailName, {
+                httpOnly: false,
+                sameSite: 'lax',
+                secure: false
+            });
+            res.cookie('emailDomain', emailDomain, {
+                httpOnly: false,
+                sameSite: 'lax',
+                secure: false
+            });
             res.send(true);
         } else {
             res.send('Password Incorrect');

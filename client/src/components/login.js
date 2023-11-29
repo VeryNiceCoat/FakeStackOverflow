@@ -42,13 +42,19 @@ function Login (props) {
         setShowLoginForm(false);
         setShowRegisterForm(false);
         setShowRejectedMessage(false);
-
-        const temp = await Axios.get(
-            'http://localhost:8000/users/guest/guest@guest.com/guest'
-        );
-
-        console.log(temp);
+    
+        try {
+            const response = await Axios.get('http://localhost:8000/users/guest/guest/guest.com/guest', {
+                withCredentials: true // This is essential for handling cookies
+            });
+    
+            console.log(response.data);
+            console.log(document.cookie); // This will only show cookies that are not HttpOnly
+        } catch (error) {
+            console.error('Error:', error);
+        }
     }
+    
 
     return(
         <div className='loginContainer'>
