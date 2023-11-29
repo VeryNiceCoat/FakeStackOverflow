@@ -336,6 +336,10 @@ const QuestionView = props => {
           {}
           {}
         </div>
+        <div className='footer'>
+          <button>Prev</button>
+          <button>Next</button>
+        </div>
       </div>
     )
   }
