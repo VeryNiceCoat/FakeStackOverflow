@@ -13,10 +13,13 @@ client:
 npm install axios bycrpt express axios react
 
 server:
-npm install bycrypt axios cors mongoose react
+npm install bycrypt axios cors mongoose react cookie-parser
 
 Set up database:
 In server folder run
 node init.js [adminName] [admingPassword]
 Data will be stored in fake_so.
 Mongodb and Mongosh should be running, and defualt mongo server is assumed, it is hardcoded so change it if you want
+
+Client side:
+npm start

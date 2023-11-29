@@ -8,6 +8,7 @@ const express = require('express');
 const cors = require('cors');
 var mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
+const cookieParser = require('cookie-parser');
 
 const port = 8000;
 
@@ -24,6 +25,8 @@ const app = express();
 app.use(cors({
     origin: 'http://localhost:3000' 
 }));
+
+app.use(cookieParser());
 
 /**
  * Sets up values to be in JSON and work automaticaly
