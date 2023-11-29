@@ -18,6 +18,8 @@ npm install bycrypt axios cors mongoose react cookie-parser
 Set up database:
 In server folder run
 node init.js [adminName] [admingPassword]
+By default it is:
+node ./init.js admin admin
 Data will be stored in fake_so.
 Mongodb and Mongosh should be running, and defualt mongo server is assumed, it is hardcoded so change it if you want
 

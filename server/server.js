@@ -9,6 +9,7 @@ const cors = require('cors');
 var mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 const cookieParser = require('cookie-parser');
+const cookieSession = require('cookie-session');
 
 const port = 8000;
 
@@ -28,6 +29,10 @@ app.use(cors({
 
 app.use(cookieParser());
 
+app.use(cookieSession({
+    keys: ['secret']
+}));
+
 /**
  * Sets up values to be in JSON and work automaticaly
  */
@@ -45,10 +50,18 @@ app.use('/answers', answersRoute);
 app.use('/tags', tagsRoute);
 
 app.get('/', (req,res) =>{
+// const y = bcrypt.hashSync("guest", 5);
+// const z = bcrypt.compareSync("guest", y);
+// console.log(z);
+// res.send(z);
     res.send('hello');
 });
 
 app.listen(port, () => {
     console.log(`App listening on port ${port}`);
 })
-    
+
+// const x = bcrypt.hashSync("guest", 5);
+// const y = bcrypt.hashSync("guest", 5);
+// const z = bcrypt.compareSync("guest", y);
+// console.log(z);

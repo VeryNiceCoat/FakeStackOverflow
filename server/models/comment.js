@@ -4,7 +4,7 @@ var Schema = mongoose.Schema;
 
 
 var CommentSchema = new Schema({
-
+    text: {type: String, required: true},
 })
 var AnswerSchema = new Schema({
     text: {type: String, required: true},
@@ -13,6 +13,6 @@ var AnswerSchema = new Schema({
 });
 //vitual
 CommentSchema.virtual('url').get(function() {
-    return 'posts/answer/'+ this._id;
+    return 'posts/answers/comments' + this._id;
 })
-module.exports = mongoose.model('Answer', AnswerSchema);
+module.exports = mongoose.model('Comment', CommentSchema);
