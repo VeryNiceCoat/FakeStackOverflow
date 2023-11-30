@@ -88,10 +88,24 @@ const Question = (
       <div id='view-stats'>
         <div id='total-answers'>{question.answers.length} answers</div>
         <div id='total-views'>{question.views} views</div>
+        <div>{question.votes} votes</div>
+      </div>
+      <div>
+        <button>
+          UPVOTE
+        </button>
+      </div>
+      <div>
+        <button>
+          DOWNVOTE
+        </button>
       </div>
       <div id='title-and-tags'>
         <div id='question-title' onClick={handleTitleClick}>
-          {question.title}
+          Question Title: {question.title}
+        </div>
+        <div>
+          Question Summary: {question.summary}
         </div>
         <div id='appendOtherTagsHere'>
           {selectedTags.map(tag => (

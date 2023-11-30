@@ -21,6 +21,13 @@ class Header extends Component {
   render () {
     return (
       <div id='header'>
+        <div>
+          USERNAME AREA
+        </div>
+        <div>
+          <button>Logout</button>
+          <button>Login</button>
+        </div>
         <div className='logo'>FAKE STACK OVERFLOW</div>
         <div className='search-bar'>
           <input

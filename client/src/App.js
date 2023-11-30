@@ -6,16 +6,16 @@ import Login from './components/login.js'
 import { useState } from 'react';
 
 function App() {
-  const [showWelcomePage, setShowWelcomePage] = useState(true);
-  const [showLoginForm, setShowLoginForm] = useState(false);
-  const [showRegisterForm, setShowRegisterForm] = useState(false);
-  const [showRejectedMessage, setShowRejectedMessage] = useState(false);
-  const [showHomePage, setShowHomePage] = useState(false);
-  const [identifier, setIdentifier] = useState(undefined);
+  // const [showWelcomePage, setShowWelcomePage] = useState(true);
+  // const [showLoginForm, setShowLoginForm] = useState(false);
+  // const [showRegisterForm, setShowRegisterForm] = useState(false);
+  // const [showRejectedMessage, setShowRejectedMessage] = useState(false);
+  const [showHomePage, setShowHomePage] = useState(true);
+  // const [identifier, setIdentifier] = useState(undefined);
 
   return (
     <section className="fakeso">
-      {showWelcomePage && (
+      {/* {showWelcomePage && (
         <Login
           showWelcomePage={showWelcomePage}
           setShowWelcomePage={setShowWelcomePage}
@@ -28,7 +28,7 @@ function App() {
           showHomePage={showHomePage}
           setShowHomePage={setShowHomePage}
         />
-      )}
+      )} */}
       {showHomePage && <FakeStackOverflow />}
     </section>
   );

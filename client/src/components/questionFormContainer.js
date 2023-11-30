@@ -71,6 +71,16 @@ const QuestionFormContainer = ({ onSubmit }) => {
           required
           title='Max 100 characters'
         />
+        <label htmlFor='questionSummary'>Question Summary:*</label>
+        <p>Limit Summaries to 140 characters or less</p>
+        <input 
+          type='text'
+          id='questionSummary'
+          name='questionSummary'
+          pattern='{0,140}'
+          required
+          title='Max 140 Characters'
+        />
         <label htmlFor='questionBody'>Question:*</label>
         <textarea
           id='questionBody'

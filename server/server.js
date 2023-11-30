@@ -9,8 +9,9 @@ const cors = require('cors');
 var mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 const cookieParser = require('cookie-parser');
-const cookieSession = require('cookie-session');
+// const cookieSession = require('cookie-session');
 const session = require('express-session');
+const MongoStore = require('connect-mongo');
 
 const port = 8000;
 
@@ -24,6 +25,16 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
  * Makes express application, and sets it so only 3000 can send requests
  */
 const app = express();
+
+app.use(
+  session({
+    secret: "supersecret difficult to guess string",
+    cookie: {},
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({ mongoUrl: 'mongodb://127.0.0.1:27017/bcrypt_ex'})
+  })
+);
 
 const corsOptionsDelegate = function (req, callback) {
     const corsOptions = {
@@ -41,16 +52,9 @@ app.use(cors(corsOptionsDelegate));
 
 app.use(cookieParser());
 
-app.use(cookieSession({
-    keys: ['secret']
-}));
-
-app.use(session({
-  secret:'secret',
-  cookie: {},
-  resave: false,
-  saveUninitialized: false
-}));
+// app.use(cookieSession({
+//     keys: ['secret']
+// }));
 
 /**
  * Sets up values to be in JSON and work automaticaly
@@ -71,10 +75,7 @@ app.use('/tags', tagsRoute);
 app.use('/users', usersRoute);
 
 app.get('/', (req,res) =>{
-// const y = bcrypt.hashSync("guest", 5);
-// const z = bcrypt.compareSync("guest", y);
-// console.log(z);
-// res.send(z);
+
     res.send('hello');
 });
 

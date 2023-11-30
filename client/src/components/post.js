@@ -4,6 +4,8 @@ import AnswerTab from './answer.js'
 
 const Post = ({ question, onAnswerQuestion, onAskQuestion }, props) => {
   const [answersToBeLoaded, setAnswersToBeLoaded] = useState([])
+  const [currentPage, setCurrentPage] = useState(0)
+  const answersPerPage = 5
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
@@ -17,7 +19,8 @@ const Post = ({ question, onAnswerQuestion, onAskQuestion }, props) => {
             questionA[0] = x[i]
             break
           }
-        }        await Axios.get('http://localhost:8000/answers').then(function (res) {
+        }
+        await Axios.get('http://localhost:8000/answers').then(function (res) {
           const answersCollection = res.data
           const relevantAnswers = answersCollection.filter(ans =>
             questionA[0].answers.some(
@@ -30,8 +33,7 @@ const Post = ({ question, onAnswerQuestion, onAskQuestion }, props) => {
           setAnswersToBeLoaded(loadedAnswers)
           setIsLoading(false)
         })
-      } catch (error) {
-      }
+      } catch (error) {}
     }
     fetchAnswers()
   }, [props.showAForm, props.showPostView])
@@ -40,19 +42,53 @@ const Post = ({ question, onAnswerQuestion, onAskQuestion }, props) => {
     setIsLoading(false)
   }, [answersToBeLoaded])
 
-  const loadingCheck = () => {
-    if (isLoading) {
-      return <div>Loading Answers...</div>
-    } else {
-      return <div id='itemsAboveAnswerBtn'>{answersToBeLoaded}</div>
-    }
+  // const loadingCheck = () => {
+  //   if (isLoading) {
+  //     return <div>Loading Answers...</div>
+  //   } else {
+  //     return <div id='itemsAboveAnswerBtn'>{answersToBeLoaded}</div>
+  //   }
+  // }
+
+  const paginatedAnswers = () => {
+    const startIndex = currentPage * answersPerPage
+    const selectedAnswers = answersToBeLoaded.slice(
+      startIndex,
+      startIndex + answersPerPage
+    )
+    return selectedAnswers
+  }
+
+  const handleNext = () => {
+    setCurrentPage(prev => prev + 1)
+  }
+
+  const handlePrev = () => {
+    setCurrentPage(prev => (prev > 0 ? prev - 1 : 0))
+  }
+
+  const renderAnswers = () => {
+    return (
+      <div
+        id='itemsAboveAnswerBtn'
+        style={{
+          maxHeight: '500px',
+          overflowY: 'auto'
+        }}
+      >
+        {paginatedAnswers()}
+      </div>
+    )
   }
 
   return (
     <div id='postContainer'>
       <div id='subheader'>
         <h5 id='answerCount'>{question.answers.length} answers</h5>
+        <h5>Question Votes: {question.votes}</h5>
         <h4 id='questionTopic'>{question.title}</h4>
+        <button>Upvote</button>
+        <button>Downvote</button>
         <button id='askQuestionBtn' className='ask-q' onClick={onAskQuestion}>
           Ask Question
         </button>
@@ -64,11 +100,16 @@ const Post = ({ question, onAnswerQuestion, onAskQuestion }, props) => {
           {question.asked_by} asked {formatQuestionDate(question.ask_date_time)}
         </div>
       </div>
-      {loadingCheck()}
+      {renderAnswers()}
+      <div>
+        <button onClick={handlePrev}>Prev</button>
+        <button onClick={handleNext}>Next</button>
+      </div>
       <button
         id='answerQuestionBtn'
         className='answer-q'
-        onClick={onAnswerQuestion}>
+        onClick={onAnswerQuestion}
+      >
         Answer Question
       </button>
     </div>

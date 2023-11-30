@@ -3,6 +3,11 @@ import React from 'react'
 const AnswerTab = (props) => {
   return (
     <div id='answerContainer'>
+      <div>
+        Votes: {props.answer.votes}
+        <button>Upvote</button>
+        <button>Downvote</button>
+      </div>
       <div id='answer-text'>{LinkifyQuestionText(props.answer.text)}</div>
       <div id='submitter-info'>
         {props.answer.ans_by} replied{' '}
