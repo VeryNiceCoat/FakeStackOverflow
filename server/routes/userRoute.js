@@ -5,6 +5,7 @@ const cors = require('cors');
 
 const Account = require('../models/user')
 const cookieParser = require('cookie-parser');
+const session = require('express-session');
 
 const corsOptions = {
     origin: 'http://localhost:3000', // Replace with your client domain
@@ -48,6 +49,8 @@ router.get('/:name/:emailName/:emailDomain/:password', async (req, res) => {
         const emailDomain = req.params.emailDomain;
         const password = req.params.password;
         const email = emailName + '@' + emailDomain;
+        res.session.email = email;
+        return;
         const account = await Account.findOne({name: name, email: email});
         if (!account) {
             return res.status(404).send(false);

@@ -42,10 +42,9 @@ function Login (props) {
         setShowLoginForm(false);
         setShowRegisterForm(false);
         setShowRejectedMessage(false);
-    
         try {
             const response = await Axios.get('http://localhost:8000/users/guest/guest/guest.com/guest', {
-                withCredentials: true // This is essential for handling cookies
+                // withCredentials: true // This is essential for handling cookies
             });
     
             console.log(response.data);

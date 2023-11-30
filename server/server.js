@@ -10,6 +10,7 @@ var mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 const cookieParser = require('cookie-parser');
 const cookieSession = require('cookie-session');
+const session = require('express-session');
 
 const port = 8000;
 
@@ -42,6 +43,13 @@ app.use(cookieParser());
 
 app.use(cookieSession({
     keys: ['secret']
+}));
+
+app.use(session({
+  secret:'secret',
+  cookie: {},
+  resave: false,
+  saveUninitialized: false
 }));
 
 /**
