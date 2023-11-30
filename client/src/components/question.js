@@ -119,7 +119,7 @@ const Question = (
         </div>
       </div>
       <div id='submitter-info'>
-        {question.asked_by} asked {formatDate(question.ask_date_time)}
+        {question.username} asked {formatDate(question.ask_date_time)}
       </div>
     </div>
   )

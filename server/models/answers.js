@@ -7,7 +7,8 @@ var AnswerSchema = new Schema({
     ans_by: {type: String, required: true},
     ans_date_time: {type: Date, default: Date.now},
     votes: {type: Number, default: 0},
-    comments: {type: [Schema.Types.ObjectId], ref: 'Comment'}
+    comments: {type: [Schema.Types.ObjectId], ref: 'Comment'},
+    username: {type: String, default:'Anon'}
 });
 //vitual
 AnswerSchema.virtual('url').get(function() {

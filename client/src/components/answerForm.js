@@ -25,7 +25,7 @@ const AnswerForm = ({ question, onSubmit }) => {
       answerID: newAnswer.data._id
     }).then(onSubmit())
     // if (updateQuestionResponse === undefined) {
-    //   console.log('error')
+    //   
     // }
   }
 

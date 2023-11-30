@@ -10,12 +10,14 @@ const AnswerTab = (props) => {
       </div>
       <div id='answer-text'>{LinkifyQuestionText(props.answer.text)}</div>
       <div id='submitter-info'>
-        {props.answer.ans_by} replied{' '}
-        {formatQuestionDate(props.answer.ans_date_time)}
+        {props.answer.username} replied{' '}
+          {formatQuestionDate(props.answer.ans_date_time)}    
+        {}
       </div>
     </div>
   )
 }
+export default AnswerTab
 
 function LinkifyQuestionText (text) {
   const regex = /\[(.*?)\]\((.*?)\)/g
@@ -43,8 +45,6 @@ function LinkifyQuestionText (text) {
   if (textAfterLastMatch) result.push(textAfterLastMatch)
   return result
 }
-
-export default AnswerTab
 
 function formatQuestionDate (askedDate) {
   const dateAskedDate = new Date(askedDate)

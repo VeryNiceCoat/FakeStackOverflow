@@ -5,7 +5,8 @@ var CommentSchema = new Schema({
     text: {type: String, required: true},
     by: {type: String, required: true},
     date_time: {type: Date, default: Date.now},
-    votes: {type: Number, default: 0}
+    votes: {type: Number, default: 0},
+    username: {type: String, default:'Anon'}
 });
 
 CommentSchema.virtual('url').get(function() {

@@ -49,7 +49,7 @@ const QuestionFormContainer = ({ onSubmit }) => {
     await Axios.post('http://localhost:8000/questions', newQuestionData).then(
       function (res) {
         if (res.status === 201) {
-          console.log(res.status)
+          
         } else {
           console.error('error code: ', res.status)
         }

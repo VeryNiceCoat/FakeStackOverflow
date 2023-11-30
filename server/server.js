@@ -32,7 +32,7 @@ app.use(
     cookie: {},
     resave: false,
     saveUninitialized: false,
-    store: MongoStore.create({ mongoUrl: 'mongodb://127.0.0.1:27017/bcrypt_ex'})
+    store: MongoStore.create({ mongoUrl: 'mongodb://127.0.0.1:27017/sessions'})
   })
 );
 
@@ -69,10 +69,12 @@ const questionsRoute = require('./routes/questionsRoute');
 const answersRoute = require('./routes/answersRoute');
 const tagsRoute = require('./routes/tagsRoute');
 const usersRoute = require('./routes/userRoute');
+const commentsRoute = require('./routes/commentsRoute');
 app.use('/questions', questionsRoute);
 app.use('/answers', answersRoute);
 app.use('/tags', tagsRoute);
 app.use('/users', usersRoute);
+app.use('/comments', commentsRoute);
 
 app.get('/', (req,res) =>{
 

@@ -44,7 +44,7 @@ const QuestionView = props => {
   function incrementQuestionViews (questionId) {
     Axios.put(`http://localhost:8000/questions/${questionId}/views`)
       .then(response => {
-        console.log(response)
+        
       })
       .catch(error => {
         console.error('Error:', error)
@@ -144,8 +144,8 @@ const QuestionView = props => {
     const filteredQuestions = questions.filter(q =>
       doesQuestionMatchSearchQuery(q, props.searchQuery)
     );
-    // console.log(document.cookie);
-    // console.log(filteredQuestions.length)
+    // 
+    // 
     getValue(filteredQuestions.length)
     const selectedQuestions = filteredQuestions.slice(startIndex, startIndex + questionsPerPage);
     const questionComponents = selectedQuestions.map(q => (

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Axios from 'axios'
 import AnswerTab from './answer.js'
+import CommentTab from './comment.js'
 
 const Post = ({ question, onAnswerQuestion, onAskQuestion }, props) => {
   const [answersToBeLoaded, setAnswersToBeLoaded] = useState([])
@@ -81,8 +82,13 @@ const Post = ({ question, onAnswerQuestion, onAskQuestion }, props) => {
     )
   }
 
+  const renderComments = () => {
+    return undefined
+  }
+
   return (
     <div id='postContainer'>
+      {/* {} */}
       <div id='subheader'>
         <h5 id='answerCount'>{question.answers.length} answers</h5>
         <h5>Question Votes: {question.votes}</h5>
@@ -95,15 +101,30 @@ const Post = ({ question, onAnswerQuestion, onAskQuestion }, props) => {
       </div>
       <div id='questionData'>
         <div id='total-views'>{question.views + 1} views</div>
-        <div id='question-text'>{convertStringToLinks(question.text)}</div>
+        <div id='summary'>Question Summary: {question.summary}</div>
+        <div id='question-text'>
+          Question Text: {convertStringToLinks(question.text)}
+        </div>
         <div id='submitter-info'>
-          {question.asked_by} asked {formatQuestionDate(question.ask_date_time)}
+          {question.username} asked {formatQuestionDate(question.ask_date_time)}
         </div>
       </div>
       {renderAnswers()}
       <div>
         <button onClick={handlePrev}>Prev</button>
         <button onClick={handleNext}>Next</button>
+      </div>
+      <div>
+        Question Comments:{' '}
+        {question.comments.length == 0 ? (
+          <div>No Questions</div>
+        ) : (
+          renderComments()
+        )}
+        <div>
+          <button>Prev</button>
+          <button>Next</button>
+        </div>
       </div>
       <button
         id='answerQuestionBtn'

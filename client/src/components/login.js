@@ -33,7 +33,7 @@ function Login (props) {
         const formData = new FormData(event.target);
         const username = formData.get('name');
         const password = formData.get('password');
-        console.log('Username:', username, 'Password:', password);
+        
 
 
     };
@@ -47,8 +47,8 @@ function Login (props) {
                 // withCredentials: true // This is essential for handling cookies
             });
     
-            console.log(response.data);
-            console.log(document.cookie); // This will only show cookies that are not HttpOnly
+            
+             // This will only show cookies that are not HttpOnly
         } catch (error) {
             console.error('Error:', error);
         }

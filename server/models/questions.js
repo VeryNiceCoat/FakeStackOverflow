@@ -13,6 +13,7 @@ var QuestionSchema = new Schema({
     views: {type: Number, default: 0},
     votes: {type: Number, default: 0},
     comments: {type: [Schema.Types.ObjectId], ref: 'Comment'},
+    username: {type: String, default: 'Anonymous'}
 })
 //virtual method described in uml. ex Question.url returns post/question/_id
 QuestionSchema.virtual('url').get(function() {
