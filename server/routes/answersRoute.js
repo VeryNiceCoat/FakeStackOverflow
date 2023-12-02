@@ -5,6 +5,7 @@ const Answer = require('../models/answers')
 
 router.get('/', async (req, res) => {
     try {
+        console.log("Req session", req.session);
         const answers = await Answer.find();
         console.log(answers);
         res.send(answers);

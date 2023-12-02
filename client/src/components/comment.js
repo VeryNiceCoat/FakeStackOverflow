@@ -1,9 +1,8 @@
 import React from 'react'
 
-const CommentTab = (props) => {
-
-  function upvoteButton() {
-    let vote = props.comment.votes + 1;
+const CommentTab = props => {
+  function upvoteButton () {
+    let vote = props.comment.votes + 1
   }
 
   return (
@@ -21,7 +20,7 @@ const CommentTab = (props) => {
   )
 }
 
-export default CommentTab;
+export default CommentTab
 
 function LinkifyQuestionText (text) {
   const regex = /\[(.*?)\]\((.*?)\)/g

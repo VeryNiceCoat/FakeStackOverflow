@@ -4,7 +4,7 @@ import Sidebar from './sidebar.js'
 import Header from './header.js'
 import QuestionView from './questionView.js'
 
-export default function FakeStackOverflow () {
+export default function FakeStackOverflow (props) {
   const [selectedView, setSelectedView] = useState('Questions')
   const [showPostView, setShowPostView] = useState(false)
   const [showQForm, setShowQForm] = useState(false)
@@ -44,7 +44,7 @@ export default function FakeStackOverflow () {
   return (
     <div className='container'>
       <div className='header'>
-        <Header onSearch={setSearchQuery} />
+        <Header onSearch={setSearchQuery} email={props.email} name={props.name}/>
         {}
       </div>
       <div className='content'>

@@ -88,7 +88,7 @@ const Post = ({ question, onAnswerQuestion, onAskQuestion }, props) => {
 
   return (
     <div id='postContainer'>
-      {/* {} */}
+      {/* {console.log("question comments", question.comments)} */}
       <div id='subheader'>
         <h5 id='answerCount'>{question.answers.length} answers</h5>
         <h5>Question Votes: {question.votes}</h5>

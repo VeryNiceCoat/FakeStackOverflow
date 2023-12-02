@@ -1,6 +1,6 @@
 import React from 'react'
 
-const AnswerTab = (props) => {
+const AnswerTab = props => {
   return (
     <div id='answerContainer'>
       <div>
@@ -11,7 +11,7 @@ const AnswerTab = (props) => {
       <div id='answer-text'>{LinkifyQuestionText(props.answer.text)}</div>
       <div id='submitter-info'>
         {props.answer.username} replied{' '}
-          {formatQuestionDate(props.answer.ans_date_time)}    
+        {formatQuestionDate(props.answer.ans_date_time)}
         {}
       </div>
     </div>

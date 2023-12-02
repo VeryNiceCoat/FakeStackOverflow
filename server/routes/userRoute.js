@@ -1,104 +1,56 @@
-const express = require('express');
-const bcrypt = require('bcrypt');
-const router = express.Router();
-const cors = require('cors');
+const express = require('express')
+const bcrypt = require('bcrypt')
+const router = express.Router()
+const cors = require('cors')
 
 const Account = require('../models/user')
-const cookieParser = require('cookie-parser');
-const session = require('express-session');
+const cookieParser = require('cookie-parser')
+const session = require('express-session')
 
 const corsOptions = {
-    origin: 'http://localhost:3000', // Replace with your client domain
-    credentials: true, // To allow cookies to be sent
-};
+  origin: 'http://localhost:3000',
+  credentials: true
+}
 
-router.get('/', async (req, res) => {
-    try {
-        const { name, email, password } = req.body;
-
-        // Find the account by username
-        const account = await Account.findOne({ name: name, email: email });
-        if (!account) {
-            return res.status(404).json({ check: false, cookie: undefined });
-        }
-
-        // Compare the provided password with the stored hash
-        const isMatch = await bcrypt.compare(password, account.password);
-
-        if (isMatch) {
-            res.cookie('email', email, {httpOnly: false}).send(true);
-            // res.setHeader('Set-Cookie', `name=${name}`);
-            // res.json({ check: true, cookie: email });
-        } else {
-            res.cookie('email', '0', {httpOnly: false}).send(false);
-            res.send(false);
-            // res.json({ check: false, cookie: undefined });
-        }
-    } catch (error) {
-        console.error(error.message);
-        res.cookie('email', '0', {httpOnly: false});
-        // res.status(500).send(false);
-        // res.status(500).json({ check: false, cookie: undefined });
+router.get('/login', async (req, res) => {
+  try {
+    const { email, password } = req.query
+    const account = await Account.findOne({ email: email })
+    if (!account) {
+      return res.status(400).send('N')
     }
-});
+    const isMatch = await bcrypt.compare(password, account.password)
 
-router.get('/:name/:emailName/:emailDomain/:password', async (req, res) => {
-    try {
-        const name = req.params.name;
-        const emailName = req.params.emailName;
-        const emailDomain = req.params.emailDomain;
-        const password = req.params.password;
-        const email = emailName + '@' + emailDomain;
-        res.session.email = email;
-        return;
-        const account = await Account.findOne({name: name, email: email});
-        if (!account) {
-            return res.status(404).send(false);
-        }
-        const isMatch = await bcrypt.compare(password, account.password);
-        if (isMatch) {
-            res.cookie('emailName', emailName, {
-                httpOnly: false,
-                sameSite: 'lax',
-                secure: false
-            });
-            res.cookie('emailDomain', emailDomain, {
-                httpOnly: false,
-                sameSite: 'lax',
-                secure: false
-            });
-            res.send(true);
-        } else {
-            res.send('Password Incorrect');
-        }
-    } catch (error) {
-        res.status(500).send(false);
+    if (isMatch) {
+      req.session.name = account.name
+      req.session.email = account.email
+      res.status(200).send(account.name)
+    } else {
+      res.status(401).send('Y')
     }
-});
+  } catch (error) {
+    res.status(402).send("'d'");
+    console.error(error.message)
+  }
+})
 
 router.post('/', async (req, res) => {
-    try {
-        const { name, email, password } = req.body;
-        const passWord = bcrypt.hashSync(password, 5);
-        // const userName = req.body.name;
-        // const passWord = bcrypt.hashSync(req.body.password, 5);
-        let account = new Account({name: name, email: email, password: passWord});
-        await account.save();
-        // res.cookie('name', name, {httpOnly: false});
-        res.cookie('email', email, {httpOnly: false});
-        res.status(201).send({success: true, cookie: email});
-        //201 means resourec created.
-        // res.status(201).json(tag);
-    } catch (error){
-        console.error(error.message);
-        if (error.code === 11000) {
-            res.cookie('email', '0', {httpOnly: false});
-            res.status(400).send({success: false, cookie: "EMAIL"}); // 400 Bad Request
-        } else {
-            res.cookie('email', '0', {httpOnly: false});
-            res.status(500).send({success: false, cookie: "SERVER"}); // 500 Internal Server Error
-        }
+  try {
+    const { name, email, password } = req.query
+    const passWord = bcrypt.hashSync(password, 5)
+    let account = new Account({ name: name, email: email, password: passWord })
+    await account.save()
+    res.status(200).send('Success')
+    req.session.email = account.email;
+    req.session.name = account.name;
+  } catch (error) {
+    if ((error.code = 11000)) {
+      res.status(400).send('Email already exists')
+    } else {
+        res.status(400).send("Server Error")
     }
-});
+    console.error(error.message)
+  }
+})
 
-module.exports = router;
+module.exports = router

@@ -11,7 +11,7 @@ var User = new Schema ({
 
 //virtual field
 User.virtual('url').get(function() {
-    return 'posts/tag/' + this._id;
+    return '/accounts/' + this._id;
 })
 
 module.exports = mongoose.model('Account', User);

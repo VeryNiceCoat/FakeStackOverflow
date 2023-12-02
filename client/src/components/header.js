@@ -1,46 +1,37 @@
-import React, { Component } from 'react'
+import React, { useState } from 'react'
 
-class Header extends Component {
-  constructor (props) {
-    super(props)
+function Header (props) {
+  const [object, setObject] = useState(props.object)
+  const [model, setModel] = useState(props.model)
+  const [query, setQuery] = useState(props.query)
+  // const [email, setEmail] = useState(props.email)
 
-    this.state = {
-      object: props.object,
-      model: props.model,
-      query: props.query
-    }
-  }
-
-  handleKeyDown = event => {
+  const handleKeyDown = event => {
     if (event.key === 'Enter') {
       const queryText = event.target.value
-      this.props.onSearch(queryText)
+      props.onSearch(queryText)
     }
   }
 
-  render () {
-    return (
-      <div id='header'>
-        <div>
-          USERNAME AREA
-        </div>
-        <div>
-          <button>Logout</button>
-          <button>Login</button>
-        </div>
-        <div className='logo'>FAKE STACK OVERFLOW</div>
-        <div className='search-bar'>
-          <input
-            type='text'
-            placeholder='Search...'
-            className='search-input'
-            id='search-input-'
-            onKeyDown={this.handleKeyDown}
-          />
-        </div>
+  return (
+    <div id='header'>
+      <div>{props.name}</div>
+      <div>
+        <button>Logout</button>
+        <button>Login</button>
       </div>
-    )
-  }
+      <div className='logo'>FAKE STACK OVERFLOW</div>
+      <div className='search-bar'>
+        <input
+          type='text'
+          placeholder='Search...'
+          className='search-input'
+          id='search-input-'
+          onKeyDown={handleKeyDown}
+        />
+      </div>
+    </div>
+  )
 }
 
 export default Header
