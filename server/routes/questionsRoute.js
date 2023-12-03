@@ -44,7 +44,7 @@ router.get('/:questionID', async (req, res) => {
 /**
  * This should be where question sort should happen
  */
-router.get('/questionSearch', async (req, rex) => {
+router.get('/questionSearch', async (req, res) => {
   try {
     const questions = await Question.find()
     console.log(questions)

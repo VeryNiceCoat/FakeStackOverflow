@@ -1,19 +1,51 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import Axios from 'axios'
+import CommentTab from './comment'
 
 const AnswerTab = props => {
+  const [comments, setComments] = useState([])
+
+  useEffect(() => {
+    const fetchComments = async () => {
+      const res = await Axios.get('http://localhost:8000/comments')
+      const allComments = res.data
+
+      const filteredComments = allComments.filter(comment =>
+        props.answer.comments.some(
+          answerComment => answerComment === comment._id
+        )
+      )
+
+      setComments(filteredComments)
+    }
+
+    fetchComments()
+  }, [props.answer.comments])
+
+  const renderComments = () => {
+    return comments.map(comment => (
+      <CommentTab key={comment._id} comment={comment} />
+    ))
+  }
+
   return (
     <div id='answerContainer'>
-      <div>
-        Votes: {props.answer.votes}
-        <button>Upvote</button>
-        <button>Downvote</button>
+      <div id='main-answer'>
+        <div className='vote-box'>
+          Votes: {props.answer.votes}
+          <button>Upvote</button>
+          <button>Downvote</button>
+        </div>
+        <div id='answer-text'>{LinkifyQuestionText(props.answer.text)}</div>
+        <div id='submitter-info'>
+          {props.answer.username} replied{' '}
+          {formatQuestionDate(props.answer.ans_date_time)}
+          {}
+        </div>
       </div>
-      <div id='answer-text'>{LinkifyQuestionText(props.answer.text)}</div>
-      <div id='submitter-info'>
-        {props.answer.username} replied{' '}
-        {formatQuestionDate(props.answer.ans_date_time)}
-        {}
-      </div>
+      <div id='answerComments'>
+        Comments:
+        {renderComments()}</div>
     </div>
   )
 }

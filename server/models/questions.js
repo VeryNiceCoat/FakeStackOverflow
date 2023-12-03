@@ -54,6 +54,7 @@ QuestionSchema.pre(
 /**
  * const question = Question.findbyID()
  * question.removeAnswer(answerID)
+ * Doesn't delete answer from database, must be done manually
  * @param {*} answerId 
  */
 QuestionSchema.methods.removeAnswer = async function (answerId) {
