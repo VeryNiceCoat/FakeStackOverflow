@@ -7,6 +7,7 @@ const Post = ({ question, onAnswerQuestion, onAskQuestion }, props) => {
   const [answersToBeLoaded, setAnswersToBeLoaded] = useState([])
   const [currentPage, setCurrentPage] = useState(0)
   const answersPerPage = 5
+  const commentsPerPage = 3
   const [isLoading, setIsLoading] = useState(true)
   const [comments, setComments] = useState([])
   const [commentPageNumber, setCommentPageNumber] = useState(0)
@@ -52,12 +53,11 @@ const Post = ({ question, onAnswerQuestion, onAskQuestion }, props) => {
           <CommentTab key={comment._id} comment={comment} />
         ))
 
-        setComments(loadedComments);
-
+        setComments(loadedComments)
       } catch (error) {}
     }
     fetchAnswers()
-  }, [props.showAForm, props.showPostView])
+  }, [props.showAForm, props.showPostView, currentPage, commentPageNumber])
 
   useEffect(() => {
     setIsLoading(false)
@@ -88,6 +88,14 @@ const Post = ({ question, onAnswerQuestion, onAskQuestion }, props) => {
     setCurrentPage(prev => (prev > 0 ? prev - 1 : 0))
   }
 
+  const handleNextComment = () => {
+    setCommentPageNumber(prev => prev + 1)
+  }
+
+  const handlePrevComment = () => {
+    setCommentPageNumber(prev => prev > 0 ? prev - 1 : 0)
+  }
+
   const renderAnswers = () => {
     return (
       <div
@@ -102,11 +110,20 @@ const Post = ({ question, onAnswerQuestion, onAskQuestion }, props) => {
     )
   }
 
+  const paginatedComments = () => {
+    const startIndex = commentPageNumber * commentsPerPage
+    const selectedComments = comments.slice(
+      startIndex,
+      startIndex + commentsPerPage
+    )
+    return selectedComments
+  }
+
   const renderComments = () => {
     if (question.comments.length == 0) {
       return <div>No Comments</div>
     } else {
-      return comments;
+      return paginatedComments()
     }
   }
 
@@ -142,8 +159,8 @@ const Post = ({ question, onAnswerQuestion, onAskQuestion }, props) => {
         Question Comments:
         {renderComments()}
         <div>
-          <button>Prev</button>
-          <button>Next</button>
+          <button onClick={handlePrevComment}>Prev</button>
+          <button onClick={handleNextComment}>Next</button>
         </div>
       </div>
       <button
