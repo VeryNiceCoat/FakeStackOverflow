@@ -30,18 +30,22 @@ const AnswerTab = props => {
 
   return (
     <div id='answerContainer'>
-      <div>
-        Votes: {props.answer.votes}
-        <button>Upvote</button>
-        <button>Downvote</button>
+      <div id='main-answer'>
+        <div className='vote-box'>
+          Votes: {props.answer.votes}
+          <button>Upvote</button>
+          <button>Downvote</button>
+        </div>
+        <div id='answer-text'>{LinkifyQuestionText(props.answer.text)}</div>
+        <div className='submitter-info'>
+          {props.answer.username} replied{' '}
+          {formatQuestionDate(props.answer.ans_date_time)}
+          {}
+        </div>
       </div>
-      <div id='answer-text'>{LinkifyQuestionText(props.answer.text)}</div>
-      <div id='submitter-info'>
-        {props.answer.username} replied{' '}
-        {formatQuestionDate(props.answer.ans_date_time)}
-        {}
-      </div>
-      <div>{renderComments()}</div>
+      <div id='answerComments'>
+        Comments:
+        {renderComments()}</div>
     </div>
   )
 }
