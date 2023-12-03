@@ -8,6 +8,8 @@ const Post = ({ question, onAnswerQuestion, onAskQuestion }, props) => {
   const [currentPage, setCurrentPage] = useState(0)
   const answersPerPage = 5
   const [isLoading, setIsLoading] = useState(true)
+  const [comments, setComments] = useState([])
+  const [commentPageNumber, setCommentPageNumber] = useState(0)
 
   useEffect(() => {
     const questionA = [undefined]
@@ -31,9 +33,27 @@ const Post = ({ question, onAnswerQuestion, onAskQuestion }, props) => {
           const loadedAnswers = relevantAnswers.map(answer => (
             <AnswerTab key={answer._id} answer={answer} />
           ))
+
           setAnswersToBeLoaded(loadedAnswers)
           setIsLoading(false)
         })
+
+        const allComments = await Axios.get('http://localhost:8000/comments')
+        // console.log(allComments);
+        const allCommentsData = allComments.data
+
+        const relevantComments = allCommentsData.filter(comment =>
+          questionA[0].comments.some(
+            questionComment => questionComment === comment._id
+          )
+        )
+
+        const loadedComments = relevantComments.map(comment => (
+          <CommentTab key={comment._id} comment={comment} />
+        ))
+
+        setComments(loadedComments);
+
       } catch (error) {}
     }
     fetchAnswers()
@@ -83,7 +103,11 @@ const Post = ({ question, onAnswerQuestion, onAskQuestion }, props) => {
   }
 
   const renderComments = () => {
-    return undefined
+    if (question.comments.length == 0) {
+      return <div>No Comments</div>
+    } else {
+      return comments;
+    }
   }
 
   return (
@@ -115,12 +139,8 @@ const Post = ({ question, onAnswerQuestion, onAskQuestion }, props) => {
         <button onClick={handleNext}>Next</button>
       </div>
       <div>
-        Question Comments:{' '}
-        {question.comments.length == 0 ? (
-          <div>No Questions</div>
-        ) : (
-          renderComments()
-        )}
+        Question Comments:
+        {renderComments()}
         <div>
           <button>Prev</button>
           <button>Next</button>

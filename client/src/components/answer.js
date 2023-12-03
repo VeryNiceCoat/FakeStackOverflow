@@ -1,6 +1,33 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import Axios from 'axios'
+import CommentTab from './comment'
 
 const AnswerTab = props => {
+  const [comments, setComments] = useState([])
+
+  useEffect(() => {
+    const fetchComments = async () => {
+      const res = await Axios.get('http://localhost:8000/comments')
+      const allComments = res.data
+
+      const filteredComments = allComments.filter(comment =>
+        props.answer.comments.some(
+          answerComment => answerComment === comment._id
+        )
+      )
+
+      setComments(filteredComments)
+    }
+
+    fetchComments()
+  }, [props.answer.comments])
+
+  const renderComments = () => {
+    return comments.map(comment => (
+      <CommentTab key={comment._id} comment={comment} />
+    ))
+  }
+
   return (
     <div id='answerContainer'>
       <div>
@@ -14,6 +41,7 @@ const AnswerTab = props => {
         {formatQuestionDate(props.answer.ans_date_time)}
         {}
       </div>
+      <div>{renderComments()}</div>
     </div>
   )
 }

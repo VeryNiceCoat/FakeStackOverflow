@@ -14,7 +14,7 @@ const CommentTab = props => {
       <div>
         Comment Text: {LinkifyQuestionText(props.comment.text)}
         Comment By: {props.comment.by}
-        Comment Date: {formatQuestionDate(props.comment.date)}
+        Comment Date: {formatQuestionDate(props.comment.date_time)}
       </div>
     </div>
   )
