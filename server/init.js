@@ -24,8 +24,8 @@ function tagCreate(name) {
   return tag.save();
 }
 
-function answerCreate(text, ans_by, comments, username) {
-  let answerdetail = { text: text , username: username};
+function answerCreate(text, ans_by, comments, username, userId) {
+  let answerdetail = { text: text , username: username, userId: userId};
   if (ans_by != false) answerdetail.ans_by = ans_by;
   if (comments != false) answerdetail.comments = comments;
 
@@ -33,14 +33,15 @@ function answerCreate(text, ans_by, comments, username) {
   return answer.save();
 }
 
-function questionCreate(title, summary, text, tags, answers, asked_by, comments, username) {
+function questionCreate(title, summary, text, tags, answers, asked_by, comments, username, userId) {
   let qstndetail = {
     title: title,
     summary: summary,
     text: text,
     tags: tags,
     asked_by: asked_by,
-    username: username
+    username: username,
+    userId: userId
   };
   if (answers != false) qstndetail.answers = answers;
   if (comments != false) qstndetail.comments = comments;
@@ -50,11 +51,12 @@ function questionCreate(title, summary, text, tags, answers, asked_by, comments,
   return question.save();
 }
 
-function createComment(text, by, username) {
+function createComment(text, by, username, userId) {
   let com = {
     text: text,
     by: by,
-    username: username
+    username: username,
+    userId: userId
   };
   let comment = new Comment(com);
   return comment.save();
@@ -82,13 +84,15 @@ function guestMake() {
 
 async function populate() {
   try {
+    const admin = await adminMake();
+    const guest = await guestMake();
     let tag = await tagCreate('tag');
-    let com1 = await createComment("answer", process.argv[2], "admin");
-    let com2 = await createComment("question", process.argv[2], "admin");
-    let ans1 = await answerCreate("answer", process.argv[2], com1, "admin");
-    let q1 = await questionCreate('admin', 'admin summ', 'admin content', tag, ans1, process.argv[2], com2, "admin");
-    await adminMake();
-    await guestMake();
+    let com1 = await createComment("answer", process.argv[2], "admin", admin._id);
+    let com2 = await createComment("question", process.argv[2], "admin", admin._id);
+    let ans1 = await answerCreate("answer", process.argv[2], com1, "admin", admin._id);
+    let q1 = await questionCreate('admin', 'admin summ', 'admin content', tag, ans1, process.argv[2], com2, "admin", admin._id);
+    // await adminMake();
+    // await guestMake();
     console.log('Database population complete');
   } catch (err) {
     console.error('Error during database population:', err);

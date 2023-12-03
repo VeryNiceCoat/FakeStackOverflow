@@ -1,17 +1,49 @@
 // Answer Document Schema
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+var mongoose = require('mongoose')
+var Schema = mongoose.Schema
+var Comment = require('./comments')
 
 var AnswerSchema = new Schema({
-    text: {type: String, required: true},
-    ans_by: {type: String, required: true},
-    ans_date_time: {type: Date, default: Date.now},
-    votes: {type: Number, default: 0},
-    comments: {type: [Schema.Types.ObjectId], ref: 'Comment'},
-    username: {type: String, default:'Anon'}
-});
-//vitual
-AnswerSchema.virtual('url').get(function() {
-    return 'posts/answer/'+ this._id;
+  text: { type: String, required: true },
+  ans_by: { type: String, required: true },
+  ans_date_time: { type: Date, default: Date.now },
+  votes: { type: Number, default: 0 },
+  comments: { type: [Schema.Types.ObjectId], ref: 'Comment' },
+  username: { type: String, default: 'Anon' },
+  userId: { type: Schema.Types.ObjectId }
 })
-module.exports = mongoose.model('Answer', AnswerSchema);
+//vitual
+AnswerSchema.virtual('url').get(function () {
+  return 'posts/answer/' + this._id
+})
+
+AnswerSchema.pre(
+  'deleteOne',
+  { document: true, query: false },
+  async function (next) {
+    const answer = this
+    try {
+      if (answer.comments && answer.comments.length > 0) {
+        for (const commentId of answer.comments) {
+          await Comment.deleteOne({ _id: commentId })
+        }
+      }
+      next()
+    } catch (error) {
+      next(error)
+    }
+  }
+)
+
+/**
+ * const answer = find One
+ * answer.removeComment
+ * @param {*} answerId 
+ */
+AnswerSchema.methods.removeComment = async function (commentId) {
+    this.comments = this.comments.filter(id => !id.equals(commentId))
+    await this.save()
+  }
+
+
+module.exports = mongoose.model('Answer', AnswerSchema)

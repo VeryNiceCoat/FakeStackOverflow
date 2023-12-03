@@ -13,12 +13,17 @@ function Header (props) {
     }
   }
 
+  const handleLogoutClick = event => {
+    
+  }
+
   return (
     <div id='header'>
-      <div>{props.name}</div>
+      <div>Username: {props.name}</div>
       <div>
         <button>Logout</button>
         <button>Login</button>
+        <button>Delete Account</button>
       </div>
       <div className='logo'>FAKE STACK OVERFLOW</div>
       <div className='search-bar'>

@@ -5,9 +5,7 @@ const Answer = require('../models/answers')
 
 router.get('/', async (req, res) => {
     try {
-        console.log("Req session", req.session);
         const answers = await Answer.find();
-        console.log(answers);
         res.send(answers);
         if (!answers) {
             return res.status(404).send('questionS not found');
@@ -35,4 +33,9 @@ router.post('/', async (req, res) => {
         res.status(500).send('server error answers/post')
     }
 })
+
+router.delete('/:answerId', async (req, res) => {
+})
+
+router
 module.exports = router;

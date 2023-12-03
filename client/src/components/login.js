@@ -46,9 +46,7 @@ function Login (props) {
         window.alert('Login Invalid')
         return
       }
-      console.log(response)
       props.setEmail(email)
-      console.log(response.data);
       props.setName(response.data)
       setShowRegisterForm(false)
       setShowLoginForm(false)
@@ -57,14 +55,77 @@ function Login (props) {
       setShowHomePage(true)
       return
     } catch (error) {
-      window.alert('Submission Error')
+      window.alert('Login Credentials Not Correct')
     }
   }
 
   const handleGuestClick = async () => {
-    setShowLoginForm(false)
-    setShowRegisterForm(false)
-    setShowRejectedMessage(false)
+    try {
+      const response = await Axios.get('http://localhost:8000/users/login', {
+        withCredentials: true,
+        params: {
+          email: 'guest@guest.com',
+          password: 'guest'
+        }
+      })
+      if (response.status !== 200) {
+        window.alert('Login Invalid')
+        return
+      }
+      props.setEmail('guest@guest.com')
+      props.setName('guest')
+      setShowRegisterForm(false)
+      setShowLoginForm(false)
+      setShowRejectedMessage(false)
+      setShowWelcomePage(false)
+      setShowHomePage(true)
+      return
+    } catch (error) {
+      window.alert('Guest Button Error')
+    }
+  }
+
+  const handleRegisterSubmit = async event => {
+    event.preventDefault()
+
+    const formData = new FormData(event.target)
+    const name = formData.get('name')
+    const email = formData.get('email')
+    const password = formData.get('password')
+
+    try {
+      const response = await Axios.post(
+        'http://localhost:8000/users/register',
+        {
+          name: name,
+          email: email,
+          password: password
+        },
+        {
+          withCredentials: true
+        }
+      )
+
+      if (response.status !== 200) {
+        window.alert('Registration Invalid')
+        return
+      }
+
+      props.setEmail(email)
+      props.setName(name)
+      setShowRegisterForm(false)
+      setShowLoginForm(false)
+      setShowRejectedMessage(false)
+      setShowWelcomePage(false)
+      setShowHomePage(true)
+      return
+    } catch (error) {
+      if (error.response.status === 400) {
+        window.alert('Email Already Exists')
+      } else {
+        window.alert('Server Error')
+      }
+    }
   }
 
   return (
@@ -81,10 +142,34 @@ function Login (props) {
         </form>
       )}
       {showRegisterForm && (
-        <form>
-          <input type='text' name='name' placeholder='Username' />
-          <input type='text' name='email' placeholder='Email' />
-          <input type='text' name='password' placeholder='Password' />
+        <form onSubmit={handleRegisterSubmit}>
+          <input
+            type='text'
+            id='username'
+            name='name'
+            placeholder='Username'
+            required
+          />
+          <input
+            type='email'
+            id='email'
+            name='email'
+            placeholder='Email'
+            required
+          />
+          <input
+            type='password'
+            id='password'
+            name='password'
+            placeholder='Password'
+            required
+            pattern={`^(?!.*${
+              document.getElementById('username')?.value
+            })(?!.*${
+              document.getElementById('email')?.value.split('@')[0]
+            }).*$`}
+            title='Password must not contain username or email id.'
+          />
           <button type='submit'>Submit</button>
         </form>
       )}

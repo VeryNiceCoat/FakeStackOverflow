@@ -44,7 +44,13 @@ export default function FakeStackOverflow (props) {
   return (
     <div className='container'>
       <div className='header'>
-        <Header onSearch={setSearchQuery} email={props.email} name={props.name}/>
+        <Header
+          onSearch={setSearchQuery}
+          email={props.email}
+          setEmail={props.setEmail}
+          name={props.name}
+          setName={props.setName}
+        />
         {}
       </div>
       <div className='content'>
