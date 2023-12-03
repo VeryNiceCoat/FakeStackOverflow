@@ -37,7 +37,7 @@ const AnswerTab = props => {
           <button>Downvote</button>
         </div>
         <div id='answer-text'>{LinkifyQuestionText(props.answer.text)}</div>
-        <div id='submitter-info'>
+        <div className='submitter-info'>
           {props.answer.username} replied{' '}
           {formatQuestionDate(props.answer.ans_date_time)}
           {}
