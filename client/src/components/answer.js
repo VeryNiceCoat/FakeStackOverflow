@@ -4,6 +4,7 @@ import CommentTab from './comment'
 
 const AnswerTab = props => {
   const [comments, setComments] = useState([])
+  const [votes, setVotes] = useState(props.answer.votes)
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -16,11 +17,21 @@ const AnswerTab = props => {
         )
       )
 
+      const answerA = [undefined]
+      const resA = await Axios.get('http://localhost:8000/answers')
+      const allAnswers = resA.data
+      for (let i = 0; i < allAnswers.length; i++) {
+        if (props.answer._id === allAnswers[i]._id) {
+          answerA[0] = allAnswers[i]
+          break
+        }
+      }
+      setVotes(answerA[0].votes)
       setComments(filteredComments)
     }
 
     fetchComments()
-  }, [props.answer.comments])
+  }, [props.answer.comments, comments])
 
   const renderComments = () => {
     return comments.map(comment => (
@@ -28,13 +39,36 @@ const AnswerTab = props => {
     ))
   }
 
+  const handleUpvote = async () => {
+    try {
+      const response = await Axios.put(
+        `http://localhost:8000/answers/${props.answer._id}/upVote`
+      )
+      setVotes(response.data.votes)
+    } catch (error) {
+      console.error('Error during upvote', error)
+    }
+  }
+
+  const handleDownvote = async () => {
+    try {
+      const response = await Axios.put(
+        `http://localhost:8000/answers/${props.answer._id}/downVote`
+      )
+      setVotes(response.data.votes)
+    } catch (error) {
+      console.error('Error during upvote', error)
+    }
+  }
+
   return (
     <div id='answerContainer'>
       <div id='main-answer'>
         <div className='vote-box'>
-          Votes: {props.answer.votes}
-          <button>Upvote</button>
-          <button>Downvote</button>
+          Votes: {votes}
+          <button onClick={handleUpvote}>Upvote</button>
+          <button onClick={handleDownvote}>Downvote</button>
+          <button>Add Comment</button>
         </div>
         <div id='answer-text'>{LinkifyQuestionText(props.answer.text)}</div>
         <div className='submitter-info'>
@@ -45,7 +79,12 @@ const AnswerTab = props => {
       </div>
       <div id='answerComments'>
         Comments:
-        {renderComments()}</div>
+        {renderComments()}
+      </div>
+      <div>
+        <button>Prev</button>
+        <button>Next</button>
+      </div>
     </div>
   )
 }

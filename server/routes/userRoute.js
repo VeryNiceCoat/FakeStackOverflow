@@ -33,6 +33,7 @@ router.get('/login', async (req, res) => {
     if (isMatch) {
       req.session.name = account.name
       req.session.email = account.email
+      req.session.id = account._id
       res.status(200).send(account.name)
     } else {
       res.status(401).send('Y')
@@ -50,9 +51,6 @@ router.get('/login', async (req, res) => {
 router.post('/register', async (req, res) => {
   try {
     const { name, email, password } = req.body;
-    console.log("name", name)
-    console.log("email", email)
-    console.log("password", password)
     const passWord = bcrypt.hashSync(password, 5)
     let account = new Account({ name: name, email: email, password: passWord })
     await account.save()

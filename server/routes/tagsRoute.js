@@ -6,7 +6,6 @@ const Tag = require('../models/tags')
 router.get('/', async (req,res) => {
     try {
         const tags = await Tag.find();
-        console.log(tags);
         res.send(tags);
         if (!tags) {
             return res.status(404).send('Tags not found, tags/get');

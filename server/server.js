@@ -42,7 +42,6 @@ app.use(
 
 // app.get('/temp', (req, res) => {
 //   req.cookies = "temp"
-//   console.log(req.cookies)
 //   res.send(req.cookies)
 // })
 
@@ -68,7 +67,6 @@ app.use('/comments', commentsRoute)
 
 app.get('/', (req, res) => {
   // req.session.name = "name";
-  // console.log("Route Triggered");
   res.send('hello')
 })
 

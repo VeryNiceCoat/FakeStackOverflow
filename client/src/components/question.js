@@ -7,6 +7,8 @@ const Question = (
   props
 ) => {
   const [selectedTags, setSelectedTags] = useState([])
+  const [votes, setVotes] = useState(question.votes)
+
   useEffect(() => {
     const fetchRelevantTags = async () => {
       try {
@@ -20,66 +22,31 @@ const Question = (
       }
     }
     fetchRelevantTags()
-  }, [question.tags])
+  }, [question.tags, question.views])
 
   const handleTitleClick = () => {
     onTitleClick()
   }
 
-  const formatDate = askedDate => {
-    const dateAskedDate = new Date(askedDate)
-    const currentDate = new Date()
-    const timeDifferenceInSeconds = Math.floor(
-      (currentDate - dateAskedDate) / 1000
-    )
-    const hours = currentDate.getHours().toString().padStart(2, '0')
-    const minutes = currentDate.getMinutes().toString().padStart(2, '0')
-    const formattedTime = `${hours}:${minutes}`
-    if (timeDifferenceInSeconds < 60) {
-      return `${timeDifferenceInSeconds} seconds ago`
-    } else if (timeDifferenceInSeconds < 3600) {
-      const minutes = Math.floor(timeDifferenceInSeconds / 60)
-      return `${minutes} minute${minutes > 1 ? 's' : ''} minutes ago`
-    } else if (timeDifferenceInSeconds < 86400) {
-      const hours = Math.floor(timeDifferenceInSeconds / 3600)
-      return `${hours} hour${hours > 1 ? 's' : ''} ago`
-    } else if (currentDate.getFullYear() === dateAskedDate.getFullYear()) {
-      const monthNames = [
-        'January',
-        'February',
-        'March',
-        'April',
-        'May',
-        'June',
-        'July',
-        'August',
-        'September',
-        'October',
-        'November',
-        'December'
-      ]
-      const month = monthNames[dateAskedDate.getMonth()]
-      const day = dateAskedDate.getDate()
-      return `${month} ${day} at ${formattedTime}`
-    } else {
-      const monthNames = [
-        'January',
-        'February',
-        'March',
-        'April',
-        'May',
-        'June',
-        'July',
-        'August',
-        'September',
-        'October',
-        'November',
-        'December'
-      ]
-      const month = monthNames[dateAskedDate.getMonth()]
-      const day = dateAskedDate.getDate()
-      const year = dateAskedDate.getFullYear()
-      return `${month} ${day}, ${year} at ${formattedTime}`
+  const handleUpvote = async () => {
+    try {
+      const response = await Axios.put(
+        `http://localhost:8000/questions/${question._id}/upVote`
+      )
+      setVotes(response.data.votes)
+    } catch (error) {
+      console.error('Error during upvote', error)
+    }
+  }
+
+  const handleDownvote = async () => {
+    try {
+      const response = await Axios.put(
+        `http://localhost:8000/questions/${question._id}/downVote`
+      )
+      setVotes(response.data.votes)
+    } catch (error) {
+      console.error('Error during upvote', error)
     }
   }
 
@@ -88,25 +55,19 @@ const Question = (
       <div id='view-stats'>
         <div id='total-answers'>{question.answers.length} answers</div>
         <div id='total-views'>{question.views} views</div>
-        <div>{question.votes} votes</div>
+        <div>{votes} votes</div>
       </div>
       <div>
-        <button>
-          UPVOTE
-        </button>
+        <button onClick={handleUpvote}>UPVOTE</button>
       </div>
       <div>
-        <button>
-          DOWNVOTE
-        </button>
+        <button onClick={handleDownvote}>DOWNVOTE</button>
       </div>
       <div id='title-and-tags'>
         <div id='question-title' onClick={handleTitleClick}>
           Question Title: {question.title}
         </div>
-        <div>
-          Question Summary: {question.summary}
-        </div>
+        <div>Question Summary: {question.summary}</div>
         <div id='appendOtherTagsHere'>
           {selectedTags.map(tag => (
             <TagForQuestionInMainPage
@@ -126,3 +87,60 @@ const Question = (
 }
 
 export default Question
+
+const formatDate = askedDate => {
+  const dateAskedDate = new Date(askedDate)
+  const currentDate = new Date()
+  const timeDifferenceInSeconds = Math.floor(
+    (currentDate - dateAskedDate) / 1000
+  )
+  const hours = currentDate.getHours().toString().padStart(2, '0')
+  const minutes = currentDate.getMinutes().toString().padStart(2, '0')
+  const formattedTime = `${hours}:${minutes}`
+  if (timeDifferenceInSeconds < 60) {
+    return `${timeDifferenceInSeconds} seconds ago`
+  } else if (timeDifferenceInSeconds < 3600) {
+    const minutes = Math.floor(timeDifferenceInSeconds / 60)
+    return `${minutes} minute${minutes > 1 ? 's' : ''} minutes ago`
+  } else if (timeDifferenceInSeconds < 86400) {
+    const hours = Math.floor(timeDifferenceInSeconds / 3600)
+    return `${hours} hour${hours > 1 ? 's' : ''} ago`
+  } else if (currentDate.getFullYear() === dateAskedDate.getFullYear()) {
+    const monthNames = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December'
+    ]
+    const month = monthNames[dateAskedDate.getMonth()]
+    const day = dateAskedDate.getDate()
+    return `${month} ${day} at ${formattedTime}`
+  } else {
+    const monthNames = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December'
+    ]
+    const month = monthNames[dateAskedDate.getMonth()]
+    const day = dateAskedDate.getDate()
+    const year = dateAskedDate.getFullYear()
+    return `${month} ${day}, ${year} at ${formattedTime}`
+  }
+}

@@ -1,7 +1,6 @@
 // let userArgs = process.argv.slice(2);
 
 // if (!userArgs[0].startsWith('mongodb://')) {
-//     console.log('ERROR: You need to specify a valid mongodb URL as the first argument');
 //     return;
 // }
 
@@ -67,6 +66,7 @@ function adminMake() {
     name: "admin",
     email: process.argv[2],
     password: bcrypt.hashSync(process.argv[3], 5),
+    reputation: -1
   };
   let ad = new Account(admin);
   return ad.save();
@@ -77,6 +77,7 @@ function guestMake() {
     name: "guest",
     email: "guest@guest.com",
     password: bcrypt.hashSync("guest", 5),
+    reputation: -2
   };
   let g = new Account(guest);
   return g.save();
@@ -93,7 +94,6 @@ async function populate() {
     let q1 = await questionCreate('admin', 'admin summ', 'admin content', tag, ans1, process.argv[2], com2, "admin", admin._id);
     // await adminMake();
     // await guestMake();
-    console.log('Database population complete');
   } catch (err) {
     console.error('Error during database population:', err);
   } finally {

@@ -9,7 +9,6 @@ const Tag = require('../models/tags')
 router.get('/', async (req, res) => {
   try {
     const questions = await Question.find()
-    console.log(questions)
     res.cookie('penis', 'penis', { httpOnly: false })
     res.send(questions)
     if (!questions) {
@@ -47,7 +46,6 @@ router.get('/:questionID', async (req, res) => {
 router.get('/questionSearch', async (req, res) => {
   try {
     const questions = await Question.find()
-    console.log(questions)
   } catch (error) {
     console.error(error)
   }
@@ -78,8 +76,6 @@ router.put(`/:questionID`, async (req, res) => {
     const questionID = new mongoose.Types.ObjectId(req.params.questionID)
     const answerID = new mongoose.Types.ObjectId(req.body.answerID) // Make sure you're getting the answerID from the request body
 
-    console.log(questionID)
-    console.log(answerID)
     // Find the question
     const question = await Question.findById(questionID)
     if (!question) {
@@ -88,9 +84,7 @@ router.put(`/:questionID`, async (req, res) => {
 
     // add the answerID to the answers array
     question.answers.push(answerID)
-    console.log(question)
     const updatedQuestion = await question.save()
-    console.log(updatedQuestion)
     res.status(200).json(updatedQuestion)
   } catch (error) {
     console.error(error.message)
@@ -114,6 +108,42 @@ router.put('/:questionID/views', async (req, res) => {
     res.status(500).send('Server error on questions view update')
   }
 })
+
+
+router.put('/:questionID/upVote', async (req, res) => {
+  try {
+    const questionID = req.params.questionID
+    const question = await Question.findById(questionID)
+    if (!question) {
+      return res.status(404).send('Question not found')
+    }
+
+    question.votes += 1 
+    const updatedQuestion = await question.save()
+
+    res.status(200).json(updatedQuestion)
+  } catch (error) {
+    res.status(500).send('Server error on questions view update')
+  }
+})
+
+router.put('/:questionID/downVote', async (req, res) => {
+  try {
+    const questionID = req.params.questionID
+    const question = await Question.findById(questionID)
+    if (!question) {
+      return res.status(404).send('Question not found')
+    }
+
+    question.votes -= 1 
+    const updatedQuestion = await question.save()
+
+    res.status(200).json(updatedQuestion)
+  } catch (error) {
+    res.status(500).send('Server error on questions view update')
+  }
+})
+
 
 router.delete('/:questionId', async (req, res) => {
   try {

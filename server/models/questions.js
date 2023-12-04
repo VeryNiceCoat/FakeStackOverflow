@@ -45,7 +45,6 @@ QuestionSchema.pre(
 
       next()
     } catch (error) {
-      console.log(error)
       next(error)
     }
   }
