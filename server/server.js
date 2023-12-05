@@ -33,10 +33,14 @@ app.use(cors(corsOptionsDelegate))
 app.use(
   session({
     secret: `string`,
-    cookie: {maxAge: 99999999},
+    cookie: { maxAge: 86400000 },
     resave: false,
     saveUninitialized: false,
     secure: false,
+    store: MongoStore.create({
+      mongoUrl: mongoDB,
+      collectionName: 'sessions'
+    })
   })
 )
 

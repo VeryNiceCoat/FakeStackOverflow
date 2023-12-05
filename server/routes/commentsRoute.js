@@ -3,6 +3,7 @@ const router = express.Router()
 
 const Comment = require('../models/comments')
 const Account = require('../models/user')
+const session = require('express-session')
 
 
 router.get('/', async (req, res) => {
@@ -45,7 +46,8 @@ router.put('/:commentID/upVote', async (req, res) => {
 router.put('/newComment/:text', async (req, res) => {
   try {
     const text = req.params.text;
-    const userID = req.session.id;
+    const userID = req.session.uid;
+    // console.log(userID)
     const user = await Account.findById(userID);
     if (!user) {
       res.status(404).send("Account Not Found")
@@ -67,7 +69,7 @@ router.put('/newComment/:text', async (req, res) => {
     const comm = await comment.save();
     res.status(200).json(comm);
   } catch (error) {
-    res.status(401).send(error);
+    // res.status(401).send(error);
   }
 })
 

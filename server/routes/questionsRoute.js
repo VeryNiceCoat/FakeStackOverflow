@@ -109,7 +109,6 @@ router.put('/:questionID/views', async (req, res) => {
   }
 })
 
-
 router.put('/:questionID/upVote', async (req, res) => {
   try {
     const questionID = req.params.questionID
@@ -118,7 +117,7 @@ router.put('/:questionID/upVote', async (req, res) => {
       return res.status(404).send('Question not found')
     }
 
-    question.votes += 1 
+    question.votes += 1
     const updatedQuestion = await question.save()
 
     res.status(200).json(updatedQuestion)
@@ -135,7 +134,7 @@ router.put('/:questionID/downVote', async (req, res) => {
       return res.status(404).send('Question not found')
     }
 
-    question.votes -= 1 
+    question.votes -= 1
     const updatedQuestion = await question.save()
 
     res.status(200).json(updatedQuestion)
@@ -144,21 +143,51 @@ router.put('/:questionID/downVote', async (req, res) => {
   }
 })
 
-
 router.delete('/:questionId', async (req, res) => {
   try {
-    const questionId = req.params.questionId;
+    const questionId = req.params.questionId
     const question = await Question.findById(questionId)
-    const sessionEmail = req.session.email;
-    const questionEmail = question.email;
-    if (sessionEmail !== questionEmail)
-    {
-        res.status(401).send("Trying to delete a question you are not an author of")
-        return;
+    const sessionEmail = req.session.email
+    const questionEmail = question.email
+    if (sessionEmail !== questionEmail) {
+      res
+        .status(401)
+        .send('Trying to delete a question you are not an author of')
+      return
     }
-    
   } catch (error) {
-    res.status(400).send("Server Question Delete Error");
+    res.status(400).send('Server Question Delete Error')
+  }
+})
+
+/**
+ * Adds a comment to a question, given question ID and comment ID in 
+ * http://localhost:8000/questions/etc
+ */
+router.put('/:questionID/addComment/:commentID', async (req, res) => {
+  try {
+    if (req.session.email === "guest@guest.com")
+    {
+      res.status(500).send("Guests don't have rights")
+    }
+    const questionID = req.params.questionID
+    const question = await Question.findById(questionID)
+    if (!question) {
+      res.status(404).send('Question not found')
+      return
+    }
+    const commentID = req.params.commentID
+    // const comment = await Comment.findById(commentID)
+    // if (!comment) {
+    //   res.status(404).send('Comment Not Found')
+    //   return
+    // }
+    question.comments.push(commentID)
+    await question.save()
+    res.status(200).send('GREAT SUCCESS')
+    return
+  } catch (error) {
+    res.status(500).send('Server Error With Getting Data')
   }
 })
 

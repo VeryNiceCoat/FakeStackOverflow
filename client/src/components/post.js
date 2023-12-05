@@ -149,11 +149,19 @@ const Post = ({ question, onAnswerQuestion, onAskQuestion }, props) => {
   }
 
   const handleCommentSubmit = async commentText => {
-    // console.log('Comment submitted:', commentText)
     try {
-      await Axios.put(`http://localhost:8000/comments/newComment/${commentText}`)
+      const temp = await Axios.put(
+        `http://localhost:8000/comments/newComment/${commentText}`,
+        {},
+        {
+          withCredentials: true
+        }
+      )
+      const comment = temp.data;
+      const wait = await Axios.put(`http://localhost:8000/questions/${question._id}/addComment/${comment._id}`, {}, {withCredentials: true})
+      setIsLoading(false);
     } catch (error) {
-      console.log(error);
+      window.alert(error.response.data)
     }
     setShowCommentForm(false)
   }

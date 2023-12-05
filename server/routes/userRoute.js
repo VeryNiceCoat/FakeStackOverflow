@@ -31,9 +31,13 @@ router.get('/login', async (req, res) => {
     const isMatch = await bcrypt.compare(password, account.password)
 
     if (isMatch) {
+      req.session.cookie.expires = null
+      req.session.cookie.maxAge = null
       req.session.name = account.name
       req.session.email = account.email
-      req.session.id = account._id
+      req.session.uid = account._id
+      req.session.save()
+      // console.log(req.session);
       res.status(200).send(account.name)
     } else {
       res.status(401).send('Y')
@@ -50,7 +54,7 @@ router.get('/login', async (req, res) => {
  */
 router.post('/register', async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password } = req.body
     const passWord = bcrypt.hashSync(password, 5)
     let account = new Account({ name: name, email: email, password: passWord })
     await account.save()
@@ -69,16 +73,17 @@ router.post('/register', async (req, res) => {
 
 router.delete('/delete', async (req, res) => {
   try {
-    const email = req.session.email;
+    const email = req.session.email
     if (!email) {
-      return res.status(400).send('No email found in session');
+      return res.status(400).send('No email found in session')
     }
 
-    const account = Account.findOne({email: email});
-    if (!account) {res.status(400).send('No Account Found')}
-
+    const account = Account.findOne({ email: email })
+    if (!account) {
+      res.status(400).send('No Account Found')
+    }
   } catch (error) {
-    res.status(400).send("Email Not Found");
+    res.status(400).send('Email Not Found')
   }
 })
 
