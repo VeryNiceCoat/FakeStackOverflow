@@ -17,7 +17,6 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
   try {
-    // const tagIds = req.body.tags.map(id => mongoose.Types.ObjectId(id));
     const newAnswer = new Answer({
       text: req.body.text,
       ans_by: req.body.ans_by,

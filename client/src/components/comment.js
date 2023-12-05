@@ -3,16 +3,18 @@ import Axios from 'axios'
 
 const CommentTab = props => {
   const [comment, setComment] = useState(props.comment)
-  // const [votes, setVotes] = useState(props.comment.votes)
 
   const upvoteButton = async () => {
     try {
-      const temp = await Axios.put(`http://localhost:8000/comments/${props.comment._id}/upVote`)
-      const comment = temp.data;
-      setComment(comment);
-
+      const temp = await Axios.put(
+        `http://localhost:8000/comments/${props.comment._id}/upVote`,
+        {},
+        { withCredentials: true }
+      )
+      const comment = temp.data
+      setComment(comment)
     } catch (error) {
-      console.log(error);
+      window.alert(error.response.data)
     }
   }
 

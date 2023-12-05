@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import Axios from 'axios'
 import CommentTab from './comment'
+import CommentForm from './commentForm'
 
 const AnswerTab = props => {
   const [comments, setComments] = useState([])
   const [votes, setVotes] = useState(props.answer.votes)
+  const [showCommentForm, setShowCommentForm] = useState(false)
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -61,6 +64,36 @@ const AnswerTab = props => {
     }
   }
 
+  const handleCommentSubmit = async commentText => {
+    try {
+      const temp = await Axios.put(
+        `http://localhost:8000/comments/newComment/${commentText}`,
+        {},
+        {
+          withCredentials: true
+        }
+      )
+      const comment = temp.data
+      const wait = await Axios.put(
+        `http://localhost:8000/answers/${props.answer._id}/addComment/${comment._id}`,
+        {},
+        { withCredentials: true }
+      )
+      setIsLoading(false)
+    } catch (error) {
+      window.alert(error.response.data)
+    }
+    setShowCommentForm(false)
+  }
+
+  const handleCancelComment = () => {
+    setShowCommentForm(false)
+  }
+
+  const handleCommentClick = () => {
+    setShowCommentForm(true);
+  }
+
   return (
     <div id='answerContainer'>
       <div id='main-answer'>
@@ -68,7 +101,7 @@ const AnswerTab = props => {
           Votes: {votes}
           <button onClick={handleUpvote}>Upvote</button>
           <button onClick={handleDownvote}>Downvote</button>
-          <button>Add Comment</button>
+          <button onClick={handleCommentClick}>Add Comment</button>
         </div>
         <div id='answer-text'>{LinkifyQuestionText(props.answer.text)}</div>
         <div className='submitter-info'>
@@ -76,6 +109,14 @@ const AnswerTab = props => {
           {formatQuestionDate(props.answer.ans_date_time)}
           {}
         </div>
+      </div>
+      <div>
+        {showCommentForm && (
+          <CommentForm
+            onSubmit={handleCommentSubmit}
+            onCancel={handleCancelComment}
+          />
+        )}
       </div>
       <div id='answerComments'>
         Comments:
