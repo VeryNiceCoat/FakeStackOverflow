@@ -38,12 +38,24 @@ AnswerSchema.pre(
 /**
  * const answer = find One
  * answer.removeComment
- * @param {*} answerId 
+ * @param {*} answerId
  */
 AnswerSchema.methods.removeComment = async function (commentId) {
-    this.comments = this.comments.filter(id => !id.equals(commentId))
-    await this.save()
-  }
+  this.comments = this.comments.filter(id => !id.equals(commentId))
+  await this.save()
+}
 
+/**
+ * Call this when a quesiton is being deleted, it will delete all comments from the answer first 
+ * using a special method, and the parent function should handle removing the answer from its array
+ */
+AnswerSchema.methods.questionDelete = async function () {
+  try {
+
+    await this.remove();
+  } catch (error) {
+    console.error(error);
+  }
+}
 
 module.exports = mongoose.model('Answer', AnswerSchema)
