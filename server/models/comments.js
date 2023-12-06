@@ -14,4 +14,19 @@ CommentSchema.virtual('url').get(function() {
     return 'posts/comments' + this._id;
 });
 
+/**
+ * Handles Comment Upvote
+ * @returns 
+ */
+CommentSchema.methods.upVote = async function () {
+    try {
+        this.votes += 1;
+        await this.save();
+        return true;
+    } catch (error) {
+        return false;
+    }
+}
+
+
 module.exports = mongoose.model('Comment', CommentSchema);

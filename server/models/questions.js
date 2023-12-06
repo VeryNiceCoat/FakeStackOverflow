@@ -71,14 +71,23 @@ QuestionSchema.methods.removeComment = async function (commentId) {
   await this.save()
 }
 
-QuestionSchema.methods.userAccountDelete = async function() {
+QuestionSchema.methods.userAccountDelete = async function () {
   try {
-    const ansArray = this.answers;
-    const commentArray = this.comments;
-
-    await this.remove();
+    // this.answers
+    // this.comments
+    for (const answerID in this.answers)
+    {
+      try {
+        const answer = await Answer.findById(answerID);
+        await answer.questionDelete();
+      } catch (error) {
+        console.error(error);
+        continue;
+      }
+    }
+    await this.remove()
   } catch (error) {
-    console.error(error);
+    console.error(error)
   }
 }
 

@@ -33,6 +33,26 @@ User.methods.upvote = async function () {
 }
 
 /**
+ * Checks if the user is an admin or guest, returns null if it is
+ * If it isn't updates the user reputation by adding -10
+ * then it calls this.save() to update the database.
+ * @return Updated User Account with new reputation value that was saved to the database, null if admin/guest
+ */
+User.methods.downvote = async function () {
+  try {
+    if (this.reputation !== -1 && this.reputation !== -2) {
+      this.reputation -= 10
+      await this.save()
+      return this
+    }  
+  } catch (error) {
+    console.error(error);
+    return undefined;
+  }
+  return null
+}
+
+/**
  * @returns True if guest, false if not
  */
 User.methods.isGuest = function () {
@@ -64,6 +84,22 @@ User.methods.wipeAllReferences = async function () {
     const questions = await Question.find({ userId: this._id }).exec()
     const answers = await Answer.find({ userId: this._id }).exec()
     const comments = await Comment.find({ userId: this._id }).exec()
+    for (const question in questions) {
+      try {
+        await question.userAccountDelete()
+      } catch (error) {
+        console.error(error)
+        continue
+      }
+    }
+    for (const answer in answers) {
+      try {
+        await answer.deleteAllCommentsAndItself()
+      } catch (error) {
+        console.error(error)
+        continue
+      }
+    }
   } catch (error) {
     console.error(error)
     return -1
