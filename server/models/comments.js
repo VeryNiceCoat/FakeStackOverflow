@@ -1,6 +1,5 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-var Account = require('./user')
 
 var CommentSchema = new Schema({
     text: {type: String, required: true},
@@ -36,3 +35,5 @@ CommentSchema.methods.upVote = async function () {
 
 
 module.exports = mongoose.model('Comment', CommentSchema);
+
+var Account = require('./user')

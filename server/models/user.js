@@ -1,9 +1,6 @@
 // Tag Document Schema
 var mongoose = require('mongoose')
 var Schema = mongoose.Schema
-var Question = require('./questions')
-var Answer = require('./answers')
-var Comment = require('./comments')
 
 /**
  * name: account name
@@ -93,7 +90,7 @@ User.methods.isRegularUser = function () {
 }
 
 /**
- * Wipes all traces of it throughout the entire database
+ * Wipes all traces of this account throughout the entire database
  * Goes through every question, anwer, and comment in databse using Schema.find()
  *  which is filtered by the id of the account which is contained in the userId
  *  property in each value
@@ -147,6 +144,7 @@ User.methods.wipeAllReferences = async function () {
  */
 User.methods.returnAllQuestions = async function () {
   try {
+    console.log(typeof Question)
     const questions = await Question.find({ userId: this._id })
     return questions
   } catch (error) {
@@ -178,3 +176,7 @@ User.methods.returnAllComments = async function () {
 }
 
 module.exports = mongoose.model('Account', User)
+
+var Question = require('./questions')
+var Answer = require('./answers')
+var Comment = require('./comments')

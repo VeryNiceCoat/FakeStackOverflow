@@ -1,6 +1,5 @@
 var mongoose = require('mongoose')
 var Schema = mongoose.Schema
-var Question = require('./questions')
 
 var TagSchema = new Schema({
   name: { type: String, required: true }
@@ -26,3 +25,5 @@ TagSchema.methods.checkIfAnyQuestionsHasThisTag = async function () {
 }
 
 module.exports = mongoose.model('Tag', TagSchema)
+var Question = require('./questions')
+

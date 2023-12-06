@@ -1,7 +1,6 @@
 var mongoose = require('mongoose')
 var Schema = mongoose.Schema
-var Comment = require('./comments')
-var Account = require('./user')
+
 
 var AnswerSchema = new Schema({
   text: { type: String, required: true },
@@ -87,3 +86,6 @@ AnswerSchema.methods.downvote = async function () {
 }
 
 module.exports = mongoose.model('Answer', AnswerSchema)
+
+var Comment = require('./comments')
+var Account = require('./user')
