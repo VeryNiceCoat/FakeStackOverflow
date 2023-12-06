@@ -60,6 +60,7 @@ router.post('/register', async (req, res) => {
     await account.save()
     req.session.email = account.email
     req.session.name = account.name
+    req.session.uid = account._id
     res.status(200).send('Success')
   } catch (error) {
     if ((error.code = 11000)) {
@@ -90,13 +91,19 @@ router.delete('/delete', async (req, res) => {
 router.get('/getAllQuestions', async (req, res) => {
   try {
     const uid = req.session.uid;
+    // res.status(200).send(uid);
+    // return;
     const account = await Account.findById(uid);
+    // res.status(200).send(account);
+    // return;
+    // const questions = await Question.find({userId: uid})
     const questions = await account.returnAllQuestions();
-    console.log("questions here")
-    console.log(questions);
-    res.status(200).json(uid);
-    // res.status(200).json(questions);
+    res.status(200).send(questions);
+    // res.status(200).send(account.returnAllQuestions())
+    // res.status(200).send(1);
+    return;
   } catch (error) {
+    // console.log(error);
     res.status(500).send(error)
   }
 })
