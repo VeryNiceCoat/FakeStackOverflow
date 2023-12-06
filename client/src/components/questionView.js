@@ -354,7 +354,7 @@ const QuestionView = props => {
           <div
             className='scrollable-questions'
             style={{
-              maxHeight: '400px', // Adjust the height as needed
+              maxHeight: '600px', // Adjust the height as needed
               overflowY: 'auto' // Enables vertical scrolling
             }}
           >
@@ -364,8 +364,8 @@ const QuestionView = props => {
           {}
         </div>
         <div className='footer'>
-          <button>Prev</button>
-          <button>Next</button>
+          <button onClick={() => {setCurrentPage(currentPage <= 0? 0 : currentPage -1)}}>Prev</button>
+          <button onClick={() => {setCurrentPage((currentPage + 1) * questionsPerPage > getValue() ? currentPage : currentPage +1)}}>Next</button>
         </div>
       </div>
     )

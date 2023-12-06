@@ -45,17 +45,23 @@ const QuestionFormContainer = ({ onSubmit }) => {
       tags: tagsIds,
       // asked_by: username
     }
-
-    await Axios.post('http://localhost:8000/questions', newQuestionData).then(
-      function (res) {
-        if (res.status === 201) {
+    try {
+      await Axios.post('http://localhost:8000/questions', newQuestionData, {withCredentials: true});
+      onSubmit();
+    } catch (error) {
+      console.log(error);
+      // window.alert(error.message);
+    }
+    // await Axios.post('http://localhost:8000/questions', newQuestionData, {withCredentials: true}).then(
+    //   function (res) {
+    //     if (res.status === 201) {
           
-        } else {
-          console.error('error code: ', res.status)
-        }
-        onSubmit()
-      }
-    )
+    //     } else {
+    //       console.error('error code: ', res.status)
+    //     }
+    //     onSubmit()
+    //   }
+    // )
   }
 
   return (
@@ -77,7 +83,7 @@ const QuestionFormContainer = ({ onSubmit }) => {
           type='text'
           id='questionSummary'
           name='questionSummary'
-          pattern='{0,140}'
+          pattern='.{0,140}'
           required
           title='Max 140 Characters'
         />

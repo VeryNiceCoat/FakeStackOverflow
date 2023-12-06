@@ -93,7 +93,7 @@ router.delete('/delete', async (req, res) => {
  */
 router.get('/accountType', async (req, res) => {
   try {
-    const email = req.session.email;  
+    const email = req.session.email
     if (!email) {
       throw new Error('Email is not is session')
     }
@@ -103,13 +103,13 @@ router.get('/accountType', async (req, res) => {
       throw new Error('Account with email not found')
     }
     if (account.isGuest() === true) {
-      res.status(200).json(1);
+      res.status(200).json(1)
       return
     } else if (account.isAdmin() === true) {
-      res.status(200).send("2")
+      res.status(200).send('2')
       return
     } else if (account.isRegularUser() === true) {
-      res.status(200).send("0")
+      res.status(200).send('0')
       return
     }
     throw new Error('Account is bugged, logout and retry')
@@ -151,6 +151,17 @@ router.get('/getAllComments', async (req, res) => {
     return
   } catch (error) {
     res.status(500).send(error)
+  }
+})
+
+router.get('/logout', async (req, res) => {
+  try {
+    req.session.name = null
+    req.session.email = null
+    req.session.uid = null
+    res.status(200).json("All is Null")
+  } catch (error) {
+    throw error
   }
 })
 
