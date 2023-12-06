@@ -64,6 +64,8 @@ export default function FakeStackOverflow (props) {
           setEmail={props.setEmail}
           name={props.name}
           setName={props.setName}
+          setShowHomePage={props.setShowHomePage}
+          setShowWelcomePage={props.setShowWelcomePage}
         />
         {}
       </div>
