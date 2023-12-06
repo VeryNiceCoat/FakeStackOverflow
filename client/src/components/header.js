@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import UserProfile from './userProfile'
 
 function Header (props) {
   // const [object, setObject] = useState(props.object)
@@ -26,6 +27,7 @@ function Header (props) {
         <button>Delete Account</button>
       </div>
       <div className='logo'>FAKE STACK OVERFLOW</div>
+      
       <div className='search-bar'>
         <input
           type='text'

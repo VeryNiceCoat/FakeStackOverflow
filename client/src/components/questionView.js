@@ -5,6 +5,7 @@ import QuestionFormContainer from './questionFormContainer'
 import AnswerForm from './answerForm'
 import Post from './post'
 import TagPage from './tag-page'
+import UserProfile from './userProfile'
 
 const QuestionView = props => {
   const [filter, setFilter] = useState('all')
@@ -52,6 +53,7 @@ const QuestionView = props => {
   const handleAskQuestionClick = () => {
     props.setShowPostView(false)
     props.setShowTagsPage(false)
+    props.setShowProfile(false)
     props.setShowAForm(false)
     props.setShowQForm(true)
   }
@@ -59,6 +61,7 @@ const QuestionView = props => {
   const handleAnswerQuestionClick = () => {
     props.setShowPostView(false)
     props.setShowTagsPage(false)
+    props.setShowProfile(false)
     props.setShowQForm(false)
     props.setShowAForm(true)
   }
@@ -132,6 +135,12 @@ const QuestionView = props => {
         onAnswerQuestion={handleAnswerQuestionClick}
         onPost={props.showPostView}
       />
+    )
+  }
+
+  const renderProfile = () => {
+    return (
+      <UserProfile/>
     )
   }
 
@@ -289,6 +298,12 @@ const QuestionView = props => {
       <div className='question-view' id='question-viewID'>
         {props.showTagsPage && !props.showQForm && renderTagsPage()}
       </div>
+    )
+  } else if(props.showProfile){
+    return (
+      <div className='question-view' id='question-viewID'>
+        {renderProfile()}
+      </div>      
     )
   } else {
     const temp1 = props.showQForm && renderQForm()

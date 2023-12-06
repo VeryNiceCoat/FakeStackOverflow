@@ -10,6 +10,7 @@ export default function FakeStackOverflow (props) {
   const [showQForm, setShowQForm] = useState(false)
   const [showAForm, setShowAForm] = useState(false)
   const [showTagsPage, setShowTagsPage] = useState(false)
+  const [showProfile, setShowProfile] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
 
   const handleQuestionsClick = () => {
@@ -17,6 +18,7 @@ export default function FakeStackOverflow (props) {
     setShowQForm(false)
     setShowAForm(false)
     setShowTagsPage(false)
+    setShowProfile(false)
     setSearchQuery('')
     setSelectedView('Questions')
   }
@@ -25,6 +27,7 @@ export default function FakeStackOverflow (props) {
     setShowQForm(false)
     setShowAForm(false)
     setShowTagsPage(true)
+    setShowProfile(false)
     setSearchQuery('')
     setSelectedView('Tags')
   }
@@ -34,11 +37,22 @@ export default function FakeStackOverflow (props) {
     setShowQForm(false)
     setShowAForm(false)
     setShowTagsPage(false)
+    setShowProfile(false)
     setSearchQuery(string)
   }
 
   const handleTagOnMainPageClicked = string => {
     setSearchQuery(string)
+  }
+
+  const handleProfilePageClick = () => {
+    setShowPostView(false)
+    setShowQForm(false)
+    setShowAForm(false)
+    setShowTagsPage(false)
+    setShowProfile(true)
+    setSearchQuery('')
+    setSelectedView('Profile')
   }
 
   return (
@@ -59,6 +73,7 @@ export default function FakeStackOverflow (props) {
           onSelect={setSelectedView}
           onQuestionsClick={handleQuestionsClick}
           onTagsPageClick={handleTagsPageClick}
+          onProfilePageClick={handleProfilePageClick}
           onhandleTagonTagPageClicked={handleTagonTagPageClicked}
         />
         <div className='question-view'>
@@ -69,6 +84,8 @@ export default function FakeStackOverflow (props) {
             setShowPostView={setShowPostView}
             showTagsPage={showTagsPage}
             setShowTagsPage={setShowTagsPage}
+            showProfile={showProfile}
+            setShowProfile={setShowProfile}
             showQForm={showQForm}
             setShowQForm={setShowQForm}
             showAForm={showAForm}

@@ -45,6 +45,20 @@ const Sidebar = props => {
             Tags
           </button>
         </li>
+        <li>
+          <button id="Profile"
+            style={linkStyle('Profile')}
+            onClick={() => {
+              handleLinkClick('Profile')
+              if (props.onProfilePageClick) {
+                setSelected('Profile')
+                props.onProfilePageClick()
+              }
+            }}
+          >
+            Your Profile
+          </button>
+        </li>
       </ul>
     </div>
   )
