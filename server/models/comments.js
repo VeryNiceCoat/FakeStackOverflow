@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
+var Account = require('./user')
 
 var CommentSchema = new Schema({
     text: {type: String, required: true},
@@ -21,10 +22,15 @@ CommentSchema.virtual('url').get(function() {
 CommentSchema.methods.upVote = async function () {
     try {
         this.votes += 1;
-        await this.save();
-        return true;
+        // await this.save();
+        const account = await Account.findById(userId);
+        if (!account) {
+            throw new Error('Account of Comment Does not exist')
+        }
+        await account.upvote;
+        return await this.save();
     } catch (error) {
-        return false;
+        throw error;
     }
 }
 
