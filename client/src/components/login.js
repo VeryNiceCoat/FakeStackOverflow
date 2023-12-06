@@ -48,6 +48,14 @@ function Login (props) {
       }
       props.setEmail(email)
       props.setName(response.data)
+      try {
+        const temp = await Axios.get('http://localhost:8000/users/getAllQuestions', {withCredentials: true});
+        // window.alert(temp.data);
+        console.log(temp.data);
+      } catch (error) {
+        console.log("error in get all questions")
+        // window.alert("Error in get all questions")
+      }
       setShowRegisterForm(false)
       setShowLoginForm(false)
       setShowRejectedMessage(false)

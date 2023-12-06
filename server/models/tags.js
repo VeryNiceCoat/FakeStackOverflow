@@ -1,13 +1,29 @@
-// Tag Document Schema
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+var mongoose = require('mongoose')
+var Schema = mongoose.Schema
 
-var TagSchema = new Schema ({
-    name: {type: String, required: true}
+var TagSchema = new Schema({
+  name: { type: String, required: true }
 })
-//virtual field
-TagSchema.virtual('url').get(function() {
-    return 'posts/tag/' + this._id;
+TagSchema.virtual('url').get(function () {
+  return 'posts/tag/' + this._id
 })
 
-module.exports = mongoose.model('Tag', TagSchema);
+TagSchema.methods.checkIfAnyQuestionsHasThisTag = async function () {
+  try {
+    const count = await Question.countDocuments({ tags: this._id })
+
+    if (count > 0) {
+      return true
+    } else {
+      await this.remove()
+      return false
+    }
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
+
+module.exports = mongoose.model('Tag', TagSchema)
+var Question = require('./questions')
+
