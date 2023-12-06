@@ -10,12 +10,15 @@ var Schema = mongoose.Schema
  *  otherwise -1 is admin, to check call isAdmin
  *  and -2 is guest, call isGuest
  */
-var User = new Schema({
-  name: { type: String, required: true },
-  email: { type: String, unique: true, required: true },
-  password: { type: String, required: true },
-  reputation: { type: Number, default: 0 }
-})
+var User = new Schema(
+  {
+    name: { type: String, required: true },
+    email: { type: String, unique: true, required: true },
+    password: { type: String, required: true },
+    reputation: { type: Number, default: 0 }
+  },
+  { timestamps: true }
+)
 
 //virtual field
 User.virtual('url').get(function () {

@@ -22,7 +22,6 @@ const corsOptions = {
  */
 router.get('/login', async (req, res) => {
   try {
-    // Get Query info, don't use body
     const { email, password } = req.query
     const account = await Account.findOne({ email: email })
     if (!account) {
@@ -37,7 +36,6 @@ router.get('/login', async (req, res) => {
       req.session.email = account.email
       req.session.uid = account._id
       req.session.save()
-      // console.log(req.session);
       res.status(200).send(account.name)
     } else {
       res.status(401).send('Y')
@@ -61,21 +59,15 @@ router.post('/register', async (req, res) => {
     if (!acc) {
       throw new Error('Server Error')
     }
-    // req.session.email = acc.email
-    // req.session.name = acc.name
-    // req.session.uid = acc._id
     res.status(200).send('Success')
   } catch (error) {
     if ((error.code = 11000)) {
       res.status(400)
       throw new Error('Email Already Exists')
-      // res.status(400).send('Email already exists')
     } else {
       res.status(500)
       throw new Error('Server Error')
-      // res.status(401).send('Server Error')
     }
-    // console.error(error.message)
   }
 })
 
@@ -101,41 +93,63 @@ router.delete('/delete', async (req, res) => {
  */
 router.get('/accountType', async (req, res) => {
   try {
-    const email = "guest@guest.cm"
+    const email = req.session.email;  
     if (!email) {
       throw new Error('Email is not is session')
     }
-    const account = await Account.findOne({email: email});
+    const account = await Account.findOne({ email: email })
 
-    if (!account){
+    if (!account) {
       throw new Error('Account with email not found')
     }
-    if (account.isGuest() === true)
-    {
-      res.json("Guest")
+    if (account.isGuest() === true) {
+      res.status(200).json(1);
+      return
+    } else if (account.isAdmin() === true) {
+      res.status(200).send("2")
+      return
+    } else if (account.isRegularUser() === true) {
+      res.status(200).send("0")
+      return
     }
-    res.json(account);
+    throw new Error('Account is bugged, logout and retry')
   } catch (error) {
-    res.json(error.message);
+    throw error
   }
 })
 
 router.get('/getAllQuestions', async (req, res) => {
   try {
     const uid = req.session.uid
-    // res.status(200).send(uid);
-    // return;
     const account = await Account.findById(uid)
-    // res.status(200).send(account);
-    // return;
-    // const questions = await Question.find({userId: uid})
     const questions = await account.returnAllQuestions()
     res.status(200).send(questions)
-    // res.status(200).send(account.returnAllQuestions())
-    // res.status(200).send(1);
     return
   } catch (error) {
-    // console.log(error);
+    res.status(500).send(error)
+  }
+})
+
+router.get('/getAllAnswers', async (req, res) => {
+  try {
+    const uid = req.session.uid
+    const account = await Account.findById(uid)
+    const answers = await account.returnAllAnswers()
+    res.status(200).send(answers)
+    return
+  } catch (error) {
+    res.status(500).send(error)
+  }
+})
+
+router.get('/getAllComments', async (req, res) => {
+  try {
+    const uid = req.session.uid
+    const account = await Account.findById(uid)
+    const answers = await account.returnAllComments()
+    res.status(200).send(answers)
+    return
+  } catch (error) {
     res.status(500).send(error)
   }
 })

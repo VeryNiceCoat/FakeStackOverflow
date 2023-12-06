@@ -20,18 +20,19 @@ function Header (props) {
   const handleDeleteAccountClick = async () => {
     try {
       const response = await Axios.get(
-        'http://localhost:8000/users/accountIsGuest',
+        'http://localhost:8000/users/accountType',
         {
           withCredentials: true
         }
       )
-      window.alert(response);
-      if (response.data === true) {
+      if (response.data === 1) {
         throw new Error("You're a guest, you can't delete yourself")
+      } else if (response.data === 2) {
+        throw new Error("The Admin can't delete themselves")
       }
     } catch (error) {
       window.alert(error.message)
-      return;
+      return
     }
     const userConfirmed = window.confirm('Delete account? Irreversible.')
     if (userConfirmed) {
