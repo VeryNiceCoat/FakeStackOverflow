@@ -9,7 +9,7 @@ import UserProfile from './userProfile'
 
 const QuestionView = props => {
   const [filter, setFilter] = useState('all')
-  const [selectedQuestion, setSelectedQuestion] = useState(null)
+  const [selectedQuestion, setSelectedQuestion] = useState(null) //for specific question when clicking on title
   const [questions, setQuestions] = useState([])
   const [allTags, setAllTags] = useState([])
   const [currentPage, setCurrentPage] = useState(0)

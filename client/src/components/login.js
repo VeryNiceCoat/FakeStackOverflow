@@ -42,6 +42,8 @@ function Login (props) {
           password: password
         }
       })
+      // const gay = await Axios.get('http://localhost:8000/users/getAllQuestions', {withCredentials: true})
+      // window.alert(gay.data) 
       if (response.status !== 200) {
         window.alert('Login Invalid')
         return
