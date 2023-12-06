@@ -87,4 +87,18 @@ router.delete('/delete', async (req, res) => {
   }
 })
 
+router.get('/getAllQuestions', async (req, res) => {
+  try {
+    const uid = req.session.uid;
+    const account = await Account.findById(uid);
+    const questions = await account.returnAllQuestions();
+    console.log("questions here")
+    console.log(questions);
+    res.status(200).json(uid);
+    // res.status(200).json(questions);
+  } catch (error) {
+    res.status(500).send(error)
+  }
+})
+
 module.exports = router
