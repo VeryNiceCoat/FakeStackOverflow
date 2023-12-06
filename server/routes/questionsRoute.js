@@ -5,17 +5,57 @@ const cookieParser = require('cookie-parser')
 
 const Question = require('../models/questions')
 const Tag = require('../models/tags')
-//fetch questions
 router.get('/', async (req, res) => {
   try {
     const questions = await Question.find()
-    res.cookie('penis', 'penis', { httpOnly: false })
     res.send(questions)
     if (!questions) {
       return res.status(404).send('questionS not found')
     }
   } catch (error) {
     console.error(error)
+  }
+})
+
+/**
+ * Returns Newest Questions
+ */
+router.get('/getNewest', async (req, res) => {
+  try {
+    const questions = await Question.getAllQuestionsByNewest()
+    res.status(200).send(questions)
+  } catch (error) {
+    console.error(error.message)
+    res.status(500)
+    throw new Error('getNewest Error')
+  }
+})
+
+/**
+ * Returns Active Questions (Most Recently Updated)
+ */
+router.get('/getActive', async (req, res) => {
+  try {
+    const questions = await Question.getAllQuestionsByActivity()
+    res.status(200).send(questions)
+  } catch (error) {
+    console.error(error.message)
+    res.status(500)
+    throw new Error('Getting Active Questions Error, router')
+  }
+})
+
+/**
+ * Returns Unanswered Questions by Newest
+ */
+router.get('/getUnanswered', async (req, res) => {
+  try {
+    const questions = await Question.getNewestUnansweredQuestions()
+    res.status(200).send(questions)
+  } catch (error) {
+    console.error(error.message)
+    res.status(500)
+    throw new Error('getUnanswered Router Error')
   }
 })
 
@@ -32,7 +72,6 @@ router.get('/:questionID', async (req, res) => {
     if (!question) {
       return res.status(404).send('question not found')
     }
-    // res.json(question);
     res.send(question)
   } catch (error) {
     console.error(error.message)
@@ -51,10 +90,8 @@ router.get('/questionSearch', async (req, res) => {
   }
 })
 
-//make new question
 router.post('/', async (req, res) => {
   try {
-    // const tagIds = req.body.tags.map(id => mongoose.Types.ObjectId(id));
     const newQuestion = new Question({
       title: req.body.title,
       text: req.body.text,
@@ -74,15 +111,13 @@ router.post('/', async (req, res) => {
 router.put(`/:questionID`, async (req, res) => {
   try {
     const questionID = new mongoose.Types.ObjectId(req.params.questionID)
-    const answerID = new mongoose.Types.ObjectId(req.body.answerID) // Make sure you're getting the answerID from the request body
+    const answerID = new mongoose.Types.ObjectId(req.body.answerID)
 
-    // Find the question
     const question = await Question.findById(questionID)
     if (!question) {
       return res.status(404).send('Question not found')
     }
 
-    // add the answerID to the answers array
     question.answers.push(answerID)
     const updatedQuestion = await question.save()
     res.status(200).json(updatedQuestion)
@@ -100,7 +135,7 @@ router.put('/:questionID/views', async (req, res) => {
       return res.status(404).send('Question not found')
     }
 
-    question.views += 1 // Increment views
+    question.views += 1
     const updatedQuestion = await question.save()
 
     res.status(200).json(updatedQuestion)
@@ -161,13 +196,12 @@ router.delete('/:questionId', async (req, res) => {
 })
 
 /**
- * Adds a comment to a question, given question ID and comment ID in 
+ * Adds a comment to a question, given question ID and comment ID in
  * http://localhost:8000/questions/etc
  */
 router.put('/:questionID/addComment/:commentID', async (req, res) => {
   try {
-    if (req.session.email === "guest@guest.com")
-    {
+    if (req.session.email === 'guest@guest.com') {
       res.status(500).send("Guests don't have rights")
     }
     const questionID = req.params.questionID
@@ -177,11 +211,6 @@ router.put('/:questionID/addComment/:commentID', async (req, res) => {
       return
     }
     const commentID = req.params.commentID
-    // const comment = await Comment.findById(commentID)
-    // if (!comment) {
-    //   res.status(404).send('Comment Not Found')
-    //   return
-    // }
     question.comments.push(commentID)
     await question.save()
     res.status(200).send('GREAT SUCCESS')

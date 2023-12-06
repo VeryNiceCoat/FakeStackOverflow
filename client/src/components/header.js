@@ -3,11 +3,6 @@ import UserProfile from './userProfile'
 import Axios from 'axios'
 
 function Header (props) {
-  // const [object, setObject] = useState(props.object)
-  // const [model, setModel] = useState(props.model)
-  // const [query, setQuery] = useState(props.query)
-  // const [email, setEmail] = useState(props.email)
-
   const handleKeyDown = event => {
     if (event.key === 'Enter') {
       const queryText = event.target.value
@@ -15,12 +10,33 @@ function Header (props) {
     }
   }
 
-  const returnToLoginPage = () => {
-    props.setShowHomePage(false)
-    props.setShowWelcomePage(true)
+  const returnToLoginPage = async () => {
+    try {
+      const value = await Axios.get('http://localhost:8000/users/accountType', {
+        withCredentials: true
+      })
+      console.log(value);
+      if (value === 0 || value === 2)
+      {
+        throw new Error('Use the logout button if you are not signed in as a guest')
+        // window.alert("Use the logout button if you are not signed in as a guest")
+      }
+      props.setShowHomePage(false)
+      props.setShowWelcomePage(true)
+    } catch (error) {
+      window.alert(error.message)
+    }
   }
-  const handleLogoutClick = event => {
-    returnToLoginPage()
+
+  const handleLogoutClick = async event => {
+    try {
+      await Axios.get('http://localhost:8000/users/logout', {
+        withCredentials: true
+      })
+      returnToLoginPage()
+    } catch (error) {
+      window.alert(error.message)
+    }
   }
 
   const handleDeleteAccountClick = async () => {

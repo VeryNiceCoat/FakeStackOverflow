@@ -23,8 +23,6 @@ QuestionSchema.virtual('url').get(function () {
   return 'posts/question/' + this._id
 })
 
-// QuestionSchema.methods.getAllAnswers = async function () {}
-
 /**
  * const question = Question.findbyID()
  * question.removeAnswer(answerID)
@@ -86,20 +84,43 @@ QuestionSchema.methods.updateItself = async function (
   tags
 ) {
   try {
-    
   } catch (error) {
-    throw error;
+    throw error
   }
 }
 
+/**
+ * @returns Questions for Active, based on answer activity
+ */
 QuestionSchema.statics.getAllQuestionsByActivity = async function () {
   try {
-    // Sorting by 'updatedAt' in descending order (most recently updated first)
     const questions = await this.find().sort({ updatedAt: -1 })
     return questions
   } catch (error) {
-    console.error('Error fetching questions by activity:', error)
-    throw error
+    throw new Error('QuestionSchema.statics.getAllQuestionsByActivity')
+  }
+}
+
+/**
+ * @returns Questions for Active, based on answer activity
+ */
+QuestionSchema.statics.getAllQuestionsByNewest = async function () {
+  try {
+    const questions = await this.find().sort({ createdAt: -1 })
+    return questions
+  } catch (error) {
+    throw new Error('QuestionSchema.statics.getAllQuestionsByActivity')
+  }
+}
+
+QuestionSchema.statics.getNewestUnansweredQuestions = async function () {
+  try {
+    const questions = await this.find({ answers: { $size: 0 } }).sort({
+      updatedAt: -1
+    })
+    return questions
+  } catch (error) {
+    throw new Error('QuestionSchema.statics.getNewestUnansweredQuestions')
   }
 }
 

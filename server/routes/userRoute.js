@@ -106,10 +106,10 @@ router.get('/accountType', async (req, res) => {
       res.status(200).json(1)
       return
     } else if (account.isAdmin() === true) {
-      res.status(200).send('2')
+      res.status(200).json(2);
       return
     } else if (account.isRegularUser() === true) {
-      res.status(200).send('0')
+      res.status(200).json(0);
       return
     }
     throw new Error('Account is bugged, logout and retry')

@@ -77,28 +77,32 @@ const QuestionView = props => {
 
   const fetchAndSetQuestionsButton = async (sortType = 'newest') => {
     try {
-      const response = await Axios.get('http://localhost:8000/questions')
-      let sortedQuestions = response.data
-      // for (const question in sortedQuestions)
-      // {
-      //   console.log(question);
-      // }
-      console.log(sortedQuestions)
+      let sortedQuestions = []
       if (sortType === 'newest') {
-        sortedQuestions = sortedQuestions.sort(
-          (a, b) => new Date(b.ask_date_time) - new Date(a.ask_date_time)
+        const response = await Axios.get(
+          'http://localhost:8000/questions/getNewest',
+          { withCredentials: true }
         )
+        sortedQuestions = response.data
       } else if (sortType === 'active') {
-        sortedQuestions = sortedQuestions.sort(
-          (a, b) => a.updatedAt - b.updatedAt
+        const response = await Axios.get(
+          'http://localhost:8000/questions/getActive',
+          { withCredentials: true }
         )
-      } else if (sortType === 'unanswered') {
-        sortedQuestions = sortedQuestions.filter(q => q.answers.length === 0)
+        sortedQuestions = response.data
+      } else {
+        const response = await Axios.get(
+          'http://localhost:8000/questions/getUnanswered',
+          { withCredentials: true }
+        )
+        sortedQuestions = response.data
       }
-
       setQuestions(sortedQuestions)
     } catch (error) {
-      console.error('Error fetching questions', error)
+      console.error(error)
+      window.alert(
+        'Error In Sorting Button Questions, refresh page ctrl shift r and try again'
+      )
     }
   }
 
@@ -143,9 +147,7 @@ const QuestionView = props => {
   }
 
   const renderProfile = () => {
-    return (
-      <UserProfile/>
-    )
+    return <UserProfile />
   }
 
   const renderQuestions = () => {
@@ -303,11 +305,11 @@ const QuestionView = props => {
         {props.showTagsPage && !props.showQForm && renderTagsPage()}
       </div>
     )
-  } else if(props.showProfile){
+  } else if (props.showProfile) {
     return (
       <div className='question-view' id='question-viewID'>
         {renderProfile()}
-      </div>      
+      </div>
     )
   } else {
     const temp1 = props.showQForm && renderQForm()
@@ -368,8 +370,24 @@ const QuestionView = props => {
           {}
         </div>
         <div className='footer'>
-          <button onClick={() => {setCurrentPage(currentPage <= 0? 0 : currentPage -1)}}>Prev</button>
-          <button onClick={() => {setCurrentPage((currentPage + 1) * questionsPerPage > getValue() ? currentPage : currentPage +1)}}>Next</button>
+          <button
+            onClick={() => {
+              setCurrentPage(currentPage <= 0 ? 0 : currentPage - 1)
+            }}
+          >
+            Prev
+          </button>
+          <button
+            onClick={() => {
+              setCurrentPage(
+                (currentPage + 1) * questionsPerPage > getValue()
+                  ? currentPage
+                  : currentPage + 1
+              )
+            }}
+          >
+            Next
+          </button>
         </div>
       </div>
     )
