@@ -15,7 +15,13 @@ function Header (props) {
     }
   }
 
-  const handleLogoutClick = event => {}
+  const returnToLoginPage = () => {
+    props.setShowHomePage(false)
+    props.setShowWelcomePage(true)
+  }
+  const handleLogoutClick = event => {
+    returnToLoginPage()
+  }
 
   const handleDeleteAccountClick = async () => {
     try {
@@ -40,6 +46,7 @@ function Header (props) {
       // Add your logic here for what happens when the user confirms deletion
 
       console.log('Account deletion confirmed')
+      returnToLoginPage()
     } else {
       // User cancelled deletion
       console.log('Account deletion cancelled')
@@ -50,8 +57,8 @@ function Header (props) {
     <div id='header'>
       <div>Username: {props.name}</div>
       <div>
-        <button>Logout</button>
-        <button>Login</button>
+        <button onClick={handleLogoutClick}>Logout</button>
+        <button onClick={returnToLoginPage}>Login</button>
         <button onClick={handleDeleteAccountClick}>Delete Account</button>
       </div>
       <div className='logo'>FAKE STACK OVERFLOW</div>
