@@ -71,23 +71,6 @@ router.post('/register', async (req, res) => {
   }
 })
 
-router.delete('/delete', async (req, res) => {
-  try {
-    const email = req.session.email
-    if (!email) {
-      return res.status(400).send('No email found in session')
-    }
-
-    const account = await Account.findOne({ email: email })
-    if (!account) {
-      res.status(400).send('No Account Found')
-    }
-  } catch (error) {
-    res.status(400).send('Email Not Found')
-    throw error
-  }
-})
-
 /**
  * Returns 0 if regular, 1 if guest, 2 if admin, otherwise error
  */
@@ -106,10 +89,10 @@ router.get('/accountType', async (req, res) => {
       res.status(200).json(1)
       return
     } else if (account.isAdmin() === true) {
-      res.status(200).json(2);
+      res.status(200).json(2)
       return
     } else if (account.isRegularUser() === true) {
-      res.status(200).json(0);
+      res.status(200).json(0)
       return
     }
     throw new Error('Account is bugged, logout and retry')
@@ -156,12 +139,31 @@ router.get('/getAllComments', async (req, res) => {
 
 router.get('/logout', async (req, res) => {
   try {
-    req.session.name = null
-    req.session.email = null
-    req.session.uid = null
-    res.status(200).json("All is Null")
+    req.session.destroy()
+    res.status(200).json(true)
   } catch (error) {
     throw error
+  }
+})
+
+router.get('/suicide', async (req, res) => {
+  try {
+    const email = req.session.email
+    const account = await Account.findOne({ email: email })
+    const val = await account.wipeAllReferences()
+    if (val === -1) {
+      res.status(500)
+      throw new Error('Server Error')
+    } else if (val === 0) {
+      res.status(500)
+      throw new Error("Can't delete yourself if you're a guest or an admin")
+    } else {
+      res.status(200).json(true)
+    }
+  } catch (error) {
+    console.error(error)
+    throw error
+    // throw new Error('Deleting User had a server error;')
   }
 })
 

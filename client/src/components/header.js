@@ -15,10 +15,11 @@ function Header (props) {
       const value = await Axios.get('http://localhost:8000/users/accountType', {
         withCredentials: true
       })
-      console.log(value);
-      if (value === 0 || value === 2)
-      {
-        throw new Error('Use the logout button if you are not signed in as a guest')
+      console.log(value)
+      if (value === 0 || value === 2) {
+        throw new Error(
+          'Use the logout button if you are not signed in as a guest'
+        )
         // window.alert("Use the logout button if you are not signed in as a guest")
       }
       props.setShowHomePage(false)
@@ -33,7 +34,9 @@ function Header (props) {
       await Axios.get('http://localhost:8000/users/logout', {
         withCredentials: true
       })
-      returnToLoginPage()
+      props.setShowHomePage(false)
+      props.setShowWelcomePage(true)
+      // returnToLoginPage()
     } catch (error) {
       window.alert(error.message)
     }
@@ -62,7 +65,8 @@ function Header (props) {
       // Add your logic here for what happens when the user confirms deletion
 
       console.log('Account deletion confirmed')
-      returnToLoginPage()
+      props.setShowHomePage(false)
+      props.setShowWelcomePage(true)
     } else {
       // User cancelled deletion
       console.log('Account deletion cancelled')

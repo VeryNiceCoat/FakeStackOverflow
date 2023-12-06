@@ -153,7 +153,7 @@ const QuestionView = props => {
   const renderQuestions = () => {
     const startIndex = currentPage * questionsPerPage
     // const selectedQuestions = questions.slice(startIndex, startIndex + questionsPerPage);
-
+    // if (props.searchQuery !== )
     const filteredQuestions = questions.filter(q =>
       doesQuestionMatchSearchQuery(q, props.searchQuery)
     )
