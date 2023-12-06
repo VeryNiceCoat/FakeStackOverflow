@@ -1,9 +1,12 @@
 var mongoose = require('mongoose')
 var Schema = mongoose.Schema
 
-var TagSchema = new Schema({
-  name: { type: String, required: true }
-})
+var TagSchema = new Schema(
+  {
+    name: { type: String, required: true }
+  },
+  { timestamps: true }
+)
 TagSchema.virtual('url').get(function () {
   return 'posts/tag/' + this._id
 })
@@ -39,19 +42,21 @@ TagSchema.methods.checkIfAnyQuestionsHasThisTag = async function () {
  */
 TagSchema.statics.findIfUserHasAnyTags = async function (userID) {
   try {
-    const questions = await Question.findByUserId(userID);
+    const questions = await Question.findByUserId(userID)
     if (questions.length === 0) {
-      return [];
+      return []
     }
-    let combinedTags = questions.reduce((acc, question) => acc.concat(question.tags), []);
-    let uniqueTagIds = [...new Set(combinedTags.map(tag => tag.toString()))];
-    return uniqueTagIds;
+    let combinedTags = questions.reduce(
+      (acc, question) => acc.concat(question.tags),
+      []
+    )
+    let uniqueTagIds = [...new Set(combinedTags.map(tag => tag.toString()))]
+    return uniqueTagIds
   } catch (error) {
-    console.error('Error finding tags:', error);
-    throw error;
+    console.error('Error finding tags:', error)
+    throw error
   }
-};
+}
 
 module.exports = mongoose.model('Tag', TagSchema)
 var Question = require('./questions')
-

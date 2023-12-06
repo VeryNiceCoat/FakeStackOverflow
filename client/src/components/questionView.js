@@ -79,14 +79,18 @@ const QuestionView = props => {
     try {
       const response = await Axios.get('http://localhost:8000/questions')
       let sortedQuestions = response.data
-
+      // for (const question in sortedQuestions)
+      // {
+      //   console.log(question);
+      // }
+      console.log(sortedQuestions)
       if (sortType === 'newest') {
         sortedQuestions = sortedQuestions.sort(
           (a, b) => new Date(b.ask_date_time) - new Date(a.ask_date_time)
         )
       } else if (sortType === 'active') {
         sortedQuestions = sortedQuestions.sort(
-          (a, b) => b.answers.length - a.answers.length
+          (a, b) => a.updatedAt - b.updatedAt
         )
       } else if (sortType === 'unanswered') {
         sortedQuestions = sortedQuestions.filter(q => q.answers.length === 0)

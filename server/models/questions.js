@@ -1,26 +1,29 @@
 var mongoose = require('mongoose')
 var Schema = mongoose.Schema
 
-var QuestionSchema = new Schema({
-  title: { type: String, maxLength: 100, required: true },
-  summary: { type: String, maxLength: 140, required: true },
-  text: { type: String, required: true },
-  tags: { type: [Schema.Types.ObjectId], ref: 'Tag', required: true },
-  asked_by: { type: String, default: 'Anonymous', required: true },
-  ask_date_time: { type: Date, default: Date.now },
-  answers: { type: [Schema.Types.ObjectId], ref: 'Answer' },
-  views: { type: Number, default: 0 },
-  votes: { type: Number, default: 0 },
-  comments: { type: [Schema.Types.ObjectId], ref: 'Comment' },
-  username: { type: String, default: 'Anonymous' },
-  userId: { type: Schema.Types.ObjectId }
-})
+var QuestionSchema = new Schema(
+  {
+    title: { type: String, maxLength: 100, required: true },
+    summary: { type: String, maxLength: 140, required: true },
+    text: { type: String, required: true },
+    tags: { type: [Schema.Types.ObjectId], ref: 'Tag', required: true },
+    asked_by: { type: String, default: 'Anonymous', required: true },
+    ask_date_time: { type: Date, default: Date.now },
+    answers: { type: [Schema.Types.ObjectId], ref: 'Answer' },
+    views: { type: Number, default: 0 },
+    votes: { type: Number, default: 0 },
+    comments: { type: [Schema.Types.ObjectId], ref: 'Comment' },
+    username: { type: String, default: 'Anonymous' },
+    userId: { type: Schema.Types.ObjectId }
+  },
+  { timestamps: true }
+)
 
 QuestionSchema.virtual('url').get(function () {
   return 'posts/question/' + this._id
 })
 
-QuestionSchema.methods.getAllAnswers = async function () {}
+// QuestionSchema.methods.getAllAnswers = async function () {}
 
 /**
  * const question = Question.findbyID()
@@ -64,25 +67,39 @@ QuestionSchema.methods.userAccountDelete = async function () {
  */
 QuestionSchema.methods.getTags = async function () {
   try {
-    const tags = await Promise.all(
-      this.tags.map(tagId => Tag.findById(tagId))
-    );
-    return tags.filter(tag => tag !== null);
+    const tags = await Promise.all(this.tags.map(tagId => Tag.findById(tagId)))
+    return tags.filter(tag => tag !== null)
   } catch (error) {
-    console.error('Error fetching tags:', error);
-    throw error;
+    console.error('Error fetching tags:', error)
+    throw error
   }
-};
+}
 
 QuestionSchema.statics.findByUserId = async function (userId) {
   return this.find({ userId: userId })
 }
 
-QuestionSchema.methods.updateItself = async function (title, summary, text, tags) {
+QuestionSchema.methods.updateItself = async function (
+  title,
+  summary,
+  text,
+  tags
+) {
   try {
     
   } catch (error) {
+    throw error;
+  }
+}
 
+QuestionSchema.statics.getAllQuestionsByActivity = async function () {
+  try {
+    // Sorting by 'updatedAt' in descending order (most recently updated first)
+    const questions = await this.find().sort({ updatedAt: -1 })
+    return questions
+  } catch (error) {
+    console.error('Error fetching questions by activity:', error)
+    throw error
   }
 }
 
