@@ -57,18 +57,25 @@ router.post('/register', async (req, res) => {
     const { name, email, password } = req.body
     const passWord = bcrypt.hashSync(password, 5)
     let account = new Account({ name: name, email: email, password: passWord })
-    await account.save()
-    req.session.email = account.email
-    req.session.name = account.name
-    req.session.uid = account._id
+    const acc = await account.save()
+    if (!acc) {
+      throw new Error('Server Error')
+    }
+    // req.session.email = acc.email
+    // req.session.name = acc.name
+    // req.session.uid = acc._id
     res.status(200).send('Success')
   } catch (error) {
     if ((error.code = 11000)) {
-      res.status(400).send('Email already exists')
+      res.status(400)
+      throw new Error('Email Already Exists')
+      // res.status(400).send('Email already exists')
     } else {
-      res.status(401).send('Server Error')
+      res.status(500)
+      throw new Error('Server Error')
+      // res.status(401).send('Server Error')
     }
-    console.error(error.message)
+    // console.error(error.message)
   }
 })
 
@@ -79,29 +86,54 @@ router.delete('/delete', async (req, res) => {
       return res.status(400).send('No email found in session')
     }
 
-    const account = Account.findOne({ email: email })
+    const account = await Account.findOne({ email: email })
     if (!account) {
       res.status(400).send('No Account Found')
     }
   } catch (error) {
     res.status(400).send('Email Not Found')
+    throw error
+  }
+})
+
+/**
+ * Returns 0 if regular, 1 if guest, 2 if admin, otherwise error
+ */
+router.get('/accountType', async (req, res) => {
+  try {
+    const email = "guest@guest.cm"
+    if (!email) {
+      throw new Error('Email is not is session')
+    }
+    const account = await Account.findOne({email: email});
+
+    if (!account){
+      throw new Error('Account with email not found')
+    }
+    if (account.isGuest() === true)
+    {
+      res.json("Guest")
+    }
+    res.json(account);
+  } catch (error) {
+    res.json(error.message);
   }
 })
 
 router.get('/getAllQuestions', async (req, res) => {
   try {
-    const uid = req.session.uid;
+    const uid = req.session.uid
     // res.status(200).send(uid);
     // return;
-    const account = await Account.findById(uid);
+    const account = await Account.findById(uid)
     // res.status(200).send(account);
     // return;
     // const questions = await Question.find({userId: uid})
-    const questions = await account.returnAllQuestions();
-    res.status(200).send(questions);
+    const questions = await account.returnAllQuestions()
+    res.status(200).send(questions)
     // res.status(200).send(account.returnAllQuestions())
     // res.status(200).send(1);
-    return;
+    return
   } catch (error) {
     // console.log(error);
     res.status(500).send(error)

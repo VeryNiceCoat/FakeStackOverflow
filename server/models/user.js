@@ -144,7 +144,6 @@ User.methods.wipeAllReferences = async function () {
  */
 User.methods.returnAllQuestions = async function () {
   try {
-    console.log(typeof Question)
     const questions = await Question.find({ userId: this._id })
     return questions
   } catch (error) {

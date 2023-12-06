@@ -1,16 +1,14 @@
-// Question Document Schema
 var mongoose = require('mongoose')
 var Schema = mongoose.Schema
-
 
 var QuestionSchema = new Schema({
   title: { type: String, maxLength: 100, required: true },
   summary: { type: String, maxLength: 140, required: true },
   text: { type: String, required: true },
-  tags: { type: [Schema.Types.ObjectId], ref: 'Tag', required: true }, //we use the model in tags.js
+  tags: { type: [Schema.Types.ObjectId], ref: 'Tag', required: true },
   asked_by: { type: String, default: 'Anonymous', required: true },
   ask_date_time: { type: Date, default: Date.now },
-  answers: { type: [Schema.Types.ObjectId], ref: 'Answer' }, //we use the answer.js model
+  answers: { type: [Schema.Types.ObjectId], ref: 'Answer' },
   views: { type: Number, default: 0 },
   votes: { type: Number, default: 0 },
   comments: { type: [Schema.Types.ObjectId], ref: 'Comment' },
@@ -18,14 +16,11 @@ var QuestionSchema = new Schema({
   userId: { type: Schema.Types.ObjectId }
 })
 
-//virtual method described in uml. ex Question.url returns post/question/_id
 QuestionSchema.virtual('url').get(function () {
   return 'posts/question/' + this._id
 })
 
-QuestionSchema.methods.getAllAnswers = async function () {
-  
-}
+QuestionSchema.methods.getAllAnswers = async function () {}
 
 /**
  * const question = Question.findbyID()
@@ -34,9 +29,7 @@ QuestionSchema.methods.getAllAnswers = async function () {
  * @param {*} answerId
  */
 QuestionSchema.methods.removeAnswer = async function (answerId) {
-  // Remove the answerId from the answers array
   this.answers = this.answers.filter(id => !id.equals(answerId))
-  // Save the updated document
   await this.save()
 }
 
@@ -50,16 +43,13 @@ QuestionSchema.methods.removeComment = async function (commentId) {
 
 QuestionSchema.methods.userAccountDelete = async function () {
   try {
-    // this.answers
-    // this.comments
-    for (const answerID in this.answers)
-    {
+    for (const answerID in this.answers) {
       try {
-        const answer = await Answer.findById(answerID);
-        await answer.questionDelete();
+        const answer = await Answer.findById(answerID)
+        await answer.questionDelete()
       } catch (error) {
-        console.error(error);
-        continue;
+        console.error(error)
+        continue
       }
     }
     await this.remove()
@@ -68,7 +58,36 @@ QuestionSchema.methods.userAccountDelete = async function () {
   }
 }
 
+/**
+ * Instance method to get tag objects for the tags in the tags array.
+ * @returns An array of tag objects.
+ */
+QuestionSchema.methods.getTags = async function () {
+  try {
+    const tags = await Promise.all(
+      this.tags.map(tagId => Tag.findById(tagId))
+    );
+    return tags.filter(tag => tag !== null);
+  } catch (error) {
+    console.error('Error fetching tags:', error);
+    throw error;
+  }
+};
+
+QuestionSchema.statics.findByUserId = async function (userId) {
+  return this.find({ userId: userId })
+}
+
+QuestionSchema.methods.updateItself = async function (title, summary, text, tags) {
+  try {
+    
+  } catch (error) {
+
+  }
+}
+
 module.exports = mongoose.model('Question', QuestionSchema)
 
 var Answer = require('./answers')
 var Comment = require('./comments')
+var Tag = require('./tags')

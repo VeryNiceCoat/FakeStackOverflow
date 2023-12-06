@@ -42,22 +42,12 @@ function Login (props) {
           password: password
         }
       })
-      // const gay = await Axios.get('http://localhost:8000/users/getAllQuestions', {withCredentials: true})
-      // window.alert(gay.data) 
       if (response.status !== 200) {
         window.alert('Login Invalid')
         return
       }
       props.setEmail(email)
       props.setName(response.data)
-      try {
-        const temp = await Axios.get('http://localhost:8000/users/getAllQuestions', {withCredentials: true});
-        // window.alert(temp.data);
-        console.log(temp.data);
-      } catch (error) {
-        console.log("error in get all questions")
-        // window.alert("Error in get all questions")
-      }
       setShowRegisterForm(false)
       setShowLoginForm(false)
       setShowRejectedMessage(false)
@@ -103,6 +93,13 @@ function Login (props) {
     const email = formData.get('email')
     const password = formData.get('password')
 
+    const emailLocalPart = email.split('@')[0]
+
+    if (password.includes(name) || password.includes(emailLocalPart)) {
+      window.alert('Password must not contain username or email id.')
+      return
+    }
+
     try {
       const response = await Axios.post(
         'http://localhost:8000/users/register',
@@ -121,20 +118,13 @@ function Login (props) {
         return
       }
 
-      props.setEmail(email)
-      props.setName(name)
       setShowRegisterForm(false)
       setShowLoginForm(false)
       setShowRejectedMessage(false)
-      setShowWelcomePage(false)
-      setShowHomePage(true)
+      window.alert('Registration Succesfull, Login to continue')
       return
     } catch (error) {
-      if (error.response.status === 400) {
-        window.alert('Email Already Exists')
-      } else {
-        window.alert('Server Error')
-      }
+      window.alert(error.message)
     }
   }
 
@@ -168,7 +158,7 @@ function Login (props) {
             required
           />
           <input
-            type='password'
+            type='text'
             id='password'
             name='password'
             placeholder='Password'

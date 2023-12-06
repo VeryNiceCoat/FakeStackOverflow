@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import UserProfile from './userProfile'
+import Axios from 'axios'
 
 function Header (props) {
   // const [object, setObject] = useState(props.object)
@@ -14,8 +15,34 @@ function Header (props) {
     }
   }
 
-  const handleLogoutClick = event => {
-    
+  const handleLogoutClick = event => {}
+
+  const handleDeleteAccountClick = async () => {
+    try {
+      const response = await Axios.get(
+        'http://localhost:8000/users/accountIsGuest',
+        {
+          withCredentials: true
+        }
+      )
+      window.alert(response);
+      if (response.data === true) {
+        throw new Error("You're a guest, you can't delete yourself")
+      }
+    } catch (error) {
+      window.alert(error.message)
+      return;
+    }
+    const userConfirmed = window.confirm('Delete account? Irreversible.')
+    if (userConfirmed) {
+      // User confirmed deletion
+      // Add your logic here for what happens when the user confirms deletion
+
+      console.log('Account deletion confirmed')
+    } else {
+      // User cancelled deletion
+      console.log('Account deletion cancelled')
+    }
   }
 
   return (
@@ -24,10 +51,10 @@ function Header (props) {
       <div>
         <button>Logout</button>
         <button>Login</button>
-        <button>Delete Account</button>
+        <button onClick={handleDeleteAccountClick}>Delete Account</button>
       </div>
       <div className='logo'>FAKE STACK OVERFLOW</div>
-      
+
       <div className='search-bar'>
         <input
           type='text'
