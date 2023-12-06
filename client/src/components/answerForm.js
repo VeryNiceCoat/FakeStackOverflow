@@ -4,7 +4,7 @@ import Axios from 'axios'
 const AnswerForm = ({ question, onSubmit }) => {
   const handleSubmit = async event => {
     event.preventDefault()
-    const username = event.target.formUsername.value
+    // const username = event.target.formUsername.value
     const answerBody = event.target.answerBody.value
     if (containsInvalidLink(answerBody)) {
       alert(
@@ -14,7 +14,7 @@ const AnswerForm = ({ question, onSubmit }) => {
     }
     const newAnswerData = {
       text: answerBody,
-      ans_by: username
+      // ans_by: username
     }
     const newAnswer = await Axios.post(
       'http://localhost:8000/answers',
@@ -29,13 +29,13 @@ const AnswerForm = ({ question, onSubmit }) => {
   return (
     <div id='answerFormContainer'>
       <form id='answerForm' onSubmit={handleSubmit}>
-        <label htmlFor='formUsernameAnswer'>Username:*</label>
+        {/* <label htmlFor='formUsernameAnswer'>Username:*</label>
         <input
           type='text'
           id='formUsernameAnswer'
           name='formUsername'
           required
-        />
+        /> */}
         <label htmlFor='answerBody'>Answer:*</label>
         <textarea
           id='answerBody'

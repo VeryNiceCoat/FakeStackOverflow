@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
+import UserProfile from './userProfile'
 
 function Header (props) {
-  const [object, setObject] = useState(props.object)
-  const [model, setModel] = useState(props.model)
-  const [query, setQuery] = useState(props.query)
+  // const [object, setObject] = useState(props.object)
+  // const [model, setModel] = useState(props.model)
+  // const [query, setQuery] = useState(props.query)
   // const [email, setEmail] = useState(props.email)
 
   const handleKeyDown = event => {
@@ -26,6 +27,7 @@ function Header (props) {
         <button>Delete Account</button>
       </div>
       <div className='logo'>FAKE STACK OVERFLOW</div>
+      
       <div className='search-bar'>
         <input
           type='text'

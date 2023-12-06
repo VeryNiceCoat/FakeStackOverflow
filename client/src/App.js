@@ -3,6 +3,7 @@
 import './stylesheets/App.css'
 import FakeStackOverflow from './components/fakestackoverflow.js'
 import Login from './components/login.js'
+// import UserProfile from './components/userProfile'
 import { useState } from 'react'
 
 function App () {

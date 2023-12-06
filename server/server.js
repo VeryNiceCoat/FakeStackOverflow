@@ -33,16 +33,19 @@ app.use(cors(corsOptionsDelegate))
 app.use(
   session({
     secret: `string`,
-    cookie: {maxAge: 99999999},
+    cookie: { maxAge: 86400000 },
     resave: false,
     saveUninitialized: false,
     secure: false,
+    store: MongoStore.create({
+      mongoUrl: mongoDB,
+      collectionName: 'sessions'
+    })
   })
 )
 
 // app.get('/temp', (req, res) => {
 //   req.cookies = "temp"
-//   console.log(req.cookies)
 //   res.send(req.cookies)
 // })
 
@@ -68,7 +71,6 @@ app.use('/comments', commentsRoute)
 
 app.get('/', (req, res) => {
   // req.session.name = "name";
-  // console.log("Route Triggered");
   res.send('hello')
 })
 

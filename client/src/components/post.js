@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Axios from 'axios'
 import AnswerTab from './answer.js'
 import CommentTab from './comment.js'
+import CommentForm from './commentForm.js'
 
 const Post = ({ question, onAnswerQuestion, onAskQuestion }, props) => {
   const [answersToBeLoaded, setAnswersToBeLoaded] = useState([])
@@ -11,6 +12,8 @@ const Post = ({ question, onAnswerQuestion, onAskQuestion }, props) => {
   const [isLoading, setIsLoading] = useState(true)
   const [comments, setComments] = useState([])
   const [commentPageNumber, setCommentPageNumber] = useState(0)
+  const [votes, setVotes] = useState(question.votes)
+  const [showCommentForm, setShowCommentForm] = useState(false)
 
   useEffect(() => {
     const questionA = [undefined]
@@ -24,6 +27,7 @@ const Post = ({ question, onAnswerQuestion, onAskQuestion }, props) => {
             break
           }
         }
+        setVotes(questionA[0].votes)
         await Axios.get('http://localhost:8000/answers').then(function (res) {
           const answersCollection = res.data
           const relevantAnswers = answersCollection.filter(ans =>
@@ -40,7 +44,6 @@ const Post = ({ question, onAnswerQuestion, onAskQuestion }, props) => {
         })
 
         const allComments = await Axios.get('http://localhost:8000/comments')
-        // console.log(allComments);
         const allCommentsData = allComments.data
 
         const relevantComments = allCommentsData.filter(comment =>
@@ -63,13 +66,27 @@ const Post = ({ question, onAnswerQuestion, onAskQuestion }, props) => {
     setIsLoading(false)
   }, [answersToBeLoaded])
 
-  // const loadingCheck = () => {
-  //   if (isLoading) {
-  //     return <div>Loading Answers...</div>
-  //   } else {
-  //     return <div id='itemsAboveAnswerBtn'>{answersToBeLoaded}</div>
-  //   }
-  // }
+  const handleUpvote = async () => {
+    try {
+      const response = await Axios.put(
+        `http://localhost:8000/questions/${question._id}/upVote`
+      )
+      setVotes(response.data.votes)
+    } catch (error) {
+      console.error('Error during upvote', error)
+    }
+  }
+
+  const handleDownvote = async () => {
+    try {
+      const response = await Axios.put(
+        `http://localhost:8000/questions/${question._id}/downVote`
+      )
+      setVotes(response.data.votes)
+    } catch (error) {
+      console.error('Error during upvote', error)
+    }
+  }
 
   const paginatedAnswers = () => {
     const startIndex = currentPage * answersPerPage
@@ -93,7 +110,7 @@ const Post = ({ question, onAnswerQuestion, onAskQuestion }, props) => {
   }
 
   const handlePrevComment = () => {
-    setCommentPageNumber(prev => prev > 0 ? prev - 1 : 0)
+    setCommentPageNumber(prev => (prev > 0 ? prev - 1 : 0))
   }
 
   const renderAnswers = () => {
@@ -127,15 +144,40 @@ const Post = ({ question, onAnswerQuestion, onAskQuestion }, props) => {
     }
   }
 
+  const handleAskCommentClick = () => {
+    setShowCommentForm(!showCommentForm)
+  }
+
+  const handleCommentSubmit = async commentText => {
+    try {
+      const temp = await Axios.put(
+        `http://localhost:8000/comments/newComment/${commentText}`,
+        {},
+        {
+          withCredentials: true
+        }
+      )
+      const comment = temp.data;
+      const wait = await Axios.put(`http://localhost:8000/questions/${question._id}/addComment/${comment._id}`, {}, {withCredentials: true})
+      setIsLoading(false);
+    } catch (error) {
+      window.alert(error.response.data)
+    }
+    setShowCommentForm(false)
+  }
+
+  const handleCancelComment = () => {
+    setShowCommentForm(false)
+  }
+
   return (
     <div id='postContainer'>
-      {/* {console.log("question comments", question.comments)} */}
       <div id='subheader'>
         <h5 id='answerCount'>{question.answers.length} answers</h5>
-        <h5>Question Votes: {question.votes}</h5>
+        <h5>Question Votes: {votes}</h5>
         <h4 id='questionTopic'>{question.title}</h4>
-        <button>Upvote</button>
-        <button>Downvote</button>
+        <button onClick={handleUpvote}>Upvote</button>
+        <button onClick={handleDownvote}>Downvote</button>
         <button id='askQuestionBtn' className='ask-q' onClick={onAskQuestion}>
           Ask Question
         </button>
@@ -162,6 +204,15 @@ const Post = ({ question, onAnswerQuestion, onAskQuestion }, props) => {
           <button onClick={handlePrevComment}>Prev</button>
           <button onClick={handleNextComment}>Next</button>
         </div>
+        <div>
+          <button onClick={handleAskCommentClick}>Add Comment</button>
+        </div>
+        {showCommentForm && (
+          <CommentForm
+            onSubmit={handleCommentSubmit}
+            onCancel={handleCancelComment}
+          />
+        )}
       </div>
       <button
         id='answerQuestionBtn'

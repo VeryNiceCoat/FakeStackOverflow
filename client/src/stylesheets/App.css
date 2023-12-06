@@ -17,9 +17,12 @@ body{
 }
 
 .logo {
-    width: 100%;/* makes the logo take up all remaining space in header */
+    /* makes the logo take up all remaining space in header */
+    width: 100%;
     text-align: center; /*the text in logo container is*/
 }
+
+
 .search-bar {
     display: flex;
     margin-left:auto; /* push searchbar far right */
@@ -31,7 +34,8 @@ body{
 }
 
 .sidebar {
-    height: 100vh; /*makes the sidebar extend to the bottom otherwise it stops partway*/
+    /*makes the sidebar extend to the bottom otherwise it stops partway*/
+    height: 100vh; 
     width: 250px;
     background: paleturquoise;
     box-sizing: border-box;
@@ -48,6 +52,10 @@ body{
 
 .sidebar li {
     margin-bottom: 16px;
+}
+
+.sidebar button {
+    border-radius: 10%;
 }
 
 .question-view {

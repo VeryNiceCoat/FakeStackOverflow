@@ -45,7 +45,6 @@ QuestionSchema.pre(
 
       next()
     } catch (error) {
-      console.log(error)
       next(error)
     }
   }
@@ -55,7 +54,7 @@ QuestionSchema.pre(
  * const question = Question.findbyID()
  * question.removeAnswer(answerID)
  * Doesn't delete answer from database, must be done manually
- * @param {*} answerId 
+ * @param {*} answerId
  */
 QuestionSchema.methods.removeAnswer = async function (answerId) {
   // Remove the answerId from the answers array
@@ -65,11 +64,22 @@ QuestionSchema.methods.removeAnswer = async function (answerId) {
 }
 
 /**
- * @param {*} answerId 
+ * @param {*} answerId
  */
 QuestionSchema.methods.removeComment = async function (commentId) {
-    this.comments = this.comments.filter(id => !id.equals(commentId))
-    await this.save()
+  this.comments = this.comments.filter(id => !id.equals(commentId))
+  await this.save()
+}
+
+QuestionSchema.methods.userAccountDelete = async function() {
+  try {
+    const ansArray = this.answers;
+    const commentArray = this.comments;
+
+    await this.remove();
+  } catch (error) {
+    console.error(error);
   }
+}
 
 module.exports = mongoose.model('Question', QuestionSchema)
