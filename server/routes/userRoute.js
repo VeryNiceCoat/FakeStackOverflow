@@ -49,18 +49,22 @@ router.get('/login', async (req, res) => {
 router.get('/canMakeNewTags', async (req, res) => {
   try {
     const accID = req.session.uid
-    const acc = Account.findById(accID)
+    const acc = await Account.findById(accID)
     if (acc.isGuest() === true) {
       res.status(200).send(false)
+      return;
     }
     if (acc.isAdmin() === true) {
       res.status(200).send(true)
+      return;
     }
     if (acc.reputation >= 50) {
       res.status(200).send(true)
+      return;
     }
     res.status(200).send(false)
   } catch (error) {
+    console.error("Error message can make new Tags:", error.message)
     throw new Error('Account Tag Error')
   }
 })

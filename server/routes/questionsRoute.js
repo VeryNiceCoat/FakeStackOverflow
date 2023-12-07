@@ -171,6 +171,8 @@ router.put('/:questionID/downVote', async (req, res) => {
       return res.status(404).send('Question not found')
     }
 
+    const update = await question.downvote();
+    res.status(200).send(update);
   } catch (error) {
     res.status(500).send('Server error on questions view update')
   }
