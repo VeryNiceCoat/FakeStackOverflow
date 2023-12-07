@@ -2,11 +2,10 @@ const express = require('express')
 const router = express.Router()
 const mongoose = require('mongoose')
 const cookieParser = require('cookie-parser')
-const auth = require('./auth')
-const errorHandler = require('./errorHandler')
 
 const Question = require('../models/questions')
 const Tag = require('../models/tags')
+const Account = require('../models/user')
 router.get('/', async (req, res) => {
   try {
     const questions = await Question.find()
@@ -96,10 +95,13 @@ router.post('/', async (req, res) => {
   try {
     const newQuestion = new Question({
       title: req.body.title,
+      summary: req.body.summary,
       text: req.body.text,
       tags: req.body.tags,
-      asked_by: req.body.asked_by,
-      ask_date_time: new Date()
+      asked_by: req.session.name,
+      username: req.session.name,
+      ask_date_time: new Date(),
+      userId: req.session.uid,
     })
 
     await newQuestion.save()
@@ -146,7 +148,7 @@ router.put('/:questionID/views', async (req, res) => {
   }
 })
 
-router.put('/:questionID/upVote', auth.verify, async (req, res) => {
+router.put('/:questionID/upVote', async (req, res) => {
   try {
     const questionID = req.params.questionID
     const question = await Question.findById(questionID)
@@ -154,13 +156,10 @@ router.put('/:questionID/upVote', auth.verify, async (req, res) => {
       return res.status(404).send('Question not found')
     }
 
-    question.votes += 1
-    const updatedQuestion = await question.save()
-
-    res.status(200).json(updatedQuestion)
+    const update = await question.upvote();
+    res.status(200).send(update);
   } catch (error) {
-    next(error);
-    // res.status(500).send('Server error on questions view update')
+    console.error(error);
   }
 })
 
@@ -172,10 +171,6 @@ router.put('/:questionID/downVote', async (req, res) => {
       return res.status(404).send('Question not found')
     }
 
-    question.votes -= 1
-    const updatedQuestion = await question.save()
-
-    res.status(200).json(updatedQuestion)
   } catch (error) {
     res.status(500).send('Server error on questions view update')
   }

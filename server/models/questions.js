@@ -34,6 +34,34 @@ QuestionSchema.methods.removeAnswer = async function (answerId) {
   await this.save()
 }
 
+QuestionSchema.methods.upvote = async function () {
+  try {
+    console.error("User id", this.userId)
+    const account = await Account.findById(this.userId);
+    console.error(account);
+    this.votes += 1;
+    await this.save();
+    await account.upvote();
+    return this;
+  } catch (error) {
+    console.error(error);
+    return this;
+  }
+}
+
+QuestionSchema.methods.downvote = async function () {
+  try {
+    const account = Account.findById(this.userId);
+    this.votes += -1;
+    await this.save();
+    await account.downvote();
+    return this;
+  } catch (error) {
+    console.error(error);
+    return this;
+  }
+}
+
 /**
  * @param {*} answerId
  */
@@ -129,3 +157,4 @@ module.exports = mongoose.model('Question', QuestionSchema)
 var Answer = require('./answers')
 var Comment = require('./comments')
 var Tag = require('./tags')
+var Account = require('./user')

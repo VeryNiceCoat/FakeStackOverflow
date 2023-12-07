@@ -6,7 +6,7 @@ const QuestionFormContainer = ({ onSubmit }) => {
     event.preventDefault()
     const title = event.target.questionTitle.value
     const text = event.target.questionBody.value
-    // const username = event.target.formUsername.value
+    const summary = event.target.questionSummary.value
     const rawTagNames = event.target.formTags.value.split(' ')
     const tagNames = rawTagNames.map(name => name.toLowerCase())
     if (!containsInvalidLink(text)) {
@@ -41,27 +41,16 @@ const QuestionFormContainer = ({ onSubmit }) => {
     }
     const newQuestionData = {
       title: title,
+      summary: summary,
       text: text,
       tags: tagsIds,
-      // asked_by: username
     }
     try {
       await Axios.post('http://localhost:8000/questions', newQuestionData, {withCredentials: true});
       onSubmit();
     } catch (error) {
       console.log(error);
-      // window.alert(error.message);
     }
-    // await Axios.post('http://localhost:8000/questions', newQuestionData, {withCredentials: true}).then(
-    //   function (res) {
-    //     if (res.status === 201) {
-          
-    //     } else {
-    //       console.error('error code: ', res.status)
-    //     }
-    //     onSubmit()
-    //   }
-    // )
   }
 
   return (
@@ -107,8 +96,8 @@ const QuestionFormContainer = ({ onSubmit }) => {
           required
           title='Up to 5 tags, each no longer than 10 characters, separated by whitespace.'
         />
-        {/* <label htmlFor='formUsername'>Username:*</label>
-        <input type='text' id='formUsername' name='formUsername' required /> */}
+        {
+}
 
         <button type='submit'>Submit</button>
       </form>

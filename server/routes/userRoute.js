@@ -46,6 +46,25 @@ router.get('/login', async (req, res) => {
   }
 })
 
+router.get('/canMakeNewTags', async (req, res) => {
+  try {
+    const accID = req.session.uid
+    const acc = Account.findById(accID)
+    if (acc.isGuest() === true) {
+      res.status(200).send(false)
+    }
+    if (acc.isAdmin() === true) {
+      res.status(200).send(true)
+    }
+    if (acc.reputation >= 50) {
+      res.status(200).send(true)
+    }
+    res.status(200).send(false)
+  } catch (error) {
+    throw new Error('Account Tag Error')
+  }
+})
+
 /**
  * Registers a new user, sends success if it works
  * REQ BODY for POST

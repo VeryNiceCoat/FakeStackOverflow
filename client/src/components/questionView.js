@@ -18,9 +18,10 @@ const QuestionView = props => {
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const response = await Axios.get('http://localhost:8000/questions')
+        const response = await Axios.get('http://localhost:8000/questions/getNewest')
         setQuestions(response.data)
       } catch (error) {
+        window.alert("Error getting questions from server")
         console.error('Error fetching questions', error)
       }
     }

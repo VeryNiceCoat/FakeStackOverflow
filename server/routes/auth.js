@@ -10,6 +10,7 @@ function authManager () {
     try {
       const accountID = req.session.uid
       const account = await Account.findById(accountID)
+      console.log(account);
 
       if (account.isGuest() === true) {
         const error = new Error('Account is Guest')

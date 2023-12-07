@@ -32,13 +32,38 @@ User.virtual('url').get(function () {
  * @return Updated User Account with new reputation value that was saved to the database, null if admin/guest
  */
 User.methods.upvote = async function () {
-  if (this.reputation !== -1 && this.reputation !== -2) {
-    this.reputation += 5
-    await this.save()
-    return this
+  if (!this.isRegularUser()) {
+    return null
+  } else {
+    try {
+      this.reputation += 5
+      await this.save()
+      return this
+    } catch (error) {
+      console.error(error)
+      return undefined
+    }
   }
-  // throw new Error('Account is either a guest or admin, cannot upvote')
-  return null
+}
+
+User.methods.questionUpvote = async function (questionID) {
+  try {
+    const y = await this.upvote();
+    const question = Question.findById(questionID);
+    return await question.upvote();
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+User.methods.questionDownvote = async function (questionID) {
+  try {
+    await this.downvote();
+    const question = Question.findById(questionID);
+    return await question.downvote();
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 /**
