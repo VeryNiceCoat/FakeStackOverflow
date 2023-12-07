@@ -1,7 +1,9 @@
 const express = require('express')
 const router = express.Router()
+const session = require('express-session')
 
 const Answer = require('../models/answers')
+const Account = require('../models/user')
 
 router.get('/', async (req, res) => {
   try {
@@ -17,17 +19,24 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
   try {
+    console.log(req.session.name)
+    const account = await Account.findById(req.session.uid)
+    if (account.isGuest() === true) {
+      res.status(403).send("You're a guest, can't submit answers")
+      return
+      // throw new Error("You're a guest, can't submit answers")
+    }
     const newAnswer = new Answer({
       text: req.body.text,
-      ans_by: req.body.ans_by,
-      ask_date_time: new Date()
+      ans_by: req.session.name,
+      ask_date_time: new Date(),
+      username: req.session.name,
+      userId: req.session.uid
     })
-
-    await newAnswer.save()
-    res.status(201).json(newAnswer)
+    const temp = await newAnswer.save()
+    res.status(201).json(temp)
   } catch (error) {
-    console.error(error.message)
-    res.status(500).send('server error answers/post')
+    res.status(500).send(error.message || 'server error answers/post')
   }
 })
 
@@ -38,11 +47,11 @@ router.put('/:answerID/downVote', async (req, res) => {
     if (!answer) {
       return res.status(404).send('Question not found')
     }
+    const answe = await answer.upvote()
+    // answer.votes -= 1
+    // const updatedAnswer = await answer.save()
 
-    answer.votes -= 1
-    const updatedAnswer = await answer.save()
-
-    res.status(200).json(updatedAnswer)
+    res.status(200).json(answe)
   } catch (error) {
     res.status(500).send('Server error on questions view update')
   }
@@ -56,10 +65,12 @@ router.put('/:answerID/upVote', async (req, res) => {
       return res.status(404).send('Question not found')
     }
 
-    answer.votes += 1
-    const updatedAnswer = await answer.save()
+    const answe = await answer.downvote()
+    res.status(200).json(answe)
+    // answer.votes += 1
+    // const updatedAnswer = await answer.save()
 
-    res.status(200).json(updatedAnswer)
+    // res.status(200).json(updatedAnswer)
   } catch (error) {
     res.status(500).send('Server error on questions view update')
   }
@@ -67,5 +78,4 @@ router.put('/:answerID/upVote', async (req, res) => {
 
 router.delete('/:answerId', async (req, res) => {})
 
-router
 module.exports = router

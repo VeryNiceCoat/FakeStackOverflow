@@ -63,27 +63,26 @@ AnswerSchema.methods.questionDelete = async function () {
 
 AnswerSchema.methods.upvote = async function () {
   try {
-    this.votes += 1
     const account = await Account.findById(this.userId)
-    if (account === null) {
-      throw new Error('Account not found')
-    }
+    this.votes += 1
+    await this.save()
     await account.upvote()
+    return this
   } catch (error) {
-    console.error(error)
+    return this
   }
 }
 
 AnswerSchema.methods.downvote = async function () {
   try {
-    this.votes += 1
-    const account = await Account.findById(this.userId)
-    if (account === null) {
-      throw new Error('Account Not Found')
-    }
+    const account = Account.findById(this.userId)
+    this.votes += -1
+    await this.save()
     await account.downvote()
+    return this
   } catch (error) {
     console.error(error)
+    return this
   }
 }
 

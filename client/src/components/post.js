@@ -100,7 +100,9 @@ const Post = ({ question, onAnswerQuestion, onAskQuestion }, props) => {
   }
 
   const handleNext = () => {
-    setCurrentPage(prev => prev + 1)
+    setCurrentPage(prev =>
+      (prev + 1) * 5 > answersToBeLoaded.length ? prev : prev + 1
+    )
   }
 
   const handlePrev = () => {
@@ -204,15 +206,15 @@ const Post = ({ question, onAnswerQuestion, onAskQuestion }, props) => {
       <div>Tags:</div>
       {renderAnswers()}
       <div>
-        <button onClick={handlePrev}>Prev</button>
-        <button onClick={handleNext}>Next</button>
+        <button onClick={handlePrev}>Prev Answers</button>
+        <button onClick={handleNext}>Next Answers</button>
       </div>
       <div>
         Question Comments:
         {renderComments()}
         <div>
-          <button onClick={handlePrevComment}>Prev</button>
-          <button onClick={handleNextComment}>Next</button>
+          <button onClick={handlePrevComment}>Prev Comments</button>
+          <button onClick={handleNextComment}>Next Comments</button>
         </div>
         <div>
           <button onClick={handleAskCommentClick}>Add Comment</button>

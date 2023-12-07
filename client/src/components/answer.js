@@ -49,7 +49,8 @@ const AnswerTab = props => {
       )
       setVotes(response.data.votes)
     } catch (error) {
-      console.error('Error during upvote', error)
+      window.alert("Upvote Error", error.data.message)
+      // console.error('Error during upvote', error)
     }
   }
 

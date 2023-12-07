@@ -13,17 +13,28 @@ const AnswerForm = ({ question, onSubmit }) => {
       return
     }
     const newAnswerData = {
-      text: answerBody,
+      text: answerBody
       // ans_by: username
     }
-    const newAnswer = await Axios.post(
-      'http://localhost:8000/answers',
-      newAnswerData
-    )
-    const questionID = question._id
-    await Axios.put(`http://localhost:8000/questions/${questionID}`, {
-      answerID: newAnswer.data._id
-    }).then(onSubmit())
+    try {
+      const newAnswer = await Axios.post(
+        'http://localhost:8000/answers',
+        newAnswerData,
+        { withCredentials: true }
+      )
+      const questionID = question._id
+      await Axios.put(
+        `http://localhost:8000/questions/${questionID}`,
+        {
+          answerID: newAnswer.data._id
+        },
+        { withCredentials: true }
+      ).then(onSubmit())
+    } catch (error) {
+      window.alert(error.response.data)
+      // onSubmit();
+      // console.error(error.message)
+    }
   }
 
   return (

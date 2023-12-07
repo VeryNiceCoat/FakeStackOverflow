@@ -36,15 +36,12 @@ QuestionSchema.methods.removeAnswer = async function (answerId) {
 
 QuestionSchema.methods.upvote = async function () {
   try {
-    console.error('User id', this.userId)
     const account = await Account.findById(this.userId)
-    console.error(account)
     this.votes += 1
     await this.save()
     await account.upvote()
     return this
   } catch (error) {
-    console.error(error)
     return this
   }
 }
