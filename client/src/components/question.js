@@ -35,7 +35,8 @@ const Question = (
       )
       setVotes(response.data.votes)
     } catch (error) {
-      console.error('Error during upvote', error)
+      console.error(error.message);
+      // window.alert(error.message);
     }
   }
 

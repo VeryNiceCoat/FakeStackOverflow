@@ -2,6 +2,8 @@ const express = require('express')
 const router = express.Router()
 const mongoose = require('mongoose')
 const cookieParser = require('cookie-parser')
+const auth = require('./auth')
+const errorHandler = require('./errorHandler')
 
 const Question = require('../models/questions')
 const Tag = require('../models/tags')
@@ -144,7 +146,7 @@ router.put('/:questionID/views', async (req, res) => {
   }
 })
 
-router.put('/:questionID/upVote', async (req, res) => {
+router.put('/:questionID/upVote', auth.verify, async (req, res) => {
   try {
     const questionID = req.params.questionID
     const question = await Question.findById(questionID)
@@ -157,7 +159,8 @@ router.put('/:questionID/upVote', async (req, res) => {
 
     res.status(200).json(updatedQuestion)
   } catch (error) {
-    res.status(500).send('Server error on questions view update')
+    next(error);
+    // res.status(500).send('Server error on questions view update')
   }
 })
 

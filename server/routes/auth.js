@@ -32,6 +32,10 @@ function authManager () {
         )
         throw error
       }
+      if (account.reputation < 50) {
+        throw new Error('Reputation is not 50 or above')
+      }
+
       next()
     } catch (error) {
       next(error)

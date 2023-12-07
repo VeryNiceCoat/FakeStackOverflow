@@ -108,16 +108,19 @@ const QuestionView = props => {
 
   const handleNewestClick = async () => {
     setFilter('newest')
+    setCurrentPage(0)
     await fetchAndSetQuestionsButton('newest')
   }
 
   const handleActiveClick = async () => {
     setFilter('active')
+    setCurrentPage(0)
     await fetchAndSetQuestionsButton('active')
   }
 
   const handleUnansweredClick = async () => {
     setFilter('unanswered')
+    setCurrentPage(0)
     await fetchAndSetQuestionsButton('unanswered')
   }
 
@@ -203,10 +206,12 @@ const QuestionView = props => {
     }
     const lowerCaseTitle = question.title.toLowerCase()
     const lowerCaseText = question.text.toLowerCase()
+    const lowerCaseSummary = question.summary.toLowerCase()
     const lowerCaseSearchString = searchString.toLowerCase()
     return (
       lowerCaseTitle.includes(lowerCaseSearchString) ||
-      lowerCaseText.includes(lowerCaseSearchString)
+      lowerCaseText.includes(lowerCaseSearchString) ||
+      lowerCaseSummary.includes(lowerCaseSearchString)
     )
   }
 
@@ -244,16 +249,20 @@ const QuestionView = props => {
     return undefined
   }
 
-  const extractAndRemoveTags = input => {
+  function extractAndRemoveTags (input) {
     const regex = /\[([^\]]+)\]/g
     const matches = input.match(regex)
-    if (!matches) {
-      const tags = []
-      const text = input
-      return { tags, text }
+    let tags = []
+    let text = ''
+    if (matches) {
+      tags = matches.map(match => match.slice(1, -1))
+      text = input.replace(regex, '')
+    } else {
+      text = input
     }
-    const tags = matches.map(match => match.slice(1, -1))
-    const text = input.replace(regex, '')
+    if (text.endsWith(' ')) {
+      text = text.slice(0, -1)
+    }
     return { tags, text }
   }
 
