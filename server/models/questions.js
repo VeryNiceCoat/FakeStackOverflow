@@ -36,29 +36,29 @@ QuestionSchema.methods.removeAnswer = async function (answerId) {
 
 QuestionSchema.methods.upvote = async function () {
   try {
-    console.error("User id", this.userId)
-    const account = await Account.findById(this.userId);
-    console.error(account);
-    this.votes += 1;
-    await this.save();
-    await account.upvote();
-    return this;
+    console.error('User id', this.userId)
+    const account = await Account.findById(this.userId)
+    console.error(account)
+    this.votes += 1
+    await this.save()
+    await account.upvote()
+    return this
   } catch (error) {
-    console.error(error);
-    return this;
+    console.error(error)
+    return this
   }
 }
 
 QuestionSchema.methods.downvote = async function () {
   try {
-    const account = Account.findById(this.userId);
-    this.votes += -1;
-    await this.save();
-    await account.downvote();
-    return this;
+    const account = Account.findById(this.userId)
+    this.votes += -1
+    await this.save()
+    await account.downvote()
+    return this
   } catch (error) {
-    console.error(error);
-    return this;
+    console.error(error)
+    return this
   }
 }
 
@@ -122,10 +122,44 @@ QuestionSchema.methods.updateItself = async function (
  */
 QuestionSchema.statics.getAllQuestionsByActivity = async function () {
   try {
-    const questions = await this.find().sort({ updatedAt: -1 })
+    // Aggregating questions and answers
+    const questions = await this.aggregate([
+      {
+        $lookup: {
+          from: 'answers', // the collection name of the Answer model
+          localField: 'answers',
+          foreignField: '_id',
+          as: 'answerDetails'
+        }
+      },
+      {
+        $project: {
+          title: 1,
+          summary: 1,
+          text: 1,
+          tags: 1,
+          asked_by: 1,
+          ask_date_time: 1,
+          answers: 1,
+          views: 1,
+          votes: 1,
+          comments: 1,
+          username: 1,
+          userId: 1,
+          updatedAt: 1,
+          latestAnswerDate: { $max: '$answerDetails.createdAt' }
+        }
+      },
+      {
+        $sort: {
+          latestAnswerDate: -1,
+          updatedAt: -1 // Fallback sort for questions without answers
+        }
+      }
+    ])
     return questions
   } catch (error) {
-    throw new Error('QuestionSchema.statics.getAllQuestionsByActivity')
+    throw new Error('Error in QuestionSchema.statics.getAllQuestionsByActivity')
   }
 }
 

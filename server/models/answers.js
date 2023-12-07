@@ -1,15 +1,18 @@
 var mongoose = require('mongoose')
 var Schema = mongoose.Schema
 
-var AnswerSchema = new Schema({
-  text: { type: String, required: true },
-  ans_by: { type: String, required: true },
-  ans_date_time: { type: Date, default: Date.now },
-  votes: { type: Number, default: 0 },
-  comments: { type: [Schema.Types.ObjectId], ref: 'Comment' },
-  username: { type: String, default: 'Anon' },
-  userId: { type: Schema.Types.ObjectId }
-})
+var AnswerSchema = new Schema(
+  {
+    text: { type: String, required: true },
+    ans_by: { type: String, required: true },
+    ans_date_time: { type: Date, default: Date.now },
+    votes: { type: Number, default: 0 },
+    comments: { type: [Schema.Types.ObjectId], ref: 'Comment' },
+    username: { type: String, default: 'Anon' },
+    userId: { type: Schema.Types.ObjectId }
+  },
+  { timestamps: true }
+)
 AnswerSchema.virtual('url').get(function () {
   return 'posts/answer/' + this._id
 })
