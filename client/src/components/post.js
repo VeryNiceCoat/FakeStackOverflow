@@ -3,6 +3,7 @@ import Axios from 'axios'
 import AnswerTab from './answer.js'
 import CommentTab from './comment.js'
 import CommentForm from './commentForm.js'
+import TagForQuestionInMainPage from './tagForQuestionInMainPage'
 
 const Post = ({ question, onAnswerQuestion, onAskQuestion }, props) => {
   const [answersToBeLoaded, setAnswersToBeLoaded] = useState([])
@@ -14,6 +15,7 @@ const Post = ({ question, onAnswerQuestion, onAskQuestion }, props) => {
   const [commentPageNumber, setCommentPageNumber] = useState(0)
   const [votes, setVotes] = useState(question.votes)
   const [showCommentForm, setShowCommentForm] = useState(false)
+  // const [tags, setTags] = useState([]);
 
   useEffect(() => {
     const questionA = [undefined]
@@ -106,7 +108,9 @@ const Post = ({ question, onAnswerQuestion, onAskQuestion }, props) => {
   }
 
   const handleNextComment = () => {
-    setCommentPageNumber(prev => prev + 1)
+    setCommentPageNumber(prev =>
+      (prev + 1) * 3 > comments.length ? prev : prev + 1
+    )
   }
 
   const handlePrevComment = () => {
@@ -157,9 +161,14 @@ const Post = ({ question, onAnswerQuestion, onAskQuestion }, props) => {
           withCredentials: true
         }
       )
-      const comment = temp.data;
-      const wait = await Axios.put(`http://localhost:8000/questions/${question._id}/addComment/${comment._id}`, {}, {withCredentials: true})
-      setIsLoading(false);
+      const comment = temp.data
+      const wait = await Axios.put(
+        `http://localhost:8000/questions/${question._id}/addComment/${comment._id}`,
+        {},
+        { withCredentials: true }
+      )
+      setIsLoading(false)
+      setIsLoading(true)
     } catch (error) {
       window.alert(error.response.data)
     }
@@ -192,6 +201,7 @@ const Post = ({ question, onAnswerQuestion, onAskQuestion }, props) => {
           {question.username} asked {formatQuestionDate(question.ask_date_time)}
         </div>
       </div>
+      <div>Tags:</div>
       {renderAnswers()}
       <div>
         <button onClick={handlePrev}>Prev</button>
