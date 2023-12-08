@@ -80,8 +80,21 @@ const AnswerTab = props => {
         {},
         { withCredentials: true }
       )
-      setIsLoading(false)
-      setIsLoading(true)
+
+      const newAnswer = wait.data;
+
+      const res = await Axios.get('http://localhost:8000/comments')
+      const allComments = res.data
+
+      const filteredComments = allComments.filter(comment =>
+        newAnswer.comments.some(
+          answerComment => answerComment === comment._id
+        )
+      )
+
+      setComments(filteredComments);
+      // setIsLoading(false)
+      // setIsLoading(true)
     } catch (error) {
       window.alert(error.response.data)
     }
