@@ -7,7 +7,7 @@ const AnswerTab = props => {
   const [comments, setComments] = useState([])
   const [votes, setVotes] = useState(props.answer.votes)
   const [showCommentForm, setShowCommentForm] = useState(false)
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -49,7 +49,7 @@ const AnswerTab = props => {
       )
       setVotes(response.data.votes)
     } catch (error) {
-      window.alert("Upvote Error", error.data.message)
+      window.alert('Upvote Error', error.data.message)
       // console.error('Error during upvote', error)
     }
   }
@@ -81,6 +81,7 @@ const AnswerTab = props => {
         { withCredentials: true }
       )
       setIsLoading(false)
+      setIsLoading(true)
     } catch (error) {
       window.alert(error.response.data)
     }
@@ -92,7 +93,7 @@ const AnswerTab = props => {
   }
 
   const handleCommentClick = () => {
-    setShowCommentForm(true);
+    setShowCommentForm(true)
   }
 
   return (

@@ -4,6 +4,7 @@ const session = require('express-session')
 
 const Answer = require('../models/answers')
 const Account = require('../models/user')
+const Question = require('../models/questions')
 
 router.get('/', async (req, res) => {
   try {
@@ -73,6 +74,35 @@ router.put('/:answerID/upVote', async (req, res) => {
     // res.status(200).json(updatedAnswer)
   } catch (error) {
     res.status(500).send('Server error on questions view update')
+  }
+})
+
+/**
+ * Adds a comment to a question, given question ID and comment ID in
+ * http://localhost:8000/questions/etc
+ */
+router.put('/:answerID/addComment/:commentID', async (req, res) => {
+  try {
+    const account = await Account.findById(req.session.uid)
+    if (account.isGuest() === true) {
+      res.status(403).send("Guests don't have rights")
+      return
+    }
+
+    const answerID = req.params.answerID
+    const answer = await Answer.findById(answerID)
+    if (!answer) {
+      res.status(404).send('answer not found')
+      return
+    }
+    const commentID = req.params.commentID
+    answer.comments.push(commentID)
+    await answer.save()
+    res.status(200).send('GREAT SUCCESS')
+    return
+  } catch (error) {
+    res.status(500).send('Server Error With Getting Data')
+    return
   }
 })
 
