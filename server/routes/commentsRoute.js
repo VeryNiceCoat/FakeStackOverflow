@@ -9,7 +9,7 @@ const errorHandler = require('./errorHandler')
 
 router.get('/', async (req, res) => {
   try {
-    const comments = await Comment.find()
+    const comments = await Comment.find().sort({createdAt: -1})
 
     res.send(comments)
   } catch (error) {
@@ -39,12 +39,14 @@ router.put('/:commentID/upVote', auth.verify, async (req, res) => {
       return res.status(404).send('Question not found')
     }
 
-    comment.votes += 1
-    const updatedComment = await comment.save()
+    // comment.votes += 1
+    const updatedComment = await comment.upVote();
 
     res.status(200).json(updatedComment)
   } catch (error) {
-    next(error)
+    console.error(error);
+    res.status(403).send(error);
+    // next(error)
     // console.log("Error Message", error.message);
     // res.status(error.status || 500).json(error);
   }

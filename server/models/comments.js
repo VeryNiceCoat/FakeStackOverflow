@@ -25,13 +25,14 @@ CommentSchema.methods.upVote = async function () {
   try {
     this.votes += 1
     // await this.save();
-    const account = await Account.findById(userId)
+    const account = await Account.findById(this.userId)
     if (!account) {
       throw new Error('Account of Comment Does not exist')
     }
     await account.upvote
     return await this.save()
   } catch (error) {
+    console.error("Inside comment upVote method", error)
     throw error
   }
 }

@@ -46,26 +46,6 @@ User.methods.upvote = async function () {
   }
 }
 
-User.methods.questionUpvote = async function (questionID) {
-  try {
-    const y = await this.upvote();
-    const question = Question.findById(questionID);
-    return await question.upvote();
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-User.methods.questionDownvote = async function (questionID) {
-  try {
-    await this.downvote();
-    const question = Question.findById(questionID);
-    return await question.downvote();
-  } catch (error) {
-    console.error(error);
-  }
-}
-
 /**
  * Checks if the user is an admin or guest, returns null if it is
  * If it isn't updates the user reputation by adding -10
@@ -86,6 +66,28 @@ User.methods.downvote = async function () {
     }
   }
 }
+
+User.methods.questionUpvote = async function (questionID) {
+  try {
+    const y = await this.upvote();
+    const question = Question.findById(questionID);
+    return await question.upvote();
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+User.methods.questionDownvote = async function (questionID) {
+  try {
+    await this.downvote();
+    const question = Question.findById(questionID);
+    return await question.downvote();
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+
 
 /**
  * @returns True if guest, false if not
