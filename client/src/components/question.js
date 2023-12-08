@@ -31,11 +31,14 @@ const Question = (
   const handleUpvote = async () => {
     try {
       const response = await Axios.put(
-        `http://localhost:8000/questions/${question._id}/upVote`
+        `http://localhost:8000/questions/${question._id}/upVote`,
+        {},
+        { withCredentials: true }
       )
       setVotes(response.data.votes)
     } catch (error) {
-      console.error(error.message);
+      // window.alert(error)
+      window.alert(error.response.data)
       // window.alert(error.message);
     }
   }
@@ -43,11 +46,14 @@ const Question = (
   const handleDownvote = async () => {
     try {
       const response = await Axios.put(
-        `http://localhost:8000/questions/${question._id}/downVote`
+        `http://localhost:8000/questions/${question._id}/downVote`,
+        {},
+        { withCredentials: true }
       )
       setVotes(response.data.votes)
     } catch (error) {
-      console.error('Error during upvote', error)
+      window.alert(error.response.data)
+      // console.error('Error during upvote', error)
     }
   }
 

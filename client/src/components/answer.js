@@ -8,6 +8,8 @@ const AnswerTab = props => {
   const [votes, setVotes] = useState(props.answer.votes)
   const [showCommentForm, setShowCommentForm] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+  const [commentPageNumber, setCommentPageNumber] = useState(0)
+  const commentsPerPage = 3
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -34,13 +36,7 @@ const AnswerTab = props => {
     }
 
     fetchComments()
-  }, [props.answer.comments, comments])
-
-  const renderComments = () => {
-    return comments.map(comment => (
-      <CommentTab key={comment._id} comment={comment} />
-    ))
-  }
+  }, [props.answer.comments])
 
   const handleUpvote = async () => {
     try {
@@ -81,18 +77,16 @@ const AnswerTab = props => {
         { withCredentials: true }
       )
 
-      const newAnswer = wait.data;
+      const newAnswer = wait.data
 
       const res = await Axios.get('http://localhost:8000/comments')
       const allComments = res.data
 
       const filteredComments = allComments.filter(comment =>
-        newAnswer.comments.some(
-          answerComment => answerComment === comment._id
-        )
+        newAnswer.comments.some(answerComment => answerComment === comment._id)
       )
 
-      setComments(filteredComments);
+      setComments(filteredComments)
       // setIsLoading(false)
       // setIsLoading(true)
     } catch (error) {
@@ -107,6 +101,41 @@ const AnswerTab = props => {
 
   const handleCommentClick = () => {
     setShowCommentForm(true)
+  }
+
+  const paginatedComments = () => {
+    const startIndex = commentPageNumber * commentsPerPage
+    const selectedComments = comments.slice(
+      startIndex,
+      startIndex + commentsPerPage
+    )
+    return selectedComments
+  }
+
+  const renderComments = () => {
+    const temp = paginatedComments();
+    // console.log(temp);
+    return temp.map(comment => (
+      <CommentTab key={comment._id} comment={comment} />
+    ))
+  }
+  // const renderComments = () => {
+  //   // if (question.comments.length == 0) {
+  //   //   return <div>No Comments</div>
+  //   // } else {
+  //   return paginatedComments()
+  //   // }
+  // }
+
+  const handleNextCommentClick = () => {
+    setCommentPageNumber(prev =>
+      (prev + 1) * 3 > comments.length ? prev : prev + 1
+    )
+  }
+
+  const handlePrevCommentClick = () => {
+    setCommentPageNumber(prev => (prev > 0 ? prev - 1 : 0))
+
   }
 
   return (
@@ -138,8 +167,8 @@ const AnswerTab = props => {
         {renderComments()}
       </div>
       <div>
-        <button>Prev</button>
-        <button>Next</button>
+        <button onClick={handlePrevCommentClick}>Prev</button>
+        <button onClick={handleNextCommentClick}>Next</button>
       </div>
     </div>
   )

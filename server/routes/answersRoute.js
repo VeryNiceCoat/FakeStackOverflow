@@ -48,7 +48,7 @@ router.put('/:answerID/downVote', async (req, res) => {
     if (!answer) {
       return res.status(404).send('Question not found')
     }
-    const answe = await answer.upvote()
+    const answe = await answer.downvote()
     // answer.votes -= 1
     // const updatedAnswer = await answer.save()
 
@@ -66,7 +66,7 @@ router.put('/:answerID/upVote', async (req, res) => {
       return res.status(404).send('Question not found')
     }
 
-    const answe = await answer.downvote()
+    const answe = await answer.upvote()
     res.status(200).json(answe)
     // answer.votes += 1
     // const updatedAnswer = await answer.save()

@@ -6,6 +6,8 @@ const cookieParser = require('cookie-parser')
 const Question = require('../models/questions')
 const Tag = require('../models/tags')
 const Account = require('../models/user')
+const session = require('express-session')
+
 router.get('/', async (req, res) => {
   try {
     const questions = await Question.find()
@@ -150,6 +152,13 @@ router.put('/:questionID/views', async (req, res) => {
 
 router.put('/:questionID/upVote', async (req, res) => {
   try {
+    const account = await Account.findById(req.session.uid);
+    if (account.isGuest() === true || (account.isRegularUser() === true && account.reputation < 50))
+    {
+      let y = new Error('Either a guest or a user with less than 50 reputation can\'t upvote')
+      res.status(403).send(y.message)
+      return;
+    }
     const questionID = req.params.questionID
     const question = await Question.findById(questionID)
     if (!question) {
@@ -159,12 +168,20 @@ router.put('/:questionID/upVote', async (req, res) => {
     const update = await question.upvote();
     res.status(200).send(update);
   } catch (error) {
+    res.status(403).send(error.message);
     console.error(error);
   }
 })
 
 router.put('/:questionID/downVote', async (req, res) => {
   try {
+    const account = await Account.findById(req.session.uid);
+    if (account.isGuest() === true || (account.isRegularUser() === true && account.reputation < 50))
+    {
+      let y = new Error('Either a guest or a user with less than 50 reputation can\'t downvote')
+      res.status(403).send(y.message)
+      return;
+    }
     const questionID = req.params.questionID
     const question = await Question.findById(questionID)
     if (!question) {
@@ -174,7 +191,8 @@ router.put('/:questionID/downVote', async (req, res) => {
     const update = await question.downvote();
     res.status(200).send(update);
   } catch (error) {
-    res.status(500).send('Server error on questions view update')
+    res.status(403).send(error.message);
+    console.error(error);
   }
 })
 
