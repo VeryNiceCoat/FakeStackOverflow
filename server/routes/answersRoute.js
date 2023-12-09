@@ -8,7 +8,7 @@ const Question = require('../models/questions')
 
 router.get('/', async (req, res) => {
   try {
-    const answers = await Answer.find()
+    const answers = await Answer.find().sort({createdAt: -1})
     res.send(answers)
     if (!answers) {
       return res.status(404).send('questionS not found')
