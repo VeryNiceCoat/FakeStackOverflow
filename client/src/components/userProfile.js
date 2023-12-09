@@ -39,16 +39,13 @@ function UserProfile (props) {
   const renderUserAnswers = () => {}
 
   const renderUserTags = () => {
-    console.log(userQuestions)
     const tags = []
     for (let i = 0; i < userQuestions.length; i++) {
       for (let z = 0; z < userQuestions[i].tags.length; z++) {
         tags.push(userQuestions[i].tags[z])
       }
     }
-    console.log('Tags', tags)
     const uniqTags = [...new Set(tags)]
-    console.log('Uniq', uniqTags)
     return (
       <TagPage
         questions={userQuestions}
