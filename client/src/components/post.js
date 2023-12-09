@@ -5,11 +5,12 @@ import CommentTab from './comment.js'
 import CommentForm from './commentForm.js'
 import TagForQuestionInMainPage from './tagForQuestionInMainPage'
 
-const Post = ({ question, onAnswerQuestion, onAskQuestion }, props) => {
+const Post = ({ question, onAnswerQuestion, onAskQuestion, onhandleTagOnMainPageClicked }, props) => {
   const [answersToBeLoaded, setAnswersToBeLoaded] = useState([])
   const [currentPage, setCurrentPage] = useState(0)
   const answersPerPage = 5
   const commentsPerPage = 3
+  const [selectedTags, setSelectedTags] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [comments, setComments] = useState([])
   const [commentPageNumber, setCommentPageNumber] = useState(0)
@@ -67,6 +68,21 @@ const Post = ({ question, onAnswerQuestion, onAskQuestion }, props) => {
   useEffect(() => {
     setIsLoading(false)
   }, [answersToBeLoaded])
+
+  useEffect(() => {
+    const fetchRelevantTags = async () => {
+      try {
+        const res = await Axios.get(`http://localhost:8000/tags`)
+        const relevantTags = res.data.filter(tag =>
+          question.tags.some(questionTags => questionTags === tag._id)
+        )
+        setSelectedTags(relevantTags)
+      } catch (error) {
+        console.error('error fetching tags in components/question.js', error)
+      }
+    }
+    fetchRelevantTags()
+  }, [question.tags, question.views])
 
   const handleUpvote = async () => {
     try {
@@ -217,7 +233,16 @@ const Post = ({ question, onAnswerQuestion, onAskQuestion }, props) => {
           {question.username} asked {formatQuestionDate(question.ask_date_time)}
         </div>
       </div>
-      <div>Tags:</div>
+      <div><div id='appendOtherTagsHere'>
+          {selectedTags.map(tag => (
+            <TagForQuestionInMainPage
+              key={tag._id}
+              onSearch={props.onSearch}
+              tag={tag}
+              onhandleTagOnMainPageClicked={onhandleTagOnMainPageClicked}
+            />
+          ))}
+        </div></div>
       {renderAnswers()}
       <div>
         <button onClick={handlePrev}>Prev Answers</button>
