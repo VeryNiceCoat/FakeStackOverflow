@@ -145,6 +145,7 @@ const QuestionView = props => {
         question={selectedQuestion}
         onAskQuestion={handleAskQuestionClick}
         onAnswerQuestion={handleAnswerQuestionClick}
+        onhandleTagOnMainPageClicked={props.onhandleTagOnMainPageClicked}
         onPost={props.showPostView}
       />
     )
