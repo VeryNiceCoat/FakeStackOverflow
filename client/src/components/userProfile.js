@@ -58,25 +58,32 @@ function UserProfile (props) {
 
   return (
     <div id='profile-page'>
-      <div className='pfp-sidebar'>
-        <h3>User: </h3>
-        <ul>
-          <li>
-            <button onClick={() => setView('questions')}>Questions</button>
-          </li>
-          <li>
-            <button onClick={() => setView('tags')}>Tags</button>
-          </li>
-          <li>
-            <button onClick={() => setView('answers')}>Answers</button>
-          </li>
-        </ul>
+      <div id='user-stats'>
+        <h2>USERNAME</h2>
+        <h4>REPUTATION</h4>
+        <h4>Account Age</h4>
       </div>
-      <div className='user-submissions'>
-        {/* {console.log(view)} */}
-        {view === 'questions' && renderUserQuestions()}
-        {view === 'tags' && renderUserTags()}
-        {view === 'answers' && renderUserAnswers()}
+      <div id='user-posts'>
+        <div className='pfp-sidebar'>
+          <h3>User: </h3>
+          <ul>
+            <li>
+              <button onClick={() => setView('questions')}>Questions</button>
+            </li>
+            <li>
+              <button onClick={() => setView('tags')}>Tags</button>
+            </li>
+            <li>
+              <button onClick={() => setView('answers')}>Answers</button>
+            </li>
+          </ul>
+        </div>
+        <div className='user-submissions'>
+          {/* {console.log(view)} */}
+          {view === 'questions' && renderUserQuestions()}
+          {view === 'tags' && renderUserTags()}
+          {view === 'answers' && renderUserAnswers()}
+        </div>
       </div>
     </div>
   )

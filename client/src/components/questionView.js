@@ -152,7 +152,10 @@ const QuestionView = props => {
   }
 
   const renderProfile = () => {
-    return <UserProfile />
+    return <UserProfile 
+              handleShowPost={handleShowPost} 
+              onhandleTagOnMainPageClicked={props.onhandleTagOnMainPageClicked}
+          />
   }
 
   const renderQuestions = () => {
