@@ -61,6 +61,17 @@ function Header (props) {
     }
     const userConfirmed = window.confirm('Delete account? Irreversible.')
     if (userConfirmed) {
+      try {
+        const res = await Axios.get('http://localhost:8000/users/suicide', {
+          withCredentials: true
+        })
+        if (res.data !== true) {
+          throw new Error('Error With Deleting Account')
+        }
+      } catch (error) {
+        window.alert(error.message)
+        return
+      }
       // User confirmed deletion
       // Add your logic here for what happens when the user confirms deletion
 

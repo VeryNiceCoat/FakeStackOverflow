@@ -52,19 +52,19 @@ router.get('/canMakeNewTags', async (req, res) => {
     const acc = await Account.findById(accID)
     if (acc.isGuest() === true) {
       res.status(200).send(false)
-      return;
+      return
     }
     if (acc.isAdmin() === true) {
       res.status(200).send(true)
-      return;
+      return
     }
     if (acc.reputation >= 50) {
       res.status(200).send(true)
-      return;
+      return
     }
     res.status(200).send(false)
   } catch (error) {
-    console.error("Error message can make new Tags:", error.message)
+    console.error('Error message can make new Tags:', error.message)
     throw new Error('Account Tag Error')
   }
 })
@@ -175,26 +175,22 @@ router.get('/suicide', async (req, res) => {
     const account = await Account.findOne({ email: email })
     const val = await account.wipeAllReferences()
     if (val === -1) {
-      res.status(500)
       throw new Error('Server Error')
     } else if (val === 0) {
-      res.status(500)
       throw new Error("Can't delete yourself if you're a guest or an admin")
     } else {
       res.status(200).json(true)
     }
   } catch (error) {
-    console.error(error)
-    throw error
-    // throw new Error('Deleting User had a server error;')
+    res.status(500).send(error.message)
   }
 })
 
 router.get('/getSelf', async (req, res) => {
   try {
-    const accID = req.session.uid;
-    const account = await Account.findById(accID);
-    res.status(200).send(account);
+    const accID = req.session.uid
+    const account = await Account.findById(accID)
+    res.status(200).send(account)
   } catch (error) {
     res.status(500).send(error.message)
   }
