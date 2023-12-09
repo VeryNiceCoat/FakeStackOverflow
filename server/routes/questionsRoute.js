@@ -230,8 +230,8 @@ router.put('/:questionID/addComment/:commentID', async (req, res) => {
     }
     const commentID = req.params.commentID
     question.comments.push(commentID)
-    await question.save()
-    res.status(200).send('GREAT SUCCESS')
+    const question2 = await question.save()
+    res.status(200).send(question2)
     return
   } catch (error) {
     res.status(500).send('Server Error With Getting Data')

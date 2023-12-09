@@ -20,7 +20,6 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
   try {
-    console.log(req.session.name)
     const account = await Account.findById(req.session.uid)
     if (account.isGuest() === true) {
       res.status(403).send("You're a guest, can't submit answers")
@@ -44,6 +43,13 @@ router.post('/', async (req, res) => {
 router.put('/:answerID/downVote', async (req, res) => {
   try {
     const answerID = req.params.answerID
+    const accID = req.session.uid;
+    const account = await Account.findById(accID)
+    if (account.isGuest() === true || (account.isRegularUser() === true && account.reputation < 50))
+    {
+      res.status(403).send("Account of guest or reputation of less than 50 can't upvote")
+      return;
+    }
     const answer = await Answer.findById(answerID)
     if (!answer) {
       return res.status(404).send('Question not found')
@@ -61,6 +67,13 @@ router.put('/:answerID/downVote', async (req, res) => {
 router.put('/:answerID/upVote', async (req, res) => {
   try {
     const answerID = req.params.answerID
+    const accID = req.session.uid;
+    const account = await Account.findById(accID)
+    if (account.isGuest() === true || (account.isRegularUser() === true && account.reputation < 50))
+    {
+      res.status(403).send("Account of guest or reputation of less than 50 can't upvote")
+      return;
+    }
     const answer = await Answer.findById(answerID)
     if (!answer) {
       return res.status(404).send('Question not found')
@@ -73,7 +86,7 @@ router.put('/:answerID/upVote', async (req, res) => {
 
     // res.status(200).json(updatedAnswer)
   } catch (error) {
-    res.status(500).send('Server error on questions view update')
+    res.status(500).send(error.message)
   }
 })
 

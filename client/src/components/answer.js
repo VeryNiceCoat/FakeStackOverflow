@@ -41,11 +41,13 @@ const AnswerTab = props => {
   const handleUpvote = async () => {
     try {
       const response = await Axios.put(
-        `http://localhost:8000/answers/${props.answer._id}/upVote`
+        `http://localhost:8000/answers/${props.answer._id}/upVote`,
+        {},
+        { withCredentials: true }
       )
       setVotes(response.data.votes)
     } catch (error) {
-      window.alert('Upvote Error', error.data.message)
+      window.alert(error.response.data)
       // console.error('Error during upvote', error)
     }
   }
@@ -53,16 +55,24 @@ const AnswerTab = props => {
   const handleDownvote = async () => {
     try {
       const response = await Axios.put(
-        `http://localhost:8000/answers/${props.answer._id}/downVote`
+        `http://localhost:8000/answers/${props.answer._id}/downVote`,
+        {},
+        { withCredentials: true }
       )
       setVotes(response.data.votes)
     } catch (error) {
-      console.error('Error during upvote', error)
+      window.alert(error.response.data)
+      // console.error('Error during upvote', error)
     }
   }
 
   const handleCommentSubmit = async commentText => {
     try {
+      if (commentText.length >= 140)
+      {
+        window.alert("Can't submit a comment with more than 140 characters")
+        return;
+      }
       const temp = await Axios.put(
         `http://localhost:8000/comments/newComment/${commentText}`,
         {},
@@ -113,7 +123,7 @@ const AnswerTab = props => {
   }
 
   const renderComments = () => {
-    const temp = paginatedComments();
+    const temp = paginatedComments()
     // console.log(temp);
     return temp.map(comment => (
       <CommentTab key={comment._id} comment={comment} />
@@ -135,7 +145,6 @@ const AnswerTab = props => {
 
   const handlePrevCommentClick = () => {
     setCommentPageNumber(prev => (prev > 0 ? prev - 1 : 0))
-
   }
 
   return (

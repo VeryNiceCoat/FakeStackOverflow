@@ -14,6 +14,7 @@ const CommentTab = props => {
       const comment = temp.data
       setComment(comment)
     } catch (error) {
+      // console.error(error.response)
       window.alert(error.response.data)
     }
   }

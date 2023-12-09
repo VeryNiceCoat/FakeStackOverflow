@@ -44,8 +44,8 @@ router.put('/:commentID/upVote', auth.verify, async (req, res) => {
 
     res.status(200).json(updatedComment)
   } catch (error) {
-    console.error(error);
-    res.status(403).send(error);
+    // console.error(error);
+    res.status(403).send("Error Upvoting Comment");
     // next(error)
     // console.log("Error Message", error.message);
     // res.status(error.status || 500).json(error);

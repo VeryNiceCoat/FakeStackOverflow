@@ -163,6 +163,11 @@ const Post = ({ question, onAnswerQuestion, onAskQuestion }, props) => {
 
   const handleCommentSubmit = async commentText => {
     try {
+      if (commentText.length >= 140)
+      {
+        window.alert("Can't submit a comment with more than 140 characters")
+        return;
+      }
       const temp = await Axios.put(
         `http://localhost:8000/comments/newComment/${commentText}`,
         {},
@@ -171,13 +176,15 @@ const Post = ({ question, onAnswerQuestion, onAskQuestion }, props) => {
         }
       )
       const comment = temp.data
+      const updatedComments = [...comments, <CommentTab key={comment._id} comment={comment} />];
+      setComments(updatedComments);
       const wait = await Axios.put(
         `http://localhost:8000/questions/${question._id}/addComment/${comment._id}`,
         {},
         { withCredentials: true }
       )
-      setIsLoading(false)
-      setIsLoading(true)
+      const newQ = wait.data;
+      // setComments(loadedComments)
     } catch (error) {
       window.alert(error.response.data)
     }
