@@ -11,17 +11,24 @@ Mayukh Banik
 Installation guide by Mayukh:
 client:
 npm install axios bycrpt express axios react
+or
+npm install
 
 server:
-npm install bycrypt axios cors mongoose react cookie-parser
+npm install bycrypt axios cors mongoose react cookie-parser express-session
+or 
+npm install
 
 Set up database:
 In server folder run
-node init.js [adminName] [admingPassword]
+node init.js [adminEmail] [admingPassword]
 By default it is:
-node ./init.js admin admin
+node init.js admin@admin.com admin
 Data will be stored in fake_so.
 Mongodb and Mongosh should be running, and defualt mongo server is assumed, it is hardcoded so change it if you want
 
 Client side:
 npm start
+
+Server side
+nodemon server.js
