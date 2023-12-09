@@ -6,6 +6,8 @@ import TagPage from './tag-page'
 function UserProfile (props) {
   const [view, setView] = useState('questions')
   const [userQuestions, setUserQuestions] = useState([])
+  const [accountReputation, setAccountReputation] = useState(null)
+  const [date, setDate] = useState(null)
 
   useEffect(() => {
     const fetchUserQuestions = async () => {
@@ -21,6 +23,26 @@ function UserProfile (props) {
     }
 
     fetchUserQuestions()
+
+    const fetchAccountReputation = async () => {
+      try {
+        const res = await Axios.get('http://localhost:8000/users/getSelf', {
+          withCredentials: true
+        })
+        const now = new Date()
+        const differenceInMilliseconds = now - new Date(res.data.createdAt)
+        const differenceInHours = differenceInMilliseconds / (1000 * 60 * 60)
+
+        const hoursAsString = differenceInHours.toFixed(0) + ' hours' // Convert to string with 2 decimal places
+        setDate(hoursAsString)
+
+        setAccountReputation(res.data.reputation)
+      } catch (error) {
+        console.error('Error fetching account reputation', error)
+      }
+    }
+
+    fetchAccountReputation()
   }, [])
 
   const renderUserQuestions = () => {
@@ -56,6 +78,16 @@ function UserProfile (props) {
     )
   }
 
+  // const accountReputation = async () => {
+  //   try {
+  //     const res = await Axios.get('http://localhost:8000/users/getSelf', {withCredentials: true})
+  //     const temp = res.data;
+  //     return <div>Account Reputation: {temp.reputation}</div>
+  //   } catch (error) {
+  //     return <div>Error With Getting Account Reputation</div>
+  //   }
+  // }
+
   return (
     <div id='profile-page'>
       <div className='pfp-sidebar'>
@@ -71,6 +103,20 @@ function UserProfile (props) {
             <button onClick={() => setView('answers')}>Answers</button>
           </li>
         </ul>
+        <div>
+          {accountReputation !== null ? (
+            <div>Account Reputation: {accountReputation}</div>
+          ) : (
+            <div>Loading Reputation...</div>
+          )}
+        </div>
+        <div>
+          {date !== null ? (
+            <div>Time since creation: {date}</div>
+          ) : (
+            <div>Loading time...</div>
+          )}
+        </div>
       </div>
       <div className='user-submissions'>
         {/* {console.log(view)} */}

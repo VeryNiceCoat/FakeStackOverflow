@@ -190,4 +190,14 @@ router.get('/suicide', async (req, res) => {
   }
 })
 
+router.get('/getSelf', async (req, res) => {
+  try {
+    const accID = req.session.uid;
+    const account = await Account.findById(accID);
+    res.status(200).send(account);
+  } catch (error) {
+    res.status(500).send(error.message)
+  }
+})
+
 module.exports = router
