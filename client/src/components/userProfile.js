@@ -6,6 +6,8 @@ import TagPage from './tag-page'
 function UserProfile (props) {
   const [view, setView] = useState('questions')
   const [userQuestions, setUserQuestions] = useState([])
+  const [accountReputation, setAccountReputation] = useState(null)
+  const [date, setDate] = useState(null)
 
   useEffect(() => {
     const fetchUserQuestions = async () => {
@@ -58,32 +60,39 @@ function UserProfile (props) {
 
   return (
     <div id='profile-page'>
-      <div id='user-stats'>
-        <h2>USERNAME</h2>
-        <h4>REPUTATION</h4>
-        <h4>Account Age</h4>
+      <div className='pfp-sidebar'>
+        <h3>User: </h3>
+        <ul>
+          <li>
+            <button onClick={() => setView('questions')}>Questions</button>
+          </li>
+          <li>
+            <button onClick={() => setView('tags')}>Tags</button>
+          </li>
+          <li>
+            <button onClick={() => setView('answers')}>Answers</button>
+          </li>
+        </ul>
+        <div>
+          {accountReputation !== null ? (
+            <div>Account Reputation: {accountReputation}</div>
+          ) : (
+            <div>Loading Reputation...</div>
+          )}
+        </div>
+        <div>
+          {date !== null ? (
+            <div>Time since creation: {date}</div>
+          ) : (
+            <div>Loading time...</div>
+          )}
+        </div>
       </div>
-      <div id='user-posts'>
-        <div className='pfp-sidebar'>
-          <h3>User: </h3>
-          <ul>
-            <li>
-              <button onClick={() => setView('questions')}>Questions</button>
-            </li>
-            <li>
-              <button onClick={() => setView('tags')}>Tags</button>
-            </li>
-            <li>
-              <button onClick={() => setView('answers')}>Answers</button>
-            </li>
-          </ul>
-        </div>
-        <div className='user-submissions'>
-          {/* {console.log(view)} */}
-          {view === 'questions' && renderUserQuestions()}
-          {view === 'tags' && renderUserTags()}
-          {view === 'answers' && renderUserAnswers()}
-        </div>
+      <div className='user-submissions'>
+        {/* {console.log(view)} */}
+        {view === 'questions' && renderUserQuestions()}
+        {view === 'tags' && renderUserTags()}
+        {view === 'answers' && renderUserAnswers()}
       </div>
     </div>
   )
