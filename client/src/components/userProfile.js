@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Axios from 'axios'
 import Question from './question'
+import QuestionEditable from './question_editable'
 import TagPage from './tag-page'
 
 function UserProfile (props) {
@@ -8,6 +9,7 @@ function UserProfile (props) {
   const [userQuestions, setUserQuestions] = useState([])
   const [accountReputation, setAccountReputation] = useState(null)
   const [date, setDate] = useState(null)
+  const [showEditor, setShowEditor] = useState(false)
 
   useEffect(() => {
     const fetchUserQuestions = async () => {
@@ -23,22 +25,7 @@ function UserProfile (props) {
       }
     }
 
-    const fetchUserRep = async () => {
-      try {
-        const response = await Axios.get(
-          'http://localhost:8000/users/getUserData',
-          { withCredentials: true }
-        )
-        setAccountReputation(response.data.reputation)
-        setDate(response.data.created_at)
-        console.log(response.data.created_at)
-        console.log('fetch user rep')
-      } catch (error) {
-        console.error('error fetching rep and data', error)
-      }
-    }
     console.log('running useEffect in userprofile')
-    fetchUserRep()
     fetchUserQuestions()
 
     const fetchAccountReputation = async () => {
@@ -62,11 +49,17 @@ function UserProfile (props) {
     fetchAccountReputation()
   }, [])
 
+  const handleShowEditor = question => {
+    setShowEditor(true)
+    console.log('editor:')
+    console.log(showEditor)
+  }
+
   const renderUserQuestions = () => {
     return userQuestions.map(q => (
-      <Question
+      <QuestionEditable
         key={q._id}
-        onTitleClick={() => props.handleShowPost(q)}
+        onTitleClick={() => handleShowEditor()}
         onSearch={props.onSearch}
         onhandleTagonTagPageClicked={props.onhandleTagonTagPageClicked}
         question={q}
@@ -95,6 +88,62 @@ function UserProfile (props) {
     )
   }
 
+  const handleSubmit = async event => {
+
+  }
+
+  const renderEditor = () => {
+    return (
+      <div id='questionFormContainer'>
+        <form id='questionForm' onSubmit={handleSubmit}>
+          <label htmlFor='questionTitle'>Question Title:*</label>
+          <p>Limit titles to 100 characters or less.</p>
+          <input
+            type='text'
+            id='questionTitle'
+            name='questionTitle'
+            pattern='.{0,100}'
+            required
+            title='Max 100 characters'
+          />
+          <label htmlFor='questionSummary'>Question Summary:*</label>
+          <p>Limit Summaries to 140 characters or less</p>
+          <input
+            type='text'
+            id='questionSummary'
+            name='questionSummary'
+            pattern='.{0,140}'
+            required
+            title='Max 140 Characters'
+          />
+          <label htmlFor='questionBody'>Question:*</label>
+          <textarea
+            id='questionBody'
+            name='questionBody'
+            rows='4'
+            required
+          ></textarea>
+          <label htmlFor='formTags'>Tags:*</label>
+          <p>
+            Add keywords separated by whitespace. 5 tags max, no more than 10
+            characters per tag
+          </p>
+          <input
+            type='text'
+            id='formTags'
+            name='formTags'
+            pattern='^(?:\b\w{1,10}\b\s*){1,5}$'
+            required
+            title='Up to 5 tags, each no longer than 10 characters, separated by whitespace.'
+          />
+          {}
+  
+          <button type='submit'>Submit</button>
+        </form>
+      </div>
+    )
+  }
+
   // const accountReputation = async () => {
   //   try {
   //     const res = await Axios.get('http://localhost:8000/users/getSelf', {withCredentials: true})
@@ -105,44 +154,48 @@ function UserProfile (props) {
   //   }
   // }
 
-  return (
-    <div id='profile-page'>
-      <div className='pfp-sidebar'>
-        <h3>User: </h3>
-        <ul>
-          <li>
-            <button onClick={() => setView('questions')}>Questions</button>
-          </li>
-          <li>
-            <button onClick={() => setView('tags')}>Tags</button>
-          </li>
-          <li>
-            <button onClick={() => setView('answers')}>Answers</button>
-          </li>
-        </ul>
-        <div>
-          {accountReputation !== null ? (
-            <div>Account Reputation: {accountReputation}</div>
-          ) : (
-            <div>Loading Reputation...</div>
-          )}
+
+    return (
+      <div id='profile-page'>
+        <div className='pfp-sidebar'>
+          <h3>User: </h3>
+          <ul>
+            <li>
+              <button onClick={() => { setView('questions'); setShowEditor(false); }}>Questions</button>
+            </li>
+            <li>
+              <button onClick={() => { setView('tags'); setShowEditor(false); }}>Tags</button>
+            </li>
+            <li>
+              <button onClick={() => { setView('answers'); setShowEditor(false); }}>Answers</button>
+            </li>
+          </ul>
+          <div>
+            {accountReputation !== null ? (
+              <div>Account Reputation: {accountReputation}</div>
+            ) : (
+              <div>Loading Reputation...</div>
+            )}
+          </div>
+          <div>
+            {date !== null ? (
+              <div>Time since creation: {date}</div>
+            ) : (
+              <div>Loading time...</div>
+            )}
+          </div>
         </div>
-        <div>
-          {date !== null ? (
-            <div>Time since creation: {date}</div>
-          ) : (
-            <div>Loading time...</div>
-          )}
+        <div className='user-submissions'>
+          {/* {console.log(view)} */}
+          {showEditor ? renderEditor() : null}
+          {view === 'questions' && !showEditor && renderUserQuestions()}
+          {view === 'tags' && !showEditor && renderUserTags()}
+          {view === 'answers' && !showEditor && renderUserAnswers()}
         </div>
       </div>
-      <div className='user-submissions'>
-        {/* {console.log(view)} */}
-        {view === 'questions' && renderUserQuestions()}
-        {view === 'tags' && renderUserTags()}
-        {view === 'answers' && renderUserAnswers()}
-      </div>
-    </div>
-  )
+    )
+  
+  
 }
 
 export default UserProfile
