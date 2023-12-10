@@ -43,6 +43,7 @@ const QuestionView = props => {
     setSelectedQuestion(question)
   }
 
+
   function incrementQuestionViews (questionId) {
     Axios.put(`http://localhost:8000/questions/${questionId}/views`)
       .then(response => {})
