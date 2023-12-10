@@ -10,6 +10,7 @@ function UserProfile (props) {
   const [accountReputation, setAccountReputation] = useState(null)
   const [date, setDate] = useState(null)
   const [showEditor, setShowEditor] = useState(false)
+  const [editingQuestion, setEditingQuestion] = useState(null)
 
   useEffect(() => {
     const fetchUserQuestions = async () => {
@@ -51,6 +52,7 @@ function UserProfile (props) {
 
   const handleShowEditor = question => {
     setShowEditor(true)
+    setEditingQuestion(question)
     console.log('editor:')
     console.log(showEditor)
   }
@@ -59,7 +61,7 @@ function UserProfile (props) {
     return userQuestions.map(q => (
       <QuestionEditable
         key={q._id}
-        onTitleClick={() => handleShowEditor()}
+        onTitleClick={() => handleShowEditor(q)}
         onSearch={props.onSearch}
         onhandleTagonTagPageClicked={props.onhandleTagonTagPageClicked}
         question={q}
@@ -89,10 +91,16 @@ function UserProfile (props) {
   }
 
   const handleSubmit = async event => {
+    event.preventDefault()
+  }
 
+  const handleCancel = () => {
+    setShowEditor(false)
+    setEditingQuestion(null)
   }
 
   const renderEditor = () => {
+    
     return (
       <div id='questionFormContainer'>
         <form id='questionForm' onSubmit={handleSubmit}>
@@ -102,6 +110,7 @@ function UserProfile (props) {
             type='text'
             id='questionTitle'
             name='questionTitle'
+            value = {editingQuestion.title}
             pattern='.{0,100}'
             required
             title='Max 100 characters'
@@ -112,6 +121,7 @@ function UserProfile (props) {
             type='text'
             id='questionSummary'
             name='questionSummary'
+            value={editingQuestion.summary}
             pattern='.{0,140}'
             required
             title='Max 140 Characters'
@@ -120,6 +130,7 @@ function UserProfile (props) {
           <textarea
             id='questionBody'
             name='questionBody'
+            value={editingQuestion.text}
             rows='4'
             required
           ></textarea>
