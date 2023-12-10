@@ -156,6 +156,7 @@ const QuestionView = props => {
     return <UserProfile 
               handleShowPost={handleShowPost} 
               onhandleTagOnMainPageClicked={props.onhandleTagOnMainPageClicked}
+              onhandleTagonTagPageClicked={props.onhandleTagonTagPageClicked}
           />
   }
 
