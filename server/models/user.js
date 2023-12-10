@@ -69,25 +69,23 @@ User.methods.downvote = async function () {
 
 User.methods.questionUpvote = async function (questionID) {
   try {
-    const y = await this.upvote();
-    const question = Question.findById(questionID);
-    return await question.upvote();
+    const y = await this.upvote()
+    const question = Question.findById(questionID)
+    return await question.upvote()
   } catch (error) {
-    console.error(error);
+    console.error(error)
   }
 }
 
 User.methods.questionDownvote = async function (questionID) {
   try {
-    await this.downvote();
-    const question = Question.findById(questionID);
-    return await question.downvote();
+    await this.downvote()
+    const question = Question.findById(questionID)
+    return await question.downvote()
   } catch (error) {
-    console.error(error);
+    console.error(error)
   }
 }
-
-
 
 /**
  * @returns True if guest, false if not
@@ -137,34 +135,23 @@ User.methods.wipeAllReferences = async function () {
   }
   try {
     const questions = await Question.find({ userId: this._id }).exec()
-    const answers = await Answer.find({ userId: this._id }).exec()
-    const comments = await Comment.find({ userId: this._id }).exec()
-    for (const question in questions) {
-      try {
-        await question.userAccountDelete()
-      } catch (error) {
-        console.error(error)
-        continue
-      }
+    for (let i = 0; i < questions.length; i++)
+    {
+      await questions[i].userAccountDelete();
     }
-    for (const answer in answers) {
-      try {
-        await answer.deleteAllCommentsAndItself()
-      } catch (error) {
-        console.error(error)
-        continue
-      }
+    // const answers = await Answer.find({ userId: this._id }).exec()
+    // const comments = await Comment.find({ userId: this._id }).exec()
+    const answers = await Answer.find({userId: this._id}).exec()
+    for (let i = 0; i < answers.length; i++)
+    {
+      await answers[i].deleteAllCommentsAndItself();
     }
-    for (const comment in comments) {
-      try {
-        await Comment.findByIdAndDelete(comment._id)
-      } catch (error) {
-        console.error(error)
-      }
-    }
+
+    await Comment.deleteMany({userId: this._id})
+    await this.deleteOne();
     return 1
   } catch (error) {
-    console.error(error)
+    console.error(error.message)
     return -1
   }
 }

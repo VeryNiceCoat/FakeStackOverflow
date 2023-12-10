@@ -27,19 +27,20 @@ AnswerSchema.virtual('url').get(function () {
  */
 AnswerSchema.methods.deleteAllCommentsAndItself = async function () {
   try {
-    for (const commentId in this.comments) {
-      try {
-        await Comment.findByIdAndDelete(commentId)
-      } catch (error) {
-        console.error(error)
-        continue
-      }
+    // Delete all children
+    for (const childId of this.comments) {
+      await Comment.findByIdAndDelete(childId).exec();
     }
-    this.remove()
+
+    // Delete this document
+    await this.deleteOne();
   } catch (error) {
-    console.error(error)
+    console.error('Error deleting document and its children:', error);
+    throw error; // Rethrow or handle error as needed
   }
 }
+
+
 /**
  * Removes a comment ID reference from this answer comments array, pass in comment ID
  *  Does not delete the comment in question

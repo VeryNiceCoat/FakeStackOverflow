@@ -72,13 +72,13 @@ QuestionSchema.methods.userAccountDelete = async function () {
     for (const answerID in this.answers) {
       try {
         const answer = await Answer.findById(answerID)
-        await answer.questionDelete()
+        await answer.deleteAllCommentsAndItself()
       } catch (error) {
         console.error(error)
         continue
       }
     }
-    await this.remove()
+    await this.deleteOne();
   } catch (error) {
     console.error(error)
   }
