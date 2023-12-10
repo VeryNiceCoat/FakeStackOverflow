@@ -160,6 +160,19 @@ router.get('/getAllComments', async (req, res) => {
   }
 })
 
+router.get('/getUserData', async (req, res) => {
+  try {
+    const uid = req.session.uid
+    const account = await Account.findById(uid)
+    const rep = account.getUserReputation()
+    const created_at = account.getUserCreationDate
+    res.status(200).send({reputation: rep, created_at: created_at})
+    return
+  } catch (error) {
+    res.status(500).send(error)
+  }
+})
+
 router.get('/logout', async (req, res) => {
   try {
     req.session.destroy()

@@ -169,6 +169,14 @@ User.methods.wipeAllReferences = async function () {
   }
 }
 
+User.methods.getUserReputation = function() {
+  return this.reputation
+}
+
+User.methods.getUserCreationDate = function() {
+  return this.createdAt
+}
+
 /**
  * Wrapper for find({userId: this._id})
  */

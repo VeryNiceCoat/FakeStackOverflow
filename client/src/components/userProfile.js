@@ -17,11 +17,28 @@ function UserProfile (props) {
           { withCredentials: true }
         )
         setUserQuestions(response.data)
+        console.log('fetch user q')
       } catch (error) {
         console.error('Error fetching questions', error)
       }
     }
 
+    const fetchUserRep = async () => {
+      try {
+        const response = await Axios.get(
+          'http://localhost:8000/users/getUserData',
+          { withCredentials: true }
+        )
+        setAccountReputation(response.data.reputation)
+        setDate(response.data.created_at)
+        console.log(response.data.created_at)
+        console.log('fetch user rep')
+      } catch (error) {
+        console.error('error fetching rep and data', error)
+      }
+    }
+    console.log('running useEffect in userprofile')
+    fetchUserRep()
     fetchUserQuestions()
   }, [])
 
