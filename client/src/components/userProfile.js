@@ -3,6 +3,7 @@ import Axios from 'axios'
 import Question from './question'
 import QuestionEditable from './question_editable'
 import TagPage from './tag-page'
+import AdminPage from './adminPage'
 
 function UserProfile (props) {
   const [view, setView] = useState('questions')
@@ -120,6 +121,12 @@ function UserProfile (props) {
     )
   }
 
+  const renderAdminPage = () => {
+    return (
+      <AdminPage/>
+    )
+  }
+
   const handleSubmit = async event => {
     event.preventDefault()
     console.log(event.target.questionSummary.value,)
@@ -141,6 +148,24 @@ function UserProfile (props) {
     }
   }
 
+  const handleAdminPageClick = async () => {
+    try {
+      const response = await Axios.get(
+        'http://localhost:8000/users/accountType',
+        {
+          withCredentials: true
+        }
+      )
+      if (response.data !==  2) {
+        throw new Error("You're not the Admin. Stay out of here")
+      } 
+    } catch (error){
+        window.alert(error.message)
+        return
+    }
+
+    setView('admin')
+  }
   const handleCancel = () => {
     setShowEditor(false)
     setEditingQuestion(null)
@@ -227,6 +252,9 @@ function UserProfile (props) {
             <li>
               <button onClick={() => { setView('answers'); setShowEditor(false); }}>Answers</button>
             </li>
+            <li>
+              <button onClick={() => {handleAdminPageClick(); setShowEditor(false);}}>AdminStuff</button>
+            </li>
           </ul>
           <div>
             {accountReputation !== null ? (
@@ -249,6 +277,7 @@ function UserProfile (props) {
           {view === 'questions' && !showEditor && renderUserQuestions()}
           {view === 'tags' && !showEditor && renderUserTags()}
           {view === 'answers' && !showEditor && renderUserAnswers()}
+          {view === 'admin' && !showEditor && renderAdminPage()}
         </div>
       </div>
     )
