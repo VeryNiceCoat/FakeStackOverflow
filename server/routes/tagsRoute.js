@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose')
 
 const Tag = require('../models/tags')
 
@@ -18,8 +19,8 @@ router.get('/', async (req,res) => {
 router.get('/:tagID', async (req, res) => {
     try {
         req.session.user_id = 123
-        const tagID = req.params.tagID
-        const tag = await tag.findById(tagID)
+        const tagID = new mongoose.Types.ObjectId(req.params.tagID);
+        const tag = await Tag.findById(tagID)
             .populate('name')
         if (!tag) {
             return res.status(404).send('tag not found')

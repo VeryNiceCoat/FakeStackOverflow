@@ -51,31 +51,33 @@ function UserProfile (props) {
     fetchAccountReputation()
   }, [showEditor])
 
-  // useEffect(() => {
-  //   const fetchTags = async (tagIds) => {
-  //     try {
-  //       let tags = [];
+  useEffect(() => {
+    const fetchTags = async (tagIds) => {
+      try {
+        let tags = [];
     
-  //       for (let i = 0; i < tagIds.length; i++) {
-  //         const response = await Axios.get(`http://localhost:8000/tags/${tagIds[i]}`, { withCredentials: true });
-  //         tags.push(response.data);
-  //       }
+        for (let i = 0; i < tagIds.length; i++) {
+          const response = await Axios.get(`http://localhost:8000/tags/${tagIds[i]}`, { withCredentials: true })
+          tags.push(response.data.name)
+          console.log("fetch tags data")
+          console.log(response.data)
+        }
     
-  //       return tags;
-  //     } catch (error) {
-  //       console.error('Error fetching tags:', error);
-  //       // Handle the error appropriately
-  //     }
-  //   }
+        return tags;
+      } catch (error) {
+        console.error('Error fetching tags:', error);
+        // Handle the error appropriately
+      }
+    }
 
-  //   if (editingQuestion) {
-  //     fetchTags(editingQuestion.tags).then(fetchedTags => {
-  //       setEditingTags(fetchedTags || []); // Set the fetched tags or an empty array if none were fetched
-  //     });
-  //   }
-  //   console.log('edioting tags')
-  //   console.log(editingTags)
-  // }, [editingQuestion]);
+    if (editingQuestion) {
+      fetchTags(editingQuestion.tags).then(fetchedTags => {
+        setEditingTags(fetchedTags || []); // Set the fetched tags or an empty array if none were fetched
+      });
+    }
+    console.log('edioting tags')
+    console.log(editingTags)
+  }, [editingQuestion]);
 
   const handleShowEditor = question => {
     // console.log(showEditor)
@@ -187,7 +189,7 @@ function UserProfile (props) {
             type='text'
             id='formTags'
             name='formTags'
-            // defaultValue={editingTags}
+            defaultValue={editingTags.join(' ')}
             pattern='^(?:\b\w{1,10}\b\s*){1,5}$'
             required
             title='Up to 5 tags, each no longer than 10 characters, separated by whitespace.'
