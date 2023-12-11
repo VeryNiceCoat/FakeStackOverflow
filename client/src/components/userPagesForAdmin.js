@@ -98,6 +98,9 @@ function UserPagesForAdmin ({uid},props) {
     }
 
     const renderUserQuestions = () => {
+        if(userQuestions.length === 0){
+            return <h2>User has no questions</h2>
+        }
         return userQuestions.map(q => (
         <QuestionEditable
             key={q._id}
@@ -184,6 +187,23 @@ function UserPagesForAdmin ({uid},props) {
         }
     }
 
+    const handleQuestionDeletion = async () => {
+        try {
+            console.log(editingQuestion)
+            const questionID = editingQuestion._id
+            const res = await Axios.delete(
+                `http://localhost:8000/questions/${questionID}/deleteQuestion`,
+                {withCredentials : true}
+            )
+            if (res.data !== true) {
+                throw new Error('Error With Deleting Question')
+            }
+            setShowEditor(false)
+            } catch (error) {
+            window.alert(error.message)
+            return
+            }
+        }
     // const handleAdminPageClick = async () => {
     //     try {
     //     const response = await Axios.get(
@@ -211,6 +231,7 @@ function UserPagesForAdmin ({uid},props) {
         return (
         <div id='questionFormContainer'>
             <form id='questionForm' onSubmit={handleSubmit}>
+            <button onClick={handleQuestionDeletion} type='button'>Delete This Question</button>
             <label htmlFor='questionTitle'>Question Title:*</label>
             <p>Limit titles to 100 characters or less.</p>
             <input

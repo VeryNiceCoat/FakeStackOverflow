@@ -166,6 +166,24 @@ function UserProfile (props) {
 
     setView('admin')
   }
+
+  const handleQuestionDeletion = async () => {
+    try {
+      console.log(editingQuestion)
+      const questionID = editingQuestion._id
+      const res = await Axios.delete(
+        `http://localhost:8000/questions/${questionID}/deleteQuestion`,
+        {withCredentials : true}
+      )
+      if (res.data !== true) {
+        throw new Error('Error With Deleting Question')
+    }
+    setShowEditor(false)
+    } catch (error) {
+      window.alert(error.message)
+      return
+    }
+  }
   const handleCancel = () => {
     setShowEditor(false)
     setEditingQuestion(null)
@@ -175,6 +193,7 @@ function UserProfile (props) {
     return (
       <div id='questionFormContainer'>
         <form id='questionForm' onSubmit={handleSubmit}>
+          <button type='button' onClick={handleQuestionDeletion}>Delete This Question</button>
           <label htmlFor='questionTitle'>Question Title:*</label>
           <p>Limit titles to 100 characters or less.</p>
           <input
