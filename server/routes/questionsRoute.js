@@ -82,6 +82,7 @@ router.get('/:questionID', async (req, res) => {
   }
 })
 
+
 /**
  * This should be where question sort should happen
  */
@@ -132,6 +133,28 @@ router.put(`/:questionID`, async (req, res) => {
     res.status(500).send('Server error on questions/put')
   }
 })
+
+router.put('/editor/:questionID', async (req, res) => {
+  try {
+    const questionID = new mongoose.Types.ObjectId(req.params.questionID);
+    const { title, text, summary} = req.body; // Destructure the updated fields from the request body
+
+    const updatedQuestion = await Question.findByIdAndUpdate(
+      questionID,
+      { title, text, summary},
+      { new: true } // retunrs the document after update
+    );
+
+    if (!updatedQuestion) {
+      return res.status(404).send('Question not found');
+    }
+
+    res.send(updatedQuestion);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Editor error for put question/editor/:questionID');
+  }
+});
 
 router.put('/:questionID/views', async (req, res) => {
   try {

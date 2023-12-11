@@ -15,6 +15,22 @@ router.get('/', async (req,res) => {
     }
 })
 
+router.get('/:tagID', async (req, res) => {
+    try {
+        req.session.user_id = 123
+        const tagID = req.params.tagID
+        const tag = await tag.findById(tagID)
+            .populate('name')
+        if (!tag) {
+            return res.status(404).send('tag not found')
+        }
+        res.send(tag)
+        } catch (error) {
+        console.error(error.message)
+        res.status(500).send('server Error tags/tagID   ')
+        }
+    })
+
 router.post('/', async (req, res) => {
     try {
         const name = req.body.name;
