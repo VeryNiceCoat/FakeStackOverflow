@@ -4,8 +4,8 @@ import UserPagesForAdmin from './userPagesForAdmin'
 
 const AdminPage = props => {
     const [users, setUsers] = useState([])
-    const [showAdminUserPages, setShowAdminUserPages] = useState(false)
     const [selectedUser, setSelectedUser] = useState(null)
+    const [showAdminUserPages, setShowAdminUserPages] = useState(false)
     useEffect(() => {
         // Fetch the user data when the component mounts
         const fetchUsers = async () => {
@@ -20,14 +20,6 @@ const AdminPage = props => {
 
         fetchUsers();
     }, []);
-
-    // const renderAdminUserPages = (userId) => {
-    //     return(
-    //         <UserPagesForAdmin
-    //             uid= {userId}
-    //         />
-    //     )
-    // }
 
     const handleUserClick = (userId) => {
 
@@ -54,7 +46,6 @@ const AdminPage = props => {
                 {selectedUser && <UserPagesForAdmin uid={selectedUser}/>}
             </div>
         </div>
-
         
     )
 }

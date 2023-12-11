@@ -37,9 +37,9 @@ function UserPagesForAdmin ({uid},props) {
         console.log('running useEffect in userprofile')
         fetchUserQuestions()
 
-        const fetchAccountReputation = async () => {
+        const fetchAccountRepForAdmin = async () => {
         try {
-            const res = await Axios.get(`http://localhost:8000/users/${userId}`, {
+            const res = await Axios.get(`http://localhost:8000/users/repAndDate/${userId}`, {
             withCredentials: true
             })
             const now = new Date()
@@ -58,7 +58,7 @@ function UserPagesForAdmin ({uid},props) {
         }
         }
 
-        fetchAccountReputation()
+        fetchAccountRepForAdmin()
     }, [showEditor,uid])
 
     useEffect(() => {
@@ -154,6 +154,33 @@ function UserPagesForAdmin ({uid},props) {
         ).then(setShowEditor(false))
         } catch (error) {
         window.alert("didnt edit right")
+        }
+    }
+
+    const handleDeleteAccountClick = async () => {
+        const userConfirmed = window.confirm('Delete account? Irreversible.')
+        if (userConfirmed) {
+            try {
+            const userId = uid
+            const res = await Axios.get(`http://localhost:8000/users/sendhimtotheshadowrealm/${userId}`, {
+                withCredentials: true
+            })
+            if (res.data !== true) {
+                throw new Error('Error With Deleting Account')
+            }
+            window.alert("CLICK")
+            } catch (error) {
+            window.alert(error.message)
+            return
+            }
+            // User confirmed deletion
+            // Add your logic here for what happens when the user confirms deletion
+
+            console.log('Account deletion confirmed. Please log out and log in to see the changes')
+
+        } else {
+            // User cancelled deletion
+            console.log('Account deletion cancelled')
         }
     }
 
@@ -261,9 +288,9 @@ function UserPagesForAdmin ({uid},props) {
                 <li>
                     <button onClick={() => { setView('answers'); setShowEditor(false); }}>Answers</button>
                 </li>
-                {/* <li>
-                <button onClick={() => {handleAdminPageClick(); setShowEditor(false);}}>AdminStuff</button>
-                </li> */}
+                <li>
+                    <button onClick={handleDeleteAccountClick}>Delete User</button>
+                </li>
             </ul>
             <div>
                 {accountReputation !== null ? (
