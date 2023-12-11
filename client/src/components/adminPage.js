@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import Axios from 'axios'
+import UserPagesForAdmin from './userPagesForAdmin'
 
 const AdminPage = props => {
     const [users, setUsers] = useState([])
+    const [showAdminUserPages, setShowAdminUserPages] = useState(false)
+    const [selectedUser, setSelectedUser] = useState(null)
     useEffect(() => {
         // Fetch the user data when the component mounts
         const fetchUsers = async () => {
@@ -18,20 +21,40 @@ const AdminPage = props => {
         fetchUsers();
     }, []);
 
+    // const renderAdminUserPages = (userId) => {
+    //     return(
+    //         <UserPagesForAdmin
+    //             uid= {userId}
+    //         />
+    //     )
+    // }
+
     const handleUserClick = (userId) => {
+
+        // console.log(userId);
+        setSelectedUser(userId)
+        console.log('new selectedUser')
+        console.log(selectedUser)
+        setShowAdminUserPages(true)
 
     }
     return (
-        <div className='pfp-sidebar'>
-            <h2>ALL USERS</h2>
-            {users.map(user => (
-                    <li key={user._id}>
-                        <button onClick={() => handleUserClick(user._id)}>
-                            {user.name} - {user.email}
-                        </button>
-                    </li>
-                ))}
+        <div id='admin-profile-list'>
+            <div className='pfp-sidebar'>
+                <h2>ALL USERS</h2>
+                {users.map(user => (
+                        <li key={user._id}>
+                            <button onClick={() => handleUserClick(user._id)}>
+                                {user.name} - {user.email}
+                            </button>
+                        </li>
+                    ))}
+            </div>
+            <div>
+                {selectedUser && <UserPagesForAdmin uid={selectedUser}/>}
+            </div>
         </div>
+
         
     )
 }
