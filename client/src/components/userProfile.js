@@ -11,6 +11,7 @@ function UserProfile (props) {
   const [date, setDate] = useState(null)
   const [showEditor, setShowEditor] = useState(false)
   const [editingQuestion, setEditingQuestion] = useState(null)
+  const [editingTags, setEditingTags] = useState([])
 
   useEffect(() => {
     const fetchUserQuestions = async () => {
@@ -48,9 +49,38 @@ function UserProfile (props) {
     }
 
     fetchAccountReputation()
-  }, [])
+  }, [showEditor])
+
+  useEffect(() => {
+    const fetchTags = async (tagIds) => {
+      try {
+        let tags = [];
+    
+        for (let i = 0; i < tagIds.length; i++) {
+          const response = await Axios.get(`http://localhost:8000/tags/${tagIds[i]}`, { withCredentials: true })
+          tags.push(response.data.name)
+          console.log("fetch tags data")
+          console.log(response.data)
+        }
+    
+        return tags;
+      } catch (error) {
+        console.error('Error fetching tags:', error);
+        // Handle the error appropriately
+      }
+    }
+
+    if (editingQuestion) {
+      fetchTags(editingQuestion.tags).then(fetchedTags => {
+        setEditingTags(fetchedTags || []); // Set the fetched tags or an empty array if none were fetched
+      });
+    }
+    console.log('edioting tags')
+    console.log(editingTags)
+  }, [editingQuestion]);
 
   const handleShowEditor = question => {
+    // console.log(showEditor)
     setShowEditor(true)
     setEditingQuestion(question)
     console.log('editor:')
@@ -92,6 +122,23 @@ function UserProfile (props) {
 
   const handleSubmit = async event => {
     event.preventDefault()
+    console.log(event.target.questionSummary.value,)
+    console.log(event.target.questionBody.value)
+    const questionID = editingQuestion._id
+    try {
+      await Axios.put(
+        `http://localhost:8000/questions/editor/${questionID}`,
+        {
+          title: event.target.questionTitle.value,
+          summary: event.target.questionSummary.value,
+          text: event.target.questionBody.value
+          
+        },
+        { withCredentials: true }
+      ).then(setShowEditor(false))
+    } catch (error) {
+      window.alert("didnt edit right")
+    }
   }
 
   const handleCancel = () => {
@@ -100,7 +147,6 @@ function UserProfile (props) {
   }
 
   const renderEditor = () => {
-    
     return (
       <div id='questionFormContainer'>
         <form id='questionForm' onSubmit={handleSubmit}>
@@ -110,7 +156,7 @@ function UserProfile (props) {
             type='text'
             id='questionTitle'
             name='questionTitle'
-            value = {editingQuestion.title}
+            defaultValue = {editingQuestion.title}
             pattern='.{0,100}'
             required
             title='Max 100 characters'
@@ -121,7 +167,7 @@ function UserProfile (props) {
             type='text'
             id='questionSummary'
             name='questionSummary'
-            value={editingQuestion.summary}
+            defaultValue={editingQuestion.summary}
             pattern='.{0,140}'
             required
             title='Max 140 Characters'
@@ -130,7 +176,7 @@ function UserProfile (props) {
           <textarea
             id='questionBody'
             name='questionBody'
-            value={editingQuestion.text}
+            defaultValue={editingQuestion.text}
             rows='4'
             required
           ></textarea>
@@ -143,6 +189,7 @@ function UserProfile (props) {
             type='text'
             id='formTags'
             name='formTags'
+            defaultValue={editingTags.join(' ')}
             pattern='^(?:\b\w{1,10}\b\s*){1,5}$'
             required
             title='Up to 5 tags, each no longer than 10 characters, separated by whitespace.'
