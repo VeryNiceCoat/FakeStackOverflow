@@ -16,6 +16,19 @@ const corsOptions = {
   credentials: true
 }
 
+router.get('/getAllUsers', async (req, res) => {
+  try {
+    const regularUsers = await Account.find({
+      reputation: { $nin: [-1, -2] } // exclude admin and guest accounts
+    });
+
+    res.status(200).send(regularUsers);
+  } catch (error) {
+      console.error(error.message);
+      res.status(500).send('Error fetching all user accounts');
+  }
+});
+
 /**
  * Used for Login, if guest@guest.com and guest is passed it should be the
  * guest login, otherwise its normal, same for admin, nothing special here
