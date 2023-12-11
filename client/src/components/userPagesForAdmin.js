@@ -9,6 +9,7 @@ function UserPagesForAdmin ({uid},props) {
     const [view, setView] = useState('questions')
     const [userQuestions, setUserQuestions] = useState([])
     const [accountReputation, setAccountReputation] = useState(null)
+    const [username, setUsername] = useState(null)
     const [date, setDate] = useState(null)
     const [showEditor, setShowEditor] = useState(false)
     const [editingQuestion, setEditingQuestion] = useState(null)
@@ -51,13 +52,14 @@ function UserPagesForAdmin ({uid},props) {
             console.log(res.data)
             console.log(res.data.reputation)
             setAccountReputation(res.data.reputation)
+            setUsername(res.data.name)
         } catch (error) {
             console.error('Error fetching account reputation', error)
         }
         }
 
         fetchAccountReputation()
-    }, [showEditor])
+    }, [showEditor,uid])
 
     useEffect(() => {
         const fetchTags = async (tagIds) => {
@@ -248,7 +250,7 @@ function UserPagesForAdmin ({uid},props) {
         return (
         <div id='profile-page'>
             <div className='pfp-sidebar'>
-            <h3>User: </h3>
+            <h3>User: {username}</h3>
             <ul>
                 <li>
                     <button onClick={() => { setView('questions'); setShowEditor(false); }}>Questions</button>

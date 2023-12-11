@@ -121,11 +121,11 @@ function UserProfile (props) {
     )
   }
 
-  const renderAdminPage = () => {
-    return (
-      <AdminPage/>
-    )
-  }
+  // const renderAdminPage = () => {
+  //   return (
+  //     <AdminPage/>
+  //   )
+  // }
 
   const handleSubmit = async event => {
     event.preventDefault()
@@ -277,7 +277,7 @@ function UserProfile (props) {
           {view === 'questions' && !showEditor && renderUserQuestions()}
           {view === 'tags' && !showEditor && renderUserTags()}
           {view === 'answers' && !showEditor && renderUserAnswers()}
-          {view === 'admin' && !showEditor && renderAdminPage()}
+          {view === 'admin' && !showEditor && <AdminPage/>}
         </div>
       </div>
     )
