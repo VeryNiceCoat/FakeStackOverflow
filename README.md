@@ -4,9 +4,18 @@ Add design docs in *images/*
 ## Instructions to setup and run project
 
 ## Team Member 1 Contribution
+made profile page
+made admin page
+made editing functionality
+more css
+
 
 ## Team Member 2 Contribution
 Mayukh Banik
+did comments, users, set up session, making accounts, splitting questions into groups of 5
+handle delete account and all the related questions, etc
+Made most routers in userRoute and made the user and comment schema.
+added some new routers to other places.
 
 Installation guide by Mayukh:
 client:

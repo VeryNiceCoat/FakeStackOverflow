@@ -149,9 +149,44 @@ router.get('/getAllQuestions', async (req, res) => {
   }
 })
 
+router.get('/:userId/getAllQuestions', async (req, res) => {
+  try {
+    const uid = req.params.userId
+    const account = await Account.findById(uid)
+    const questions = await account.returnAllQuestions()
+    res.status(200).send(questions)
+    return
+  } catch (error) {
+    res.status(500).send(error)
+  }
+})
+
+router.get('/repAndDate/:userId', async (req, res) => {
+  try {
+    const uid = req.params.userId
+    const account = await Account.findById(uid)
+    // const reputation = await account.getUserReputation
+    // const created_at = await account.getUserCreationDate
+    res.status(200).send(account)
+  } catch (error) {
+    res.status(500).send(error.message)
+  }
+})
 router.get('/getAllAnswers', async (req, res) => {
   try {
     const uid = req.session.uid
+    const account = await Account.findById(uid)
+    const answers = await account.returnAllAnswers()
+    res.status(200).send(answers)
+    return
+  } catch (error) {
+    res.status(500).send(error)
+  }
+})
+
+router.get('/getAllAnswers/:userId', async (req, res) => {
+  try {
+    const uid = req.params.userId
     const account = await Account.findById(uid)
     const answers = await account.returnAllAnswers()
     res.status(200).send(answers)
@@ -199,6 +234,25 @@ router.get('/suicide', async (req, res) => {
   try {
     const email = req.session.email
     const account = await Account.findOne({ email: email })
+    const val = await account.wipeAllReferences()
+    if (val === -1) {
+      throw new Error('Server Error')
+    } else if (val === 0) {
+      throw new Error("Can't delete yourself if you're a guest or an admin")
+    } else {
+      res.status(200).json(true)
+    }
+  } catch (error) {
+    res.status(500).send(error.message)
+  }
+})
+
+router.get('/sendhimtotheshadowrealm/:userId', async (req, res) => {
+  try {
+    const uid = req.params.userId
+    const account = await Account.findById(uid)
+    // const email = req.session.email
+    // const account = await Account.findOne({ email: email })
     const val = await account.wipeAllReferences()
     if (val === -1) {
       throw new Error('Server Error')

@@ -35,7 +35,7 @@ const QuestionView = props => {
     }
     fetchQuestions()
     fetchAllTags()
-  }, [props.showQForm, props.showAForm, props.showPostView, props.searchQuery])
+  }, [props.showQForm, props.showAForm, props.showPostView, props.searchQuery, props.showProfile])
 
   const handleShowPost = question => {
     incrementQuestionViews(question._id)

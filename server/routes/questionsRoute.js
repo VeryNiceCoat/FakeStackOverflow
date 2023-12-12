@@ -262,3 +262,34 @@ router.put('/:questionID/addComment/:commentID', async (req, res) => {
 })
 
 module.exports = router
+
+router.delete('/:qid/deleteQuestion', async (req, res) => {
+  try {
+    const qid = req.params.qid;
+    const question = await Question.findById(qid);
+
+    if (!question) {
+      return res.status(404).send('Question not found');
+    }
+
+    await question.userAccountDelete();
+    res.status(200).json(true);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+})
+
+router.post('/questionsWithUserAnswers', async (req, res) => {
+  try {
+
+    // filter questions for answer ids
+    const questionsWithUserAnswers = await Question.find({
+      'answers': { $in: req.body.userAnswers }
+    });
+
+    res.status(200).json(questionsWithUserAnswers);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Error fetching questions with user answers');
+  }
+})

@@ -40,7 +40,7 @@ body{
     margin-left:auto; /* push searchbar far right */
 }
 
-.content, #profile-page {
+.content, #profile-page, #admin-profile-list {
     display: flex;
     flex: 1;
 }
