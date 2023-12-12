@@ -4,15 +4,18 @@ import Question from './question'
 import QuestionEditable from './question_editable'
 import TagPage from './tag-page'
 import AdminPage from './adminPage'
+import AnswerTabEditable from './answer_editable'
 
 function UserProfile (props) {
   const [view, setView] = useState('questions')
   const [userQuestions, setUserQuestions] = useState([])
+  const [userAnswers, setUserAnswers] = useState([])
   const [accountReputation, setAccountReputation] = useState(null)
   const [date, setDate] = useState(null)
   const [showEditor, setShowEditor] = useState(false)
   const [editingQuestion, setEditingQuestion] = useState(null)
   const [editingTags, setEditingTags] = useState([])
+  const [editingAnswers, setEditingAnswers] = useState([])
 
   useEffect(() => {
     const fetchUserQuestions = async () => {
@@ -28,7 +31,23 @@ function UserProfile (props) {
       }
     }
 
+    const fetchUserAnswers = async () => {
+      try {
+        const ans = await Axios.get(
+          'http://localhost:8000/users/getAllAnswers',
+          { withCredentials: true }
+        ) 
+        setUserAnswers(ans.data)
+        console.log('user answers')
+        console.log(userAnswers)
+      } catch (error) {
+        console.error("error fetching user answers", error)
+      }
+    }
+
+
     console.log('running useEffect in userprofile')
+    fetchUserAnswers()
     fetchUserQuestions()
 
     const fetchAccountReputation = async () => {
@@ -51,6 +70,25 @@ function UserProfile (props) {
 
     fetchAccountReputation()
   }, [showEditor])
+
+  const fetchQuestionsWithUserAnswers = async () => {
+    try {
+      const answerIds = userAnswers.map(answer => answer._id);
+      console.log('ansids')
+      console.log(answerIds)
+  
+      const response = await Axios.post(
+        'http://localhost:8000/questions/questionsWithUserAnswers',
+        { userAnswers: answerIds },
+        { withCredentials: true }
+      );
+  
+      console.log('Questions with user answers:')
+      console.log(response.data)
+    } catch (error) {
+      console.error("Error fetching questions with user answers", error);
+    }
+  }
 
   useEffect(() => {
     const fetchTags = async (tagIds) => {
@@ -101,7 +139,15 @@ function UserProfile (props) {
     ))
   }
 
-  const renderUserAnswers = () => {}
+
+  const renderUserAnswers = () => {
+    return userAnswers.map(ans => (
+      <AnswerTabEditable
+        key={ans._id}
+        answer={ans}
+      />
+    ))
+  }
 
   const renderUserTags = () => {
     const tags = []
@@ -224,8 +270,8 @@ function UserProfile (props) {
             rows='4'
             required
           ></textarea>
-          <label htmlFor='formTags'>Tags:*</label>
-          <p>
+          {/* <label htmlFor='formTags'>Tags:*</label> */}
+          {/* <p>
             Add keywords separated by whitespace. 5 tags max, no more than 10
             characters per tag
           </p>
@@ -237,7 +283,7 @@ function UserProfile (props) {
             pattern='^(?:\b\w{1,10}\b\s*){1,5}$'
             required
             title='Up to 5 tags, each no longer than 10 characters, separated by whitespace.'
-          />
+          /> */}
           {}
   
           <button type='submit'>Submit</button>
@@ -269,7 +315,7 @@ function UserProfile (props) {
               <button onClick={() => { setView('tags'); setShowEditor(false); }}>Tags</button>
             </li>
             <li>
-              <button onClick={() => { setView('answers'); setShowEditor(false); }}>Answers</button>
+              <button onClick={() => { setView('answers'); fetchQuestionsWithUserAnswers();setShowEditor(false); }}>Answers</button>
             </li>
             <li>
               <button onClick={() => {handleAdminPageClick(); setShowEditor(false);}}>AdminStuff</button>

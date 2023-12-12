@@ -4,10 +4,12 @@ import Question from './question'
 import QuestionEditable from './question_editable'
 import TagPage from './tag-page'
 import AdminPage from './adminPage'
+import AnswerTabEditable from './answer_editable'
 
 function UserPagesForAdmin ({uid},props) {
     const [view, setView] = useState('questions')
     const [userQuestions, setUserQuestions] = useState([])
+    const [userAnswers, setUserAnswers] = useState([])
     const [accountReputation, setAccountReputation] = useState(null)
     const [username, setUsername] = useState(null)
     const [date, setDate] = useState(null)
@@ -34,7 +36,22 @@ function UserPagesForAdmin ({uid},props) {
         }
         }
 
+        // const fetchUserAnswers = async() => {
+        //     try {
+        //         const ans = await Axios.get(
+        //             `http://localhost:8000/users/getAllAnswers/${userId}`,
+        //             { withCredentials: true }
+        //         ) 
+        //         setUserAnswers(ans.data)
+        //         console.log('admin user answers')
+        //         console.log(userAnswers)
+        //         } catch (error) {
+        //             console.error("error fetching user answers", error)
+        //         }            
+        // }
+
         console.log('running useEffect in userprofile')
+        // fetchUserAnswers()
         fetchUserQuestions()
 
         const fetchAccountRepForAdmin = async () => {
@@ -113,7 +130,14 @@ function UserPagesForAdmin ({uid},props) {
         ))
     }
 
-    const renderUserAnswers = () => {}
+    const renderUserAnswers = () => {
+        return userAnswers.map(ans => (
+            <AnswerTabEditable
+                key={ans._id}
+                answer={ans}
+            />
+        ))
+    }
 
     const renderUserTags = () => {
         const tags = []
@@ -262,8 +286,8 @@ function UserPagesForAdmin ({uid},props) {
                 rows='4'
                 required
             ></textarea>
-            <label htmlFor='formTags'>Tags:*</label>
-            <p>
+            {/* <label htmlFor='formTags'>Tags:*</label> */}
+            {/* <p>
                 Add keywords separated by whitespace. 5 tags max, no more than 10
                 characters per tag
             </p>
@@ -275,7 +299,7 @@ function UserPagesForAdmin ({uid},props) {
                 pattern='^(?:\b\w{1,10}\b\s*){1,5}$'
                 required
                 title='Up to 5 tags, each no longer than 10 characters, separated by whitespace.'
-            />
+            /> */}
             {}
     
             <button type='submit'>Submit</button>
@@ -306,9 +330,9 @@ function UserPagesForAdmin ({uid},props) {
                 <li>
                     <button onClick={() => { setView('tags'); setShowEditor(false); }}>Tags</button>
                 </li>
-                <li>
+                {/* <li>
                     <button onClick={() => { setView('answers'); setShowEditor(false); }}>Answers</button>
-                </li>
+                </li> */}
                 <li>
                     <button onClick={handleDeleteAccountClick}>Delete User</button>
                 </li>
@@ -333,7 +357,7 @@ function UserPagesForAdmin ({uid},props) {
             {showEditor ? renderEditor() : null}
             {view === 'questions' && !showEditor && renderUserQuestions()}
             {view === 'tags' && !showEditor && renderUserTags()}
-            {view === 'answers' && !showEditor && renderUserAnswers()}
+            {/* {view === 'answers' && !showEditor && renderUserAnswers()} */}
             {/* {view === 'admin' && !showEditor && renderAdminPage()} */}
             </div>
         </div>

@@ -277,4 +277,19 @@ router.delete('/:qid/deleteQuestion', async (req, res) => {
   } catch (error) {
     res.status(500).send(error.message);
   }
-});
+})
+
+router.post('/questionsWithUserAnswers', async (req, res) => {
+  try {
+
+    // filter questions for answer ids
+    const questionsWithUserAnswers = await Question.find({
+      'answers': { $in: req.body.userAnswers }
+    });
+
+    res.status(200).json(questionsWithUserAnswers);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Error fetching questions with user answers');
+  }
+})
