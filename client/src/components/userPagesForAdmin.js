@@ -1,21 +1,23 @@
 import React, { useState, useEffect } from 'react'
 import Axios from 'axios'
-import Question from './question'
+// import Question from './question'
 import QuestionEditable from './question_editable'
 import TagPage from './tag-page'
-import AdminPage from './adminPage'
-import AnswerTabEditable from './answer_editable'
+// import AdminPage from './adminPage'
+// import AnswerTabEditable from './answer_editable'
 
 function UserPagesForAdmin ({uid},props) {
     const [view, setView] = useState('questions')
     const [userQuestions, setUserQuestions] = useState([])
-    const [userAnswers, setUserAnswers] = useState([])
+    // const [userAnswers, setUserAnswers] = useState([])
     const [accountReputation, setAccountReputation] = useState(null)
     const [username, setUsername] = useState(null)
     const [date, setDate] = useState(null)
     const [showEditor, setShowEditor] = useState(false)
     const [editingQuestion, setEditingQuestion] = useState(null)
     const [editingTags, setEditingTags] = useState([])
+
+    console.log(editingTags)
 
     useEffect(() => {
         const userId = uid
@@ -130,14 +132,14 @@ function UserPagesForAdmin ({uid},props) {
         ))
     }
 
-    const renderUserAnswers = () => {
-        return userAnswers.map(ans => (
-            <AnswerTabEditable
-                key={ans._id}
-                answer={ans}
-            />
-        ))
-    }
+    // const renderUserAnswers = () => {
+    //     return userAnswers.map(ans => (
+    //         <AnswerTabEditable
+    //             key={ans._id}
+    //             answer={ans}
+    //         />
+    //     ))
+    // }
 
     const renderUserTags = () => {
         const tags = []
@@ -146,7 +148,7 @@ function UserPagesForAdmin ({uid},props) {
             tags.push(userQuestions[i].tags[z])
         }
         }
-        const uniqTags = [...new Set(tags)]
+        // const uniqTags = [...new Set(tags)]
         return (
         <TagPage
             questions={userQuestions}
@@ -246,10 +248,10 @@ function UserPagesForAdmin ({uid},props) {
 
     //     setView('admin')
     // }
-    const handleCancel = () => {
-        setShowEditor(false)
-        setEditingQuestion(null)
-    }
+    // const handleCancel = () => {
+    //     setShowEditor(false)
+    //     setEditingQuestion(null)
+    // }
 
     const renderEditor = () => {
         return (

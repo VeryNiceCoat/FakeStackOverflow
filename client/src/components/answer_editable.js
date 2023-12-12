@@ -1,26 +1,26 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect} from 'react'
 import Axios from 'axios'
-import CommentTab from './comment'
-import CommentForm from './commentForm'
+// import CommentTab from './comment'
+// import CommentForm from './commentForm'
 
 const AnswerTabEditable = props => {
-const [comments, setComments] = useState([])
-const [votes, setVotes] = useState(props.answer.votes)
-const [showCommentForm, setShowCommentForm] = useState(false)
-const [isLoading, setIsLoading] = useState(true)
-const [commentPageNumber, setCommentPageNumber] = useState(0)
-const commentsPerPage = 3
+// const [comments, setComments] = useState([])
+// const [votes, setVotes] = useState(props.answer.votes)
+// const [showCommentForm, setShowCommentForm] = useState(false)
+// const [isLoading, setIsLoading] = useState(true)
+// const [commentPageNumber, setCommentPageNumber] = useState(0)
+// const commentsPerPage = 3
 
     useEffect(() => {
         const fetchComments = async () => {
-        const res = await Axios.get('http://localhost:8000/comments')
-        const allComments = res.data
+        // const res = await Axios.get('http://localhost:8000/comments')
+        // const allComments = res.data
 
-        const filteredComments = allComments.filter(comment =>
-            props.answer.comments.some(
-            answerComment => answerComment === comment._id
-            )
-        )
+        // const filteredComments = allComments.filter(comment =>
+        //     props.answer.comments.some(
+        //     answerComment => answerComment === comment._id
+        //     )
+        // )
 
         const answerA = [undefined]
         const resA = await Axios.get('http://localhost:8000/answers')
@@ -31,104 +31,104 @@ const commentsPerPage = 3
             break
             }
         }
-        setVotes(answerA[0].votes)
-        setComments(filteredComments)
+        // setVotes(answerA[0].votes)
+        // setComments(filteredComments)
         }
 
         fetchComments()
     }, [props.answer.comments])
 
-    const handleUpvote = async () => {
-        try {
-        const response = await Axios.put(
-            `http://localhost:8000/answers/${props.answer._id}/upVote`,
-            {},
-            { withCredentials: true }
-        )
-        setVotes(response.data.votes)
-        } catch (error) {
-        window.alert(error.response.data)
-        // console.error('Error during upvote', error)
-        }
-    }
+    // const handleUpvote = async () => {
+    //     try {
+    //     const response = await Axios.put(
+    //         `http://localhost:8000/answers/${props.answer._id}/upVote`,
+    //         {},
+    //         { withCredentials: true }
+    //     )
+    //     setVotes(response.data.votes)
+    //     } catch (error) {
+    //     window.alert(error.response.data)
+    //     // console.error('Error during upvote', error)
+    //     }
+    // }
 
-    const handleDownvote = async () => {
-        try {
-        const response = await Axios.put(
-            `http://localhost:8000/answers/${props.answer._id}/downVote`,
-            {},
-            { withCredentials: true }
-        )
-        setVotes(response.data.votes)
-        } catch (error) {
-        window.alert(error.response.data)
-        // console.error('Error during upvote', error)
-        }
-    }
+    // const handleDownvote = async () => {
+    //     try {
+    //     const response = await Axios.put(
+    //         `http://localhost:8000/answers/${props.answer._id}/downVote`,
+    //         {},
+    //         { withCredentials: true }
+    //     )
+    //     setVotes(response.data.votes)
+    //     } catch (error) {
+    //     window.alert(error.response.data)
+    //     // console.error('Error during upvote', error)
+    //     }
+    // }
 
-    const handleCommentSubmit = async commentText => {
-        try {
-        if (commentText.length >= 140)
-        {
-            window.alert("Can't submit a comment with more than 140 characters")
-            return;
-        }
-        const temp = await Axios.put(
-            `http://localhost:8000/comments/newComment/${commentText}`,
-            {},
-            {
-            withCredentials: true
-            }
-        )
-        const comment = temp.data
-        const wait = await Axios.put(
-            `http://localhost:8000/answers/${props.answer._id}/addComment/${comment._id}`,
-            {},
-            { withCredentials: true }
-        )
+    // const handleCommentSubmit = async commentText => {
+    //     try {
+    //     if (commentText.length >= 140)
+    //     {
+    //         window.alert("Can't submit a comment with more than 140 characters")
+    //         return;
+    //     }
+    //     const temp = await Axios.put(
+    //         `http://localhost:8000/comments/newComment/${commentText}`,
+    //         {},
+    //         {
+    //         withCredentials: true
+    //         }
+    //     )
+    //     const comment = temp.data
+    //     const wait = await Axios.put(
+    //         `http://localhost:8000/answers/${props.answer._id}/addComment/${comment._id}`,
+    //         {},
+    //         { withCredentials: true }
+    //     )
 
-        const newAnswer = wait.data
+    //     const newAnswer = wait.data
 
-        const res = await Axios.get('http://localhost:8000/comments')
-        const allComments = res.data
+    //     const res = await Axios.get('http://localhost:8000/comments')
+    //     const allComments = res.data
 
-        const filteredComments = allComments.filter(comment =>
-            newAnswer.comments.some(answerComment => answerComment === comment._id)
-        )
+    //     const filteredComments = allComments.filter(comment =>
+    //         newAnswer.comments.some(answerComment => answerComment === comment._id)
+    //     )
 
-        setComments(filteredComments)
-        // setIsLoading(false)
-        // setIsLoading(true)
-        } catch (error) {
-        window.alert(error.response.data)
-        }
-        setShowCommentForm(false)
-    }
+    //     setComments(filteredComments)
+    //     // setIsLoading(false)
+    //     // setIsLoading(true)
+    //     } catch (error) {
+    //     window.alert(error.response.data)
+    //     }
+    //     setShowCommentForm(false)
+    // }
 
-    const handleCancelComment = () => {
-        setShowCommentForm(false)
-    }
+    // const handleCancelComment = () => {
+    //     setShowCommentForm(false)
+    // }
 
-    const handleCommentClick = () => {
-        setShowCommentForm(true)
-    }
+    // const handleCommentClick = () => {
+    //     setShowCommentForm(true)
+    // }
 
-    const paginatedComments = () => {
-        const startIndex = commentPageNumber * commentsPerPage
-        const selectedComments = comments.slice(
-        startIndex,
-        startIndex + commentsPerPage
-        )
-        return selectedComments
-    }
+    // const paginatedComments = () => {
+    //     const startIndex = commentPageNumber * commentsPerPage
+    //     const selectedComments = comments.slice(
+    //     startIndex,
+    //     startIndex + commentsPerPage
+    //     )
+    //     return selectedComments
+    // }
 
-    const renderComments = () => {
-        const temp = paginatedComments()
-        // console.log(temp);
-        return temp.map(comment => (
-        <CommentTab key={comment._id} comment={comment} />
-        ))
-    }
+    // const renderComments = () => {
+    //     const temp = paginatedComments()
+    //     // console.log(temp);
+    //     return temp.map(comment => (
+    //     <CommentTab key={comment._id} comment={comment} />
+    //     ))
+    // }
     // const renderComments = () => {
     //   // if (question.comments.length == 0) {
     //   //   return <div>No Comments</div>
@@ -137,15 +137,15 @@ const commentsPerPage = 3
     //   // }
     // }
 
-    const handleNextCommentClick = () => {
-        setCommentPageNumber(prev =>
-        (prev + 1) * 3 > comments.length ? prev : prev + 1
-        )
-    }
+    // const handleNextCommentClick = () => {
+    //     setCommentPageNumber(prev =>
+    //     (prev + 1) * 3 > comments.length ? prev : prev + 1
+    //     )
+    // }
 
-    const handlePrevCommentClick = () => {
-        setCommentPageNumber(prev => (prev > 0 ? prev - 1 : 0))
-    }
+    // const handlePrevCommentClick = () => {
+    //     setCommentPageNumber(prev => (prev > 0 ? prev - 1 : 0))
+    // }
 
     return (
         <div id='answerContainer'>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Axios from 'axios'
-import Question from './question'
+// import Question from './question'
 import QuestionEditable from './question_editable'
 import TagPage from './tag-page'
 import AdminPage from './adminPage'
@@ -15,7 +15,7 @@ function UserProfile (props) {
   const [showEditor, setShowEditor] = useState(false)
   const [editingQuestion, setEditingQuestion] = useState(null)
   const [editingTags, setEditingTags] = useState([])
-  const [editingAnswers, setEditingAnswers] = useState([])
+  // const [editingAnswers, setEditingAnswers] = useState([])
 
   useEffect(() => {
     const fetchUserQuestions = async () => {
@@ -156,7 +156,7 @@ function UserProfile (props) {
         tags.push(userQuestions[i].tags[z])
       }
     }
-    const uniqTags = [...new Set(tags)]
+    // const uniqTags = [...new Set(tags)]
     return (
       <TagPage
         questions={userQuestions}
@@ -230,10 +230,10 @@ function UserProfile (props) {
       return
     }
   }
-  const handleCancel = () => {
-    setShowEditor(false)
-    setEditingQuestion(null)
-  }
+  // const handleCancel = () => {
+  //   setShowEditor(false)
+  //   setEditingQuestion(null)
+  // }
 
   const renderEditor = () => {
     return (

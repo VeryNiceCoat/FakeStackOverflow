@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import Axios from 'axios'
+import React, { useState } from 'react'
+// import Axios from 'axios'
 
 const CommentForm = ({ onSubmit, onCancel }) => {
   const [commentText, setCommentText] = useState('')

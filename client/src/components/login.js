@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import Axios from 'axios'
 
 function Login (props) {
   const {
-    showWelcomePage,
+    // showWelcomePage,
     setShowWelcomePage,
     showLoginForm,
     setShowLoginForm,
     showRegisterForm,
     setShowRegisterForm,
-    showRejectedMessage,
+    // showRejectedMessage,
     setShowRejectedMessage,
-    showHomePage,
+    // showHomePage,
     setShowHomePage
   } = props
 

@@ -46,7 +46,7 @@ const QuestionView = props => {
 
   function incrementQuestionViews (questionId) {
     Axios.put(`http://localhost:8000/questions/${questionId}/views`)
-      .then(response => {})
+      .then(() => {})
       .catch(error => {
         console.error('Error:', error)
       })

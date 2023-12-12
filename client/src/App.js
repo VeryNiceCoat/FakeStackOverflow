@@ -1,6 +1,8 @@
 // ************** THIS IS YOUR APP'S ENTRY POINT. CHANGE THIS FILE AS NEEDED. **************
 // ************** DEFINE YOUR REACT COMPONENTS in ./components directory **************
 import './stylesheets/App.css'
+import React from 'react';
+
 import FakeStackOverflow from './components/fakestackoverflow.js'
 import Login from './components/login.js'
 // import UserProfile from './components/userProfile'
