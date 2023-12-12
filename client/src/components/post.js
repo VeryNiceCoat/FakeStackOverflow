@@ -11,7 +11,7 @@ const Post = ({ question, onAnswerQuestion, onAskQuestion, onhandleTagOnMainPage
   const answersPerPage = 5
   const commentsPerPage = 3
   const [selectedTags, setSelectedTags] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
+  // const [isLoading, setIsLoading] = useState(true)
   const [comments, setComments] = useState([])
   const [commentPageNumber, setCommentPageNumber] = useState(0)
   const [votes, setVotes] = useState(question.votes)
@@ -43,7 +43,7 @@ const Post = ({ question, onAnswerQuestion, onAskQuestion, onhandleTagOnMainPage
           ))
 
           setAnswersToBeLoaded(loadedAnswers)
-          setIsLoading(false)
+          // setIsLoading(false)
         })
 
         const allComments = await Axios.get('http://localhost:8000/comments')
@@ -60,14 +60,16 @@ const Post = ({ question, onAnswerQuestion, onAskQuestion, onhandleTagOnMainPage
         ))
 
         setComments(loadedComments)
-      } catch (error) {}
+      } catch (error) {
+        console.error(error.message)
+      }
     }
     fetchAnswers()
   }, [props.showAForm, props.showPostView, currentPage, commentPageNumber])
 
-  useEffect(() => {
-    setIsLoading(false)
-  }, [answersToBeLoaded])
+  // useEffect(() => {
+  //   setIsLoading(false)
+  // }, [answersToBeLoaded])
 
   useEffect(() => {
     const fetchRelevantTags = async () => {
@@ -200,6 +202,7 @@ const Post = ({ question, onAnswerQuestion, onAskQuestion, onhandleTagOnMainPage
         { withCredentials: true }
       )
       const newQ = wait.data;
+      console.log(newQ)
       // setComments(loadedComments)
     } catch (error) {
       window.alert(error.response.data)

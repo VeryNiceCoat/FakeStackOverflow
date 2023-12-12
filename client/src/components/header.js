@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import UserProfile from './userProfile'
+import React from 'react'
+// import UserProfile from './userProfile'
 import Axios from 'axios'
 
 function Header (props) {
@@ -29,7 +29,7 @@ function Header (props) {
     }
   }
 
-  const handleLogoutClick = async event => {
+  const handleLogoutClick = async () => {
     try {
       await Axios.get('http://localhost:8000/users/logout', {
         withCredentials: true

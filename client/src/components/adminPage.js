@@ -3,9 +3,10 @@ import Axios from 'axios'
 import UserPagesForAdmin from './userPagesForAdmin'
 
 const AdminPage = props => {
+    console.log(props)
     const [users, setUsers] = useState([])
     const [selectedUser, setSelectedUser] = useState(null)
-    const [showAdminUserPages, setShowAdminUserPages] = useState(false)
+    // const [showAdminUserPages, setShowAdminUserPages] = useState(false)
     useEffect(() => {
         // Fetch the user data when the component mounts
         const fetchUsers = async () => {
@@ -27,7 +28,7 @@ const AdminPage = props => {
         setSelectedUser(userId)
         console.log('new selectedUser')
         console.log(selectedUser)
-        setShowAdminUserPages(true)
+        // setShowAdminUserPages(true)
 
     }
     return (

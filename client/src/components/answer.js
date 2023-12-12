@@ -7,7 +7,7 @@ const AnswerTab = props => {
   const [comments, setComments] = useState([])
   const [votes, setVotes] = useState(props.answer.votes)
   const [showCommentForm, setShowCommentForm] = useState(false)
-  const [isLoading, setIsLoading] = useState(true)
+  // const [isLoading, setIsLoading] = useState(true)
   const [commentPageNumber, setCommentPageNumber] = useState(0)
   const commentsPerPage = 3
 

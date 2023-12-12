@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import TagForQuestionInMainPage from './tagForQuestionInMainPage'
+// import TagForQuestionInMainPage from './tagForQuestionInMainPage'
 import Axios from 'axios'
 
 const QuestionEditable = (
-    { question, onTitleClick, onhandleTagOnMainPageClicked },
-    props
+    { question, onTitleClick }
 ) => {
     const [selectedTags, setSelectedTags] = useState([])
     const [votes, setVotes] = useState(question.votes)
@@ -17,6 +16,7 @@ const QuestionEditable = (
             question.tags.some(questionTags => questionTags === tag._id)
             )
             setSelectedTags(relevantTags)
+            console.log(selectedTags)
         } catch (error) {
             console.error('error fetching tags in components/question.js', error)
         }
