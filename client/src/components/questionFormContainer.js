@@ -137,7 +137,7 @@ const QuestionFormContainer = ({ onSubmit }) => {
   }
 
   // Example usage
-  const array1 = [] //
+  // const array1 = [] //
 
   return (
     <div id='questionFormContainer'>
